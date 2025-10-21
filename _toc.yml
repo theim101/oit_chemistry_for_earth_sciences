@@ -1,0 +1,13 @@
+# Table of content
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro.md
+parts:
+  - caption: Template Caption
+    chapters:
+      - file: content/template-chapter.md
+        options:
+          numbered: true
+        sections:
+        - file: content/template-subchapter.md

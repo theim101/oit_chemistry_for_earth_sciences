@@ -1,0 +1,132 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+#######################################################################################
+# Book Settings
+title: "Template Jupyter Book"
+author: Your Name # Change this parameter
+description: This is the template book for everyone that wants to create a new Jupyter Book from scratch. # Change this parameter
+copyright: Delft University of Technology, CC BY 4.0
+logo: content/images/tudelft.png
+exclude_patterns: [ _build, Thumbs.db, .DS_Store, "**.ipynb_checkpoints" ]
+
+# Only build files in the ToC to avoid building README, etc.
+only_build_toc_files: true
+
+
+#######################################################################################
+# Execution settings
+execute:
+  execute_notebooks: force
+  cache: ""
+  exclude_patterns: [ ]
+  timeout: 30
+  run_in_temp: false
+  allow_errors: false
+  stderr_output: show
+
+
+#######################################################################################
+# Parse and render settings
+parse:
+  myst_enable_extensions:
+    - amsmath
+    - colon_fence # To allow for ::: instead of ``` blocks.
+    - deflist
+    - dollarmath
+    - html_admonition
+    - html_image
+    - linkify
+    - replacements
+    - smartquotes
+    - substitution
+    - tasklist
+  myst_url_schemes: [ mailto, http, https ]
+  myst_dmath_double_inline: true
+
+
+#######################################################################################
+# HTML-specific settings
+html:
+  favicon: "content/images/favicon.ico"
+  use_edit_page_button: true
+  use_repository_button: true
+  use_issues_button: false
+  use_multitoc_numbering: true
+  extra_navbar: "" # Change this parameter (optional)
+  extra_footer: "" # Change this parameter (optional)
+  google_analytics_id: ""
+  home_page_in_navbar: true
+  baseurl: ""
+  comments:
+    hypothesis: true
+    utterances: false
+  announcement: "" # Change this parameter (optional)
+
+
+#######################################################################################
+# LaTeX-specific settings
+latex:
+  latex_engine: pdflatex
+  use_jupyterbook_latex: true
+  latex_documents:
+    targetname: book.tex # Change this parameter (optional)
+
+
+#######################################################################################
+# Launch button settings
+launch_buttons:
+  notebook_interface: classic
+
+
+#######################################################################################
+# Information about where the book exists on the web - note that due to incompatibility
+# with the logo change this has become redundant, see sphinx->config->html_theme_options
+repository:
+  url: https://gitlab.tudelft.nl/opentextbooks/template-book/ # Change this parameter (optional)
+  path_to_book: "" # Change this parameter (optional)
+  branch: master # Change this parameter (optional)
+
+
+#######################################################################################
+# Add a bibtex file so that we can create citations
+bibtex_bibfiles:
+  - references.bib
+
+
+#######################################################################################
+# Advanced and power-user settings
+sphinx:
+  extra_extensions:
+    - sphinx_proof
+    - sphinx_exercise
+    - sphinx_togglebutton
+
+  recursive_update: false
+
+  config:
+    language: en  # To identify the language. Change if appropriate
+    html_js_files:
+      - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js
+#      - https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.0/dist/loading-attribute-polyfill.min.js
+#      - https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.0/dist/loading-attribute-polyfill.min.css
+    mathjax3_config:
+      loader: { load: [ '[tex]/autoload', '[tex]/ams' ] }
+      tex:
+        packages: { '[+]': [ 'autoload', 'ams', 'physics', 'boldsymbol' ] }
+        tags: 'ams'
+        macros: # Define your macros here. Examples (note the use of escape \ for a backslash):
+          "kB": "k_\\mathrm{B}"
+          "bm": "\\mathbf"
+          "inprod": "\\innerproduct"
+          "diff": "\\pdv"
+
+    html_theme_options:
+      # This is an alternative to the `repository` key.
+      # It allows compatibility with the light/dark TU Delft logo.
+      repository_url: https://gitlab.tudelft.nl/opentextbooks/template-book
+      use_repository_button: True
+ 
+      logo:
+        image_light: content/images/tudelft.png
+        image_dark:  content/images/tudelft-dark.png
