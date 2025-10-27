@@ -1,4 +1,6 @@
-# Open textbooks with Jupyter books
+# Chemistry for Earth Sciences
+
+Work in progress... only changed title...
 
 Welcome to the Jupyter Book template for TU Delft! This template is designed to make it easy for lecturers to create their own custom textbooks, lecture notes, or other educational materials for their courses.
 

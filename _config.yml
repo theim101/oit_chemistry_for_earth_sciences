@@ -3,8 +3,8 @@
 
 #######################################################################################
 # Book Settings
-title: "Template Jupyter Book"
-author: Your Name # Change this parameter
+title: "Template Chemistry in Earth Sciences"
+author: Timo Heimovaara, Your Name # Change this parameter
 description: This is the template book for everyone that wants to create a new Jupyter Book from scratch. # Change this parameter
 copyright: Delft University of Technology, CC BY 4.0
 logo: content/images/tudelft.png
