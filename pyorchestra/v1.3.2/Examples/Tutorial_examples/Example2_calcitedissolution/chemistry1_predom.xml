@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Composer>
+   <!--**** The predominance settings! ******-->
+   <title>Cr</title>
+   <synonym>Cr</synonym>
+   <fontsize>1.2</fontsize>
+   <X-Axis>
+      <variable>pH</variable>
+      <min>2.0</min>
+      <max>11.0</max>
+      <scientificformat>false</scientificformat>
+      <nrdecimals>2</nrdecimals>
+      <steps>300</steps>
+      <minortics>2</minortics>
+      <majortics>9</majortics>
+   </X-Axis>
+   <Y-Axis>
+      <variable>pe</variable>
+      <min>-13.0</min>
+      <max>19.0</max>
+      <scientificformat>false</scientificformat>
+      <nrdecimals>2</nrdecimals>
+      <steps>300</steps>
+      <minortics>4</minortics>
+      <majortics>8</majortics>
+   </Y-Axis>
+   <datafile>userdata.dat</datafile>
+   <area colour="-1" factor="1" formationreaction="" variable="H2.liter.con"/>
+   <area colour="-1" factor="1" formationreaction="" variable="O2.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Cr+2, 0.0, 1.0, Cr[+2])" variable="Cr+2.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Cr+3, &quot;(( (1.0 / log(10)) * ((9.5688 * log(10)) - (-129620.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, 2.0, H+, -2.0, H2O)" variable="Cr+3.liter.con"/>
+   <area colour="-8213866" factor="2.0" formationreaction="@logKreaction(Cr2O3[s], &quot;-1 * (( (1.0 / log(10)) * ((-2.3576 * log(10)) - (-50731.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 2.0, Cr[OH]2+, -2.0, H+, -1.0, H2O)" variable="Cr2O3[s].liter.con"/>
+   <area colour="-2302776" factor="2.0" formationreaction="@logKreaction(Cr2O7-2, &quot;(( (1.0 / log(10)) * ((14.56 * log(10)) - (-15000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 2.0, CrO4-2, 2.0, H+, -1.0, H2O)" variable="Cr2O7-2.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CrO2-, &quot;(( (1.0 / log(10)) * ((-17.7456 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, -2.0, H+)" variable="CrO2-.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(CrO3[s], &quot;-1 * (( (1.0 / log(10)) * ((-3.2105 * log(10)) - (-5209.1 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CrO4-2, 2.0, H+, -1.0, H2O)" variable="CrO3[s].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CrO4-2, 0.0, 1.0, Cr[+6])" variable="CrO4-2.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Cr[+2], &quot;(( (1.0 / log(10)) * ((2.947 * log(10)) - (6360.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )) + 1.0 * ((( (1.0 / log(10)) * ((67.376 * log(10)) - (-103000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))&quot;, 1.0, Cr, 8.0, H+, -4.0, H2O, 4.0, e-)" variable="Cr[+2].liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Cr[+3], &quot;(( (1.0 / log(10)) * ((67.376 * log(10)) - (-103000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr, 6.0, H+, -2.0, H2O, 3.0, e-)" variable="Cr[+3].liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Cr[+6], 0.0, 1.0, Cr)" variable="Cr[+6].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Cr[OH]+2, &quot;(( (1.0 / log(10)) * ((5.9118 * log(10)) - (-77910.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, 1.0, H+, -1.0, H2O)" variable="Cr[OH]+2.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Cr[OH]2+, 0.0, 1.0, Cr[+3])" variable="Cr[OH]2+.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Cr[OH]2[s], &quot;-1 * (( (1.0 / log(10)) * ((10.8189 * log(10)) - (-35605.8 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr+2, -2.0, H+, 2.0, H2O)" variable="Cr[OH]2[s].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Cr[OH]3, &quot;(( (1.0 / log(10)) * ((-8.4222 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, -1.0, H+, 1.0, H2O)" variable="Cr[OH]3.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Cr[OH]3[am][s], &quot;-1 * (( (1.0 / log(10)) * ((-0.75 * log(10)) - (-0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, -1.0, H+, 1.0, H2O)" variable="Cr[OH]3[am][s].liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Cr[OH]3[s], &quot;-1 * (( (1.0 / log(10)) * ((1.3355 * log(10)) - (-29769.2 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, -1.0, H+, 1.0, H2O)" variable="Cr[OH]3[s].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Cr[OH]4-, &quot;(( (1.0 / log(10)) * ((-17.8192 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr[OH]2+, -2.0, H+, 2.0, H2O)" variable="Cr[OH]4-.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Crmetal[s], &quot;-1 * (( (1.0 / log(10)) * ((30.4831 * log(10)) - (-172000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Cr+2, 2.0, e-)" variable="Crmetal[s].liter.con"/>
+   <area colour="-8213866" factor="2.0" formationreaction="@logKreaction(FeCr2O4[s], &quot;-1 * (( (1.0 / log(10)) * ((7.2003 * log(10)) - (-140400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 2.0, Cr[OH]2+, 1.0, Fe+2, -4.0, H+)" variable="FeCr2O4[s].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(H2CrO4, &quot;(( (1.0 / log(10)) * ((6.4188 * log(10)) - (39000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CrO4-2, 2.0, H+)" variable="H2CrO4.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(HCrO4-, &quot;(( (1.0 / log(10)) * ((6.51 * log(10)) - (2000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CrO4-2, 1.0, H+)" variable="HCrO4-.liter.con"/>
+</Composer>

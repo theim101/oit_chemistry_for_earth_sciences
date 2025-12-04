@@ -1,0 +1,774 @@
+//*********  Version: 04 May 2022 10:34  *******
+@NrDigits: 12  // number of decimal places in reaction coefficients. 
+ //@rewriteReactions:   //indicates that reactions are rewritten in terms of primary entities. 
+
+//********* The database file(s) *******
+// This section list the database files that are used by the interactive chemistry editor
+// The database file is not used during the calculations!
+// Syntax for local files:                   @database: minteq.txt
+// Syntax for files on the internet:         @database: www.meeussen.nl/orchestra/minteqv4.txt
+
+@database: minteq.v4_2021.txt
+@database: kinetics_db.txt
+@database: adsmodels2022.txt
+//********* End of the database file(s) *******
+
+
+//********* Extra text 0 *******
+
+@class: extra_text_0(){
+ // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
+@scan: objects2022.txt
+@scan: kinetics_db.txt
+@stop:
+
+}
+@extra_text_0()
+//********* End of extra text 0 *******
+
+
+//********* The variables *******
+@Var: <name>.ddl 0.0 // 
+@GlobalVar: <name>.eq 0 // this defines eq as global variables with initial value 0.
+@Var: CLAY_kgkg .0003 // Clay kg per kg solid fraction
+@Var: DFA_kgl 0.0 // Dissolved fulvic acid kg/l
+@Var: DHA_kgl 0.0 // Dissoved humic acid kg/l
+@Var: E.logact 1 // 
+@Var: F 96484.56 // 
+@Var: FA_kgkg 0 // 
+@Var: Goethite_kgkg 0.0 // 
+@Var: H+.logact 1.0 // 
+@Var: H.logact 1 // 
+@GlobalVar: H2O.logact 0.0 // 
+@Var: HA_kgkg 1.0E-4 // 
+@Var: HFO_kgkg 1e-3 // 
+@GlobalVar: I .1 // 
+@Var: O.logact 1 // 
+@Var: SL 1.0 // 
+@Var: T 293.15 // Temperature in degrees Kelvin
+@Var: density 1.0 // 
+@Var: e-.logact 1.0 // 
+@Var: gasvolume 0 // 
+@Var: pH 7 // 
+@Var: pe 3 // 
+@Var: porosity 0.2 // 
+@Var: saturation 0.9 // 
+@Var: solidvolume 0// // 
+@Var: totvolume 1 // 
+@Var: wastefraction 0.3 // 
+@Var: wastevolume 1 // 
+@Var: watervolume 1 // 
+//********* End of the variables *******
+
+
+//********* Extra text 1 *******
+
+@class: extra_text_1(){
+ // Here you can write ORCHESTRA extra expressions new style. 
+@Calc: (1,  "watervolume = porosity * totvolume * saturation")     // is total water volume per cell
+@Calc: (1,  "gasvolume   = porosity * (1-saturation)")             // is tot gas volume per liter water
+@Calc: (1, "solidvolume = totvolume*(1-porosity)")
+@Calc: (1, "wastevolume = wastefraction")
+@Calc: (1,  "SL = ((1-porosity)*density) / (porosity*saturation)")
+}
+@extra_text_1()
+//********* End of extra text 1 *******
+
+//********* The phases *******
+@phase(tot)
+@phase(liter)
+@link_phase(liter, tot, "watervolume")
+@phase(solution)
+@link_phase(solution, liter, "1")
+@phase(diss)
+@link_phase(diss, solution, "1")
+@phase(colloid)
+@link_phase(colloid, solution, "1")
+@phase(DHA_part)
+@link_phase(DHA_part, colloid, "1")
+@phase(DFA_part)
+@link_phase(DFA_part, colloid, "1")
+@phase(adsorbed)
+@link_phase(adsorbed, liter, "1")
+@phase(gas)
+@link_phase(gas, tot, "gasvolume")
+@phase(solid)
+@link_phase(solid, tot, "solidvolume")
+@phase(min)
+@link_phase(min, solid, "1")
+@phase(ads)
+@link_phase(ads, solid, "1")
+@phase(CLAY_part_l)
+@link_phase(CLAY_part_l, ads, "1")
+@phase(CLAY_part)
+@link_phase(CLAY_part, CLAY_part_l, "CLAY_kgkg*SL")
+@phase(HFO_part_l)
+@link_phase(HFO_part_l, ads, "1")
+@phase(HFO_part)
+@link_phase(HFO_part, HFO_part_l, "HFO_kgkg*SL")
+@phase(Goethite_part_l)
+@link_phase(Goethite_part_l, ads, "1")
+@phase(Goethite_part)
+@link_phase(Goethite_part, Goethite_part_l, "Goethite_kgkg*SL")
+@phase(SHA_part_l)
+@link_phase(SHA_part_l, ads, "1")
+@phase(HA_part)
+@link_phase(HA_part, DHA_part, "DHA_kgl")
+@link_phase(HA_part, SHA_part_l, "HA_kgkg*SL")
+@phase(SFA_part_l)
+@link_phase(SFA_part_l, ads, "1")
+@phase(FA_part)
+@link_phase(FA_part, DFA_part, "DFA_kgl")
+@link_phase(FA_part, SFA_part_l, "FA_kgkg*SL")
+@phase(wastephase)
+@link_phase(wastephase, solid, "wastevolume")
+//********* End of the phases *******
+
+@class: extra_text_2(){
+
+}
+@extra_text_2()
+//********* End of extra text 2 *******
+
+@davies(0)
+
+//********* The primary entities *******
+@species(CO3-2, -2)
+@primary_entity(CO3-2, -9.0, tot, 3.38213706)
+@species(Ca+2, 2)
+@primary_entity(Ca+2, -9.0, tot, 0.27)
+@Global: pH
+@Calc:(1, "H.logact = -pH")
+@entity(H, tot, 0 )
+@primary_entity(H, pH, 7.0, lin, 0.1, tot, 5.2885878)
+@entity(N2, solution, 1 )
+@primary_entity(N2, -9.0, tot, 0.0)
+@species(NH4+, 1)
+@primary_entity(NH4+, -9.0, tot, 0.0320715852)
+@species(NO3-, -1)
+@primary_entity(NO3-, -9.0, tot, 1.0E-9)
+@Global: H2O.logact
+@Calc:(1, "O.logact = H2O.logact")
+@entity(O, tot, 0 )
+@primary_entity(O, H2O.logact, 0.0)
+@species(O2, 0)
+@primary_entity(O2, -9.0, tot, 0.0051)
+@species(SO4-2, -2)
+@primary_entity(SO4-2, -9.0, tot, 0.1)
+@entity(acetate, solution, 1 )
+@primary_entity(acetate, -9.0, tot, 0.593484667)
+@entity(denitrifiers, solution, 1 )
+@primary_entity(denitrifiers, -9.0, tot, 0.01)
+@entity(methanogens, solution, 1 )
+@primary_entity(methanogens, -9.0, tot, 0.01)
+@entity(nitrifiers, solution, 1 )
+@primary_entity(nitrifiers, -9.0, tot, 0.01)
+@entity(oxidizers, solution, 1 )
+@primary_entity(oxidizers, -9.0, tot, 0.01)
+@entity(waste, wastephase, 1 )
+@primary_entity(waste, -9.0, tot, 2.08584638)
+//****************************************
+//******************************
+
+//********* Extra text 2a **************
+
+@class: extra_text_2a(){
+@composition(waste, 1.0, CO3-2, 1.595, H, -2.5, O)
+@composition(acetate, 2, CO3-2, 3, H, -4, O) 
+@composition(methanogens, 1, CO3-2, 1.0, H, -2.5, O)
+@composition(oxidizers, 1, CO3-2, 1.0, H, -2.5, O)
+@composition(nitrifiers, 1, CO3-2, 1.0, H, -2.5, O)
+@composition(denitrifiers, 1, CO3-2, 1.0, H, -2.5, O)
+//@composition(nitrate, 1, N, -4, H, 3, O)
+//@composition(lactate, 3, C, 5, H, 3, O)
+//@composition(oxygen, 2, O)
+//@composition(biomassa, 1, glucose, 1, H)
+}
+@extra_text_2a()
+
+//********* The entities *******
+
+@entity(Alkalinity, tot, 0 )
+@logKreaction(Alkalinity, -0.0, 1.0, CO3-2)
+@entity(H[+1], tot, 0 )
+@logKreaction(H[+1], 0.0, 1.0, H)
+@species(H+, 1)
+@logKreaction(H+, 0.0, 1.0, H[+1])
+@entity(O[-2], tot, 0 )
+@logKreaction(O[-2], 0.0, 1.0, O)
+@entity(H2O, liter, 55.6 )
+@logKreaction(H2O, 0.0, 1.0, O[-2])
+@entity(O[+0], tot, 0 )
+@logKreaction(O[+0], -0.0, 1.0, O2)
+@entity(e-, diss, 0 )
+@logKreaction(e-, "0.25* (((38.0229 + 0.00799407 * @T() + -27655.0 / @T() + -14.506 * log10(@T()) + 199838.45 / (@T() * @T()))))", -1.0, H+, 0.5, O, -0.25, O[+0])
+@gas(CH4[g])
+@logKreaction(CH4[g], "-1 * (( (1.0 / log(10)) * ((-41.0452 * log(10)) - (257132.99999999997 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 10.0, H+, -3.0, H2O, 8.0, e-)
+@gas(CO2[g])
+@logKreaction(CO2[g], "-1 * (( (1.0 / log(10)) * ((-18.147 * log(10)) - (4059.9999999999995 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+, -1.0, H2O)
+@entity(C[+4], tot, 0 )
+@logKreaction(C[+4], -0.0, 1.0, CO3-2)
+@entity(Ca, tot, 0 )
+@logKreaction(Ca, -0.0, 1.0, Ca+2)
+@species(CaCO3, 0, 0, 0)
+@logKreaction(CaCO3, "(( (1.0 / log(10)) * ((3.2 * log(10)) - (16000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@species(CaHCO3+, 1, 6, 0)
+@logKreaction(CaHCO3+, "(( (1.0 / log(10)) * ((11.599 * log(10)) - (5400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2, 1.0, H+)
+@species(CaNH3+2, 2, 0, 0)
+@logKreaction(CaNH3+2, "(( (1.0 / log(10)) * ((-9.144 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, NH4+)
+@species(CaNO3+, 1, 0, 0)
+@logKreaction(CaNO3+, "(( (1.0 / log(10)) * ((0.5 * log(10)) - (-5400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, NO3-)
+@species(CaOH+, 1, 6, 0)
+@logKreaction(CaOH+, "(( (1.0 / log(10)) * ((-12.697 * log(10)) - (64110.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
+@species(CaSO4, 0, 0, 0)
+@logKreaction(CaSO4, "(( (1.0 / log(10)) * ((2.36 * log(10)) - (7100.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
+@species(Ca[NH3]2+2, 2, 0, 0)
+@logKreaction(Ca[NH3]2+2, "(( (1.0 / log(10)) * ((-18.788 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -2.0, H+, 2.0, NH4+)
+@entity(E, tot, 0 )
+@logKreaction(E, 0.0, 1.0, e-)
+@entity(H[+0], tot, 0 )
+@logKreaction(H[+0], "(( (1.0 / log(10)) * ((-3.15 * log(10)) - (-7359.656 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, H, 2.0, e-)
+@species(H2, 0)
+@logKreaction(H2, 0.0, 1.0, H[+0])
+@species(H2CO3, 0, 0, 0)
+@logKreaction(H2CO3, "(( (1.0 / log(10)) * ((16.681 * log(10)) - (-23760.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+)
+@species(HCO3-, -1, 5.4, 0)
+@logKreaction(HCO3-, "(( (1.0 / log(10)) * ((10.329 * log(10)) - (-14600.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, H+)
+@species(HSO4-, -1, 4.5, 0)
+@logKreaction(HSO4-, "(( (1.0 / log(10)) * ((1.99 * log(10)) - (22000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H+, 1.0, SO4-2)
+@species(NH3, 0, 0, 0)
+@logKreaction(NH3, "(( (1.0 / log(10)) * ((-9.244 * log(10)) - (52000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, NH4+)
+@species(NH4SO4-, -1, 5, 0)
+@logKreaction(NH4SO4-, "(( (1.0 / log(10)) * ((1.03 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, NH4+, 1.0, SO4-2)
+@entity(NH4_ads, adsorbed, 1 )
+@logKreaction(NH4_ads, -4, "0.8, 1.0" , NH4+)
+@gas(O2[g])
+@logKreaction(O2[g], "-1 * (( (1.0 / log(10)) * ((83.0894 * log(10)) - (-571660.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -4.0, H+, 2.0, H2O, -4.0, e-)
+@species(OH-, -1, 3.5, 0)
+@logKreaction(OH-, "(( (1.0 / log(10)) * ((-13.997 * log(10)) - (55810.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2O)
+//********* Extra text 3 **************
+@class: extra_text_3(){
+In mijn systeem houd ik de kinetiek buiten ORCHESTRA, dit doe ik in Python. 
+Nu is er een reactie binnen mijn systeem: CO2 + 4H2 -> CH4 + 2H2O. 
+kan ik deze reactie op eenzelfde manier toevoegen als met de andere stoffen (glucose, TOC, etc.)? dus een entity CH4 aanmaken en dan de CH4.con opgeven waarna ik een logKreactie kan definieer. als ik dus CH4.con opgeef weet ORCHESTRA precies hoeveel CO2 en H2 is verbruikt. Het is voor mij alleen minder intuitief omdat CH4 al een bestaande entity is. Wellicht zit ik er helemaal naast en heb jij een betere manier! 
+}
+@extra_text_3()
+//********* End of extra text 3 *******
+
+//********* Extra text 4 **************
+@class: extra_text_4(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_4()
+//********* End of extra text 4 *******
+
+//********* End of Adsorption Models *******
+//********* Extra text 5 **************
+@class: extra_text_5(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_5()
+//********* End of extra text 5 *******
+
+//********* add @userfriendlyformat: to get output of reactions in user friendly format *******
+@class: PHREEQCOutput(){
+----------------------------Description of solution--------------------------------------------------
+                            Cellnumber = @Node_ID()
+                                    pH = @pH()
+                                    pe = @pe()
+                    Activity of water  = @evaluate:("10^@H2O.logact()")
+                       Ionic strength  = @I()
+           Total number of iterations  = @tot_nr_iter()
+
+----------------------------Distribution of aqueous species---------------------------------------------
+
+     Species            concentration (Mol/l)        Log Activity              Activity             log gamma   
+ CO3-2               @CO3-2.diss()      
+     CO3-2                @CO3-2.con()  @CO3-2.logact()@evaluate:("10^@CO3-2.logact()")    @evaluate:("-@CO3-2.logf()")
+     CaCO3                @CaCO3.con()  @CaCO3.logact()@evaluate:("10^@CaCO3.logact()")    @evaluate:("-@CaCO3.logf()") 
+     CaHCO3+              @CaHCO3+.con()  @CaHCO3+.logact()@evaluate:("10^@CaHCO3+.logact()")    @evaluate:("-@CaHCO3+.logf()") 
+     H2CO3                @H2CO3.con()  @H2CO3.logact()@evaluate:("10^@H2CO3.logact()")    @evaluate:("-@H2CO3.logf()") 
+     HCO3-                @HCO3-.con()  @HCO3-.logact()@evaluate:("10^@HCO3-.logact()")    @evaluate:("-@HCO3-.logf()") 
+ Ca+2                @Ca+2.diss()       
+     Ca+2                 @Ca+2.con()  @Ca+2.logact()@evaluate:("10^@Ca+2.logact()")    @evaluate:("-@Ca+2.logf()")
+     CaCO3                @CaCO3.con()  @CaCO3.logact()@evaluate:("10^@CaCO3.logact()")    @evaluate:("-@CaCO3.logf()") 
+     CaHCO3+              @CaHCO3+.con()  @CaHCO3+.logact()@evaluate:("10^@CaHCO3+.logact()")    @evaluate:("-@CaHCO3+.logf()") 
+     CaNH3+2              @CaNH3+2.con()  @CaNH3+2.logact()@evaluate:("10^@CaNH3+2.logact()")    @evaluate:("-@CaNH3+2.logf()") 
+     CaNO3+               @CaNO3+.con()  @CaNO3+.logact()@evaluate:("10^@CaNO3+.logact()")    @evaluate:("-@CaNO3+.logf()") 
+     CaOH+                @CaOH+.con()  @CaOH+.logact()@evaluate:("10^@CaOH+.logact()")    @evaluate:("-@CaOH+.logf()") 
+     CaSO4                @CaSO4.con()  @CaSO4.logact()@evaluate:("10^@CaSO4.logact()")    @evaluate:("-@CaSO4.logf()") 
+     Ca[NH3]2+2           @Ca[NH3]2+2.con()  @Ca[NH3]2+2.logact()@evaluate:("10^@Ca[NH3]2+2.logact()")    @evaluate:("-@Ca[NH3]2+2.logf()") 
+ H                   @H.diss()          
+     CaHCO3+              @CaHCO3+.con()  @CaHCO3+.logact()@evaluate:("10^@CaHCO3+.logact()")    @evaluate:("-@CaHCO3+.logf()") 
+     CaNH3+2              @CaNH3+2.con()  @CaNH3+2.logact()@evaluate:("10^@CaNH3+2.logact()")    @evaluate:("-@CaNH3+2.logf()") 
+     CaOH+                @CaOH+.con()  @CaOH+.logact()@evaluate:("10^@CaOH+.logact()")    @evaluate:("-@CaOH+.logf()") 
+     Ca[NH3]2+2           @Ca[NH3]2+2.con()  @Ca[NH3]2+2.logact()@evaluate:("10^@Ca[NH3]2+2.logact()")    @evaluate:("-@Ca[NH3]2+2.logf()") 
+     H+                   @H+.con()  @H+.logact()@evaluate:("10^@H+.logact()")    @evaluate:("-@H+.logf()") 
+     H2CO3                @H2CO3.con()  @H2CO3.logact()@evaluate:("10^@H2CO3.logact()")    @evaluate:("-@H2CO3.logf()") 
+     HCO3-                @HCO3-.con()  @HCO3-.logact()@evaluate:("10^@HCO3-.logact()")    @evaluate:("-@HCO3-.logf()") 
+     HSO4-                @HSO4-.con()  @HSO4-.logact()@evaluate:("10^@HSO4-.logact()")    @evaluate:("-@HSO4-.logf()") 
+     NH3                  @NH3.con()  @NH3.logact()@evaluate:("10^@NH3.logact()")    @evaluate:("-@NH3.logf()") 
+     OH-                  @OH-.con()  @OH-.logact()@evaluate:("10^@OH-.logact()")    @evaluate:("-@OH-.logf()") 
+     e-                   @e-.con()  @e-.logact()@evaluate:("10^@e-.logact()")    @evaluate:("-@e-.logf()") 
+ N2                  @N2.diss()         
+ NH4+                @NH4+.diss()       
+     NH4+                 @NH4+.con()  @NH4+.logact()@evaluate:("10^@NH4+.logact()")    @evaluate:("-@NH4+.logf()")
+     CaNH3+2              @CaNH3+2.con()  @CaNH3+2.logact()@evaluate:("10^@CaNH3+2.logact()")    @evaluate:("-@CaNH3+2.logf()") 
+     Ca[NH3]2+2           @Ca[NH3]2+2.con()  @Ca[NH3]2+2.logact()@evaluate:("10^@Ca[NH3]2+2.logact()")    @evaluate:("-@Ca[NH3]2+2.logf()") 
+     NH3                  @NH3.con()  @NH3.logact()@evaluate:("10^@NH3.logact()")    @evaluate:("-@NH3.logf()") 
+     NH4SO4-              @NH4SO4-.con()  @NH4SO4-.logact()@evaluate:("10^@NH4SO4-.logact()")    @evaluate:("-@NH4SO4-.logf()") 
+ NO3-                @NO3-.diss()       
+     NO3-                 @NO3-.con()  @NO3-.logact()@evaluate:("10^@NO3-.logact()")    @evaluate:("-@NO3-.logf()")
+     CaNO3+               @CaNO3+.con()  @CaNO3+.logact()@evaluate:("10^@CaNO3+.logact()")    @evaluate:("-@CaNO3+.logf()") 
+ O                   @O.diss()          
+     CaOH+                @CaOH+.con()  @CaOH+.logact()@evaluate:("10^@CaOH+.logact()")    @evaluate:("-@CaOH+.logf()") 
+     H2                   @H2.con()  @H2.logact()@evaluate:("10^@H2.logact()")    @evaluate:("-@H2.logf()") 
+     OH-                  @OH-.con()  @OH-.logact()@evaluate:("10^@OH-.logact()")    @evaluate:("-@OH-.logf()") 
+     e-                   @e-.con()  @e-.logact()@evaluate:("10^@e-.logact()")    @evaluate:("-@e-.logf()") 
+ O2                  @O2.diss()         
+     O2                   @O2.con()  @O2.logact()@evaluate:("10^@O2.logact()")    @evaluate:("-@O2.logf()")
+     H2                   @H2.con()  @H2.logact()@evaluate:("10^@H2.logact()")    @evaluate:("-@H2.logf()") 
+     e-                   @e-.con()  @e-.logact()@evaluate:("10^@e-.logact()")    @evaluate:("-@e-.logf()") 
+ SO4-2               @SO4-2.diss()      
+     SO4-2                @SO4-2.con()  @SO4-2.logact()@evaluate:("10^@SO4-2.logact()")    @evaluate:("-@SO4-2.logf()")
+     CaSO4                @CaSO4.con()  @CaSO4.logact()@evaluate:("10^@CaSO4.logact()")    @evaluate:("-@CaSO4.logf()") 
+     HSO4-                @HSO4-.con()  @HSO4-.logact()@evaluate:("10^@HSO4-.logact()")    @evaluate:("-@HSO4-.logf()") 
+     NH4SO4-              @NH4SO4-.con()  @NH4SO4-.logact()@evaluate:("10^@NH4SO4-.logact()")    @evaluate:("-@NH4SO4-.logf()") 
+ acetate             @acetate.diss()    
+ denitrifiers        @denitrifiers.diss(
+ methanogens         @methanogens.diss()
+ nitrifiers          @nitrifiers.diss() 
+ oxidizers           @oxidizers.diss()  
+ waste               @waste.diss()      
+
+----------------------------Description  of mineral phases --------------------------------------------------
+     Mineral           concentration (Mol/l)           SI  
+ CO3-2               @CO3-2.min()            
+ Ca+2                @Ca+2.min()             
+ H                   @H.min()                
+ N2                  @N2.min()               
+ NH4+                @NH4+.min()             
+ NO3-                @NO3-.min()             
+ O                   @O.min()                
+ O2                  @O2.min()               
+ SO4-2               @SO4-2.min()            
+ acetate             @acetate.min()          
+ denitrifiers        @denitrifiers.min()     
+ methanogens         @methanogens.min()      
+ nitrifiers          @nitrifiers.min()       
+ oxidizers           @oxidizers.min()        
+ waste               @waste.min()            
+
+---------------------------- Description of CLAY_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.CLAY_part()      
+ Ca+2                     @Ca+2.CLAY_part()       
+ H                        @H.CLAY_part()          
+ N2                       @N2.CLAY_part()         
+ NH4+                     @NH4+.CLAY_part()       
+ NO3-                     @NO3-.CLAY_part()       
+ O                        @O.CLAY_part()          
+ O2                       @O2.CLAY_part()         
+ SO4-2                    @SO4-2.CLAY_part()      
+ acetate                  @acetate.CLAY_part()    
+ denitrifiers             @denitrifiers.CLAY_part(
+ methanogens              @methanogens.CLAY_part()
+ nitrifiers               @nitrifiers.CLAY_part() 
+ oxidizers                @oxidizers.CLAY_part()  
+ waste                    @waste.CLAY_part()      
+
+---------------------------- Description of CLAY_part_l phase --------------------------------------------------
+ CO3-2                    @CO3-2.CLAY_part_l()    
+ Ca+2                     @Ca+2.CLAY_part_l()     
+ H                        @H.CLAY_part_l()        
+ N2                       @N2.CLAY_part_l()       
+ NH4+                     @NH4+.CLAY_part_l()     
+ NO3-                     @NO3-.CLAY_part_l()     
+ O                        @O.CLAY_part_l()        
+ O2                       @O2.CLAY_part_l()       
+ SO4-2                    @SO4-2.CLAY_part_l()    
+ acetate                  @acetate.CLAY_part_l()  
+ denitrifiers             @denitrifiers.CLAY_part_
+ methanogens              @methanogens.CLAY_part_l
+ nitrifiers               @nitrifiers.CLAY_part_l(
+ oxidizers                @oxidizers.CLAY_part_l()
+ waste                    @waste.CLAY_part_l()    
+
+---------------------------- Description of DFA_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.DFA_part()       
+ Ca+2                     @Ca+2.DFA_part()        
+ H                        @H.DFA_part()           
+ N2                       @N2.DFA_part()          
+ NH4+                     @NH4+.DFA_part()        
+ NO3-                     @NO3-.DFA_part()        
+ O                        @O.DFA_part()           
+ O2                       @O2.DFA_part()          
+ SO4-2                    @SO4-2.DFA_part()       
+ acetate                  @acetate.DFA_part()     
+ denitrifiers             @denitrifiers.DFA_part()
+ methanogens              @methanogens.DFA_part() 
+ nitrifiers               @nitrifiers.DFA_part()  
+ oxidizers                @oxidizers.DFA_part()   
+ waste                    @waste.DFA_part()       
+
+---------------------------- Description of DHA_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.DHA_part()       
+ Ca+2                     @Ca+2.DHA_part()        
+ H                        @H.DHA_part()           
+ N2                       @N2.DHA_part()          
+ NH4+                     @NH4+.DHA_part()        
+ NO3-                     @NO3-.DHA_part()        
+ O                        @O.DHA_part()           
+ O2                       @O2.DHA_part()          
+ SO4-2                    @SO4-2.DHA_part()       
+ acetate                  @acetate.DHA_part()     
+ denitrifiers             @denitrifiers.DHA_part()
+ methanogens              @methanogens.DHA_part() 
+ nitrifiers               @nitrifiers.DHA_part()  
+ oxidizers                @oxidizers.DHA_part()   
+ waste                    @waste.DHA_part()       
+
+---------------------------- Description of FA_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.FA_part()        
+ Ca+2                     @Ca+2.FA_part()         
+ H                        @H.FA_part()            
+ N2                       @N2.FA_part()           
+ NH4+                     @NH4+.FA_part()         
+ NO3-                     @NO3-.FA_part()         
+ O                        @O.FA_part()            
+ O2                       @O2.FA_part()           
+ SO4-2                    @SO4-2.FA_part()        
+ acetate                  @acetate.FA_part()      
+ denitrifiers             @denitrifiers.FA_part() 
+ methanogens              @methanogens.FA_part()  
+ nitrifiers               @nitrifiers.FA_part()   
+ oxidizers                @oxidizers.FA_part()    
+ waste                    @waste.FA_part()        
+
+---------------------------- Description of Goethite_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.Goethite_part()  
+ Ca+2                     @Ca+2.Goethite_part()   
+ H                        @H.Goethite_part()      
+ N2                       @N2.Goethite_part()     
+ NH4+                     @NH4+.Goethite_part()   
+ NO3-                     @NO3-.Goethite_part()   
+ O                        @O.Goethite_part()      
+ O2                       @O2.Goethite_part()     
+ SO4-2                    @SO4-2.Goethite_part()  
+ acetate                  @acetate.Goethite_part()
+ denitrifiers             @denitrifiers.Goethite_p
+ methanogens              @methanogens.Goethite_pa
+ nitrifiers               @nitrifiers.Goethite_par
+ oxidizers                @oxidizers.Goethite_part
+ waste                    @waste.Goethite_part()  
+
+---------------------------- Description of Goethite_part_l phase --------------------------------------------------
+ CO3-2                    @CO3-2.Goethite_part_l()
+ Ca+2                     @Ca+2.Goethite_part_l() 
+ H                        @H.Goethite_part_l()    
+ N2                       @N2.Goethite_part_l()   
+ NH4+                     @NH4+.Goethite_part_l() 
+ NO3-                     @NO3-.Goethite_part_l() 
+ O                        @O.Goethite_part_l()    
+ O2                       @O2.Goethite_part_l()   
+ SO4-2                    @SO4-2.Goethite_part_l()
+ acetate                  @acetate.Goethite_part_l
+ denitrifiers             @denitrifiers.Goethite_p
+ methanogens              @methanogens.Goethite_pa
+ nitrifiers               @nitrifiers.Goethite_par
+ oxidizers                @oxidizers.Goethite_part
+ waste                    @waste.Goethite_part_l()
+
+---------------------------- Description of HA_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.HA_part()        
+ Ca+2                     @Ca+2.HA_part()         
+ H                        @H.HA_part()            
+ N2                       @N2.HA_part()           
+ NH4+                     @NH4+.HA_part()         
+ NO3-                     @NO3-.HA_part()         
+ O                        @O.HA_part()            
+ O2                       @O2.HA_part()           
+ SO4-2                    @SO4-2.HA_part()        
+ acetate                  @acetate.HA_part()      
+ denitrifiers             @denitrifiers.HA_part() 
+ methanogens              @methanogens.HA_part()  
+ nitrifiers               @nitrifiers.HA_part()   
+ oxidizers                @oxidizers.HA_part()    
+ waste                    @waste.HA_part()        
+
+---------------------------- Description of HFO_part phase --------------------------------------------------
+ CO3-2                    @CO3-2.HFO_part()       
+ Ca+2                     @Ca+2.HFO_part()        
+ H                        @H.HFO_part()           
+ N2                       @N2.HFO_part()          
+ NH4+                     @NH4+.HFO_part()        
+ NO3-                     @NO3-.HFO_part()        
+ O                        @O.HFO_part()           
+ O2                       @O2.HFO_part()          
+ SO4-2                    @SO4-2.HFO_part()       
+ acetate                  @acetate.HFO_part()     
+ denitrifiers             @denitrifiers.HFO_part()
+ methanogens              @methanogens.HFO_part() 
+ nitrifiers               @nitrifiers.HFO_part()  
+ oxidizers                @oxidizers.HFO_part()   
+ waste                    @waste.HFO_part()       
+
+---------------------------- Description of HFO_part_l phase --------------------------------------------------
+ CO3-2                    @CO3-2.HFO_part_l()     
+ Ca+2                     @Ca+2.HFO_part_l()      
+ H                        @H.HFO_part_l()         
+ N2                       @N2.HFO_part_l()        
+ NH4+                     @NH4+.HFO_part_l()      
+ NO3-                     @NO3-.HFO_part_l()      
+ O                        @O.HFO_part_l()         
+ O2                       @O2.HFO_part_l()        
+ SO4-2                    @SO4-2.HFO_part_l()     
+ acetate                  @acetate.HFO_part_l()   
+ denitrifiers             @denitrifiers.HFO_part_l
+ methanogens              @methanogens.HFO_part_l(
+ nitrifiers               @nitrifiers.HFO_part_l()
+ oxidizers                @oxidizers.HFO_part_l() 
+ waste                    @waste.HFO_part_l()     
+
+---------------------------- Description of SFA_part_l phase --------------------------------------------------
+ CO3-2                    @CO3-2.SFA_part_l()     
+ Ca+2                     @Ca+2.SFA_part_l()      
+ H                        @H.SFA_part_l()         
+ N2                       @N2.SFA_part_l()        
+ NH4+                     @NH4+.SFA_part_l()      
+ NO3-                     @NO3-.SFA_part_l()      
+ O                        @O.SFA_part_l()         
+ O2                       @O2.SFA_part_l()        
+ SO4-2                    @SO4-2.SFA_part_l()     
+ acetate                  @acetate.SFA_part_l()   
+ denitrifiers             @denitrifiers.SFA_part_l
+ methanogens              @methanogens.SFA_part_l(
+ nitrifiers               @nitrifiers.SFA_part_l()
+ oxidizers                @oxidizers.SFA_part_l() 
+ waste                    @waste.SFA_part_l()     
+
+---------------------------- Description of SHA_part_l phase --------------------------------------------------
+ CO3-2                    @CO3-2.SHA_part_l()     
+ Ca+2                     @Ca+2.SHA_part_l()      
+ H                        @H.SHA_part_l()         
+ N2                       @N2.SHA_part_l()        
+ NH4+                     @NH4+.SHA_part_l()      
+ NO3-                     @NO3-.SHA_part_l()      
+ O                        @O.SHA_part_l()         
+ O2                       @O2.SHA_part_l()        
+ SO4-2                    @SO4-2.SHA_part_l()     
+ acetate                  @acetate.SHA_part_l()   
+ denitrifiers             @denitrifiers.SHA_part_l
+ methanogens              @methanogens.SHA_part_l(
+ nitrifiers               @nitrifiers.SHA_part_l()
+ oxidizers                @oxidizers.SHA_part_l() 
+ waste                    @waste.SHA_part_l()     
+
+---------------------------- Description of ads phase --------------------------------------------------
+ CO3-2                    @CO3-2.ads()            
+ Ca+2                     @Ca+2.ads()             
+ H                        @H.ads()                
+ N2                       @N2.ads()               
+ NH4+                     @NH4+.ads()             
+ NO3-                     @NO3-.ads()             
+ O                        @O.ads()                
+ O2                       @O2.ads()               
+ SO4-2                    @SO4-2.ads()            
+ acetate                  @acetate.ads()          
+ denitrifiers             @denitrifiers.ads()     
+ methanogens              @methanogens.ads()      
+ nitrifiers               @nitrifiers.ads()       
+ oxidizers                @oxidizers.ads()        
+ waste                    @waste.ads()            
+
+---------------------------- Description of adsorbed phase --------------------------------------------------
+ CO3-2                    @CO3-2.adsorbed()       
+ Ca+2                     @Ca+2.adsorbed()        
+ H                        @H.adsorbed()           
+ N2                       @N2.adsorbed()          
+ NH4+                     @NH4+.adsorbed()        
+     NH4_ads                   @NH4_ads.con()  @NH4_ads.logact()@evaluate:("10^@NH4_ads.logact()") 
+ NO3-                     @NO3-.adsorbed()        
+ O                        @O.adsorbed()           
+ O2                       @O2.adsorbed()          
+ SO4-2                    @SO4-2.adsorbed()       
+ acetate                  @acetate.adsorbed()     
+ denitrifiers             @denitrifiers.adsorbed()
+ methanogens              @methanogens.adsorbed() 
+ nitrifiers               @nitrifiers.adsorbed()  
+ oxidizers                @oxidizers.adsorbed()   
+ waste                    @waste.adsorbed()       
+
+---------------------------- Description of colloid phase --------------------------------------------------
+ CO3-2                    @CO3-2.colloid()        
+ Ca+2                     @Ca+2.colloid()         
+ H                        @H.colloid()            
+ N2                       @N2.colloid()           
+ NH4+                     @NH4+.colloid()         
+ NO3-                     @NO3-.colloid()         
+ O                        @O.colloid()            
+ O2                       @O2.colloid()           
+ SO4-2                    @SO4-2.colloid()        
+ acetate                  @acetate.colloid()      
+ denitrifiers             @denitrifiers.colloid() 
+ methanogens              @methanogens.colloid()  
+ nitrifiers               @nitrifiers.colloid()   
+ oxidizers                @oxidizers.colloid()    
+ waste                    @waste.colloid()        
+
+---------------------------- Description of gas phase --------------------------------------------------
+ CO3-2                    @CO3-2.gas()            
+     CH4[g]                    @CH4[g].con()  @CH4[g].logact()@evaluate:("10^@CH4[g].logact()") 
+     CO2[g]                    @CO2[g].con()  @CO2[g].logact()@evaluate:("10^@CO2[g].logact()") 
+ Ca+2                     @Ca+2.gas()             
+ H                        @H.gas()                
+     CH4[g]                    @CH4[g].con()  @CH4[g].logact()@evaluate:("10^@CH4[g].logact()") 
+     CO2[g]                    @CO2[g].con()  @CO2[g].logact()@evaluate:("10^@CO2[g].logact()") 
+ N2                       @N2.gas()               
+ NH4+                     @NH4+.gas()             
+ NO3-                     @NO3-.gas()             
+ O                        @O.gas()                
+     CH4[g]                    @CH4[g].con()  @CH4[g].logact()@evaluate:("10^@CH4[g].logact()") 
+     CO2[g]                    @CO2[g].con()  @CO2[g].logact()@evaluate:("10^@CO2[g].logact()") 
+ O2                       @O2.gas()               
+     CH4[g]                    @CH4[g].con()  @CH4[g].logact()@evaluate:("10^@CH4[g].logact()") 
+     O2[g]                     @O2[g].con()  @O2[g].logact()@evaluate:("10^@O2[g].logact()") 
+ SO4-2                    @SO4-2.gas()            
+ acetate                  @acetate.gas()          
+ denitrifiers             @denitrifiers.gas()     
+ methanogens              @methanogens.gas()      
+ nitrifiers               @nitrifiers.gas()       
+ oxidizers                @oxidizers.gas()        
+ waste                    @waste.gas()            
+
+---------------------------- Description of liter phase --------------------------------------------------
+ CO3-2                    @CO3-2.liter()          
+ Ca+2                     @Ca+2.liter()           
+ H                        @H.liter()              
+ N2                       @N2.liter()             
+ NH4+                     @NH4+.liter()           
+ NO3-                     @NO3-.liter()           
+ O                        @O.liter()              
+     H2O                       @H2O.con()  @H2O.logact()@evaluate:("10^@H2O.logact()") 
+ O2                       @O2.liter()             
+ SO4-2                    @SO4-2.liter()          
+ acetate                  @acetate.liter()        
+ denitrifiers             @denitrifiers.liter()   
+ methanogens              @methanogens.liter()    
+ nitrifiers               @nitrifiers.liter()     
+ oxidizers                @oxidizers.liter()      
+ waste                    @waste.liter()          
+
+---------------------------- Description of part phase --------------------------------------------------
+ CO3-2                    @CO3-2.part()           
+ Ca+2                     @Ca+2.part()            
+ H                        @H.part()               
+ N2                       @N2.part()              
+ NH4+                     @NH4+.part()            
+ NO3-                     @NO3-.part()            
+ O                        @O.part()               
+ O2                       @O2.part()              
+ SO4-2                    @SO4-2.part()           
+ acetate                  @acetate.part()         
+ denitrifiers             @denitrifiers.part()    
+ methanogens              @methanogens.part()     
+ nitrifiers               @nitrifiers.part()      
+ oxidizers                @oxidizers.part()       
+ waste                    @waste.part()           
+
+---------------------------- Description of solid phase --------------------------------------------------
+ CO3-2                    @CO3-2.solid()          
+ Ca+2                     @Ca+2.solid()           
+ H                        @H.solid()              
+ N2                       @N2.solid()             
+ NH4+                     @NH4+.solid()           
+ NO3-                     @NO3-.solid()           
+ O                        @O.solid()              
+ O2                       @O2.solid()             
+ SO4-2                    @SO4-2.solid()          
+ acetate                  @acetate.solid()        
+ denitrifiers             @denitrifiers.solid()   
+ methanogens              @methanogens.solid()    
+ nitrifiers               @nitrifiers.solid()     
+ oxidizers                @oxidizers.solid()      
+ waste                    @waste.solid()          
+
+---------------------------- Description of solution phase --------------------------------------------------
+ CO3-2                    @CO3-2.solution()       
+ Ca+2                     @Ca+2.solution()        
+ H                        @H.solution()           
+ N2                       @N2.solution()          
+ NH4+                     @NH4+.solution()        
+ NO3-                     @NO3-.solution()        
+ O                        @O.solution()           
+ O2                       @O2.solution()          
+ SO4-2                    @SO4-2.solution()       
+ acetate                  @acetate.solution()     
+ denitrifiers             @denitrifiers.solution()
+ methanogens              @methanogens.solution() 
+ nitrifiers               @nitrifiers.solution()  
+ oxidizers                @oxidizers.solution()   
+ waste                    @waste.solution()       
+
+---------------------------- Description of temporary phase --------------------------------------------------
+ CO3-2                    @CO3-2.temporary()      
+ Ca+2                     @Ca+2.temporary()       
+ H                        @H.temporary()          
+ N2                       @N2.temporary()         
+ NH4+                     @NH4+.temporary()       
+ NO3-                     @NO3-.temporary()       
+ O                        @O.temporary()          
+ O2                       @O2.temporary()         
+ SO4-2                    @SO4-2.temporary()      
+ acetate                  @acetate.temporary()    
+ denitrifiers             @denitrifiers.temporary(
+ methanogens              @methanogens.temporary()
+ nitrifiers               @nitrifiers.temporary() 
+ oxidizers                @oxidizers.temporary()  
+ waste                    @waste.temporary()      
+
+---------------------------- Description of tot phase --------------------------------------------------
+ CO3-2                    @CO3-2.tot()            
+     Alkalinity                @Alkalinity.con()  @Alkalinity.logact()@evaluate:("10^@Alkalinity.logact()") 
+     C[+4]                     @C[+4].con()  @C[+4].logact()@evaluate:("10^@C[+4].logact()") 
+ Ca+2                     @Ca+2.tot()             
+     Ca                        @Ca.con()  @Ca.logact()@evaluate:("10^@Ca.logact()") 
+ H                        @H.tot()                
+     E                         @E.con()  @E.logact()@evaluate:("10^@E.logact()") 
+     H[+1]                     @H[+1].con()  @H[+1].logact()@evaluate:("10^@H[+1].logact()") 
+ N2                       @N2.tot()               
+ NH4+                     @NH4+.tot()             
+ NO3-                     @NO3-.tot()             
+ O                        @O.tot()                
+     E                         @E.con()  @E.logact()@evaluate:("10^@E.logact()") 
+     H[+0]                     @H[+0].con()  @H[+0].logact()@evaluate:("10^@H[+0].logact()") 
+     O[-2]                     @O[-2].con()  @O[-2].logact()@evaluate:("10^@O[-2].logact()") 
+ O2                       @O2.tot()               
+     E                         @E.con()  @E.logact()@evaluate:("10^@E.logact()") 
+     H[+0]                     @H[+0].con()  @H[+0].logact()@evaluate:("10^@H[+0].logact()") 
+     O[+0]                     @O[+0].con()  @O[+0].logact()@evaluate:("10^@O[+0].logact()") 
+ SO4-2                    @SO4-2.tot()            
+ acetate                  @acetate.tot()          
+ denitrifiers             @denitrifiers.tot()     
+ methanogens              @methanogens.tot()      
+ nitrifiers               @nitrifiers.tot()       
+ oxidizers                @oxidizers.tot()        
+ waste                    @waste.tot()            
+
+---------------------------- Description of wastephase phase --------------------------------------------------
+ CO3-2                    @CO3-2.wastephase()     
+ Ca+2                     @Ca+2.wastephase()      
+ H                        @H.wastephase()         
+ N2                       @N2.wastephase()        
+ NH4+                     @NH4+.wastephase()      
+ NO3-                     @NO3-.wastephase()      
+ O                        @O.wastephase()         
+ O2                       @O2.wastephase()        
+ SO4-2                    @SO4-2.wastephase()     
+ acetate                  @acetate.wastephase()   
+ denitrifiers             @denitrifiers.wastephase
+ methanogens              @methanogens.wastephase(
+ nitrifiers               @nitrifiers.wastephase()
+ oxidizers                @oxidizers.wastephase() 
+ waste                    @waste.wastephase()     
+}
+@class: outputline(){Var: Node_ID pH pe I H2O.logact tot_nr_iter CO3-2.diss CO3-2.con CO3-2.logact CO3-2.logf CaCO3.con CaCO3.logact CaCO3.logf CaHCO3+.con CaHCO3+.logact CaHCO3+.logf H2CO3.con H2CO3.logact H2CO3.logf HCO3-.con HCO3-.logact HCO3-.logf Ca+2.diss Ca+2.con Ca+2.logact Ca+2.logf CaCO3.con CaCO3.logact CaCO3.logf CaHCO3+.con CaHCO3+.logact CaHCO3+.logf CaNH3+2.con CaNH3+2.logact CaNH3+2.logf CaNO3+.con CaNO3+.logact CaNO3+.logf CaOH+.con CaOH+.logact CaOH+.logf CaSO4.con CaSO4.logact CaSO4.logf Ca[NH3]2+2.con Ca[NH3]2+2.logact Ca[NH3]2+2.logf H.diss CaHCO3+.con CaHCO3+.logact CaHCO3+.logf CaNH3+2.con CaNH3+2.logact CaNH3+2.logf CaOH+.con CaOH+.logact CaOH+.logf Ca[NH3]2+2.con Ca[NH3]2+2.logact Ca[NH3]2+2.logf H+.con H+.logact H+.logf H2CO3.con H2CO3.logact H2CO3.logf HCO3-.con HCO3-.logact HCO3-.logf HSO4-.con HSO4-.logact HSO4-.logf NH3.con NH3.logact NH3.logf OH-.con OH-.logact OH-.logf e-.con e-.logact e-.logf N2.diss NH4+.diss NH4+.con NH4+.logact NH4+.logf CaNH3+2.con CaNH3+2.logact CaNH3+2.logf Ca[NH3]2+2.con Ca[NH3]2+2.logact Ca[NH3]2+2.logf NH3.con NH3.logact NH3.logf NH4SO4-.con NH4SO4-.logact NH4SO4-.logf NO3-.diss NO3-.con NO3-.logact NO3-.logf CaNO3+.con CaNO3+.logact CaNO3+.logf O.diss CaOH+.con CaOH+.logact CaOH+.logf H2.con H2.logact H2.logf OH-.con OH-.logact OH-.logf e-.con e-.logact e-.logf O2.diss O2.con O2.logact O2.logf H2.con H2.logact H2.logf e-.con e-.logact e-.logf SO4-2.diss SO4-2.con SO4-2.logact SO4-2.logf CaSO4.con CaSO4.logact CaSO4.logf HSO4-.con HSO4-.logact HSO4-.logf NH4SO4-.con NH4SO4-.logact NH4SO4-.logf acetate.diss denitrifiers.diss methanogens.diss nitrifiers.diss oxidizers.diss waste.diss CO3-2.min Ca+2.min H.min N2.min NH4+.min NO3-.min O.min O2.min SO4-2.min acetate.min denitrifiers.min methanogens.min nitrifiers.min oxidizers.min waste.min CO3-2.CLAY_part Ca+2.CLAY_part H.CLAY_part N2.CLAY_part NH4+.CLAY_part NO3-.CLAY_part O.CLAY_part O2.CLAY_part SO4-2.CLAY_part acetate.CLAY_part denitrifiers.CLAY_part methanogens.CLAY_part nitrifiers.CLAY_part oxidizers.CLAY_part waste.CLAY_part CO3-2.CLAY_part_l Ca+2.CLAY_part_l H.CLAY_part_l N2.CLAY_part_l NH4+.CLAY_part_l NO3-.CLAY_part_l O.CLAY_part_l O2.CLAY_part_l SO4-2.CLAY_part_l acetate.CLAY_part_l denitrifiers.CLAY_part_l methanogens.CLAY_part_l nitrifiers.CLAY_part_l oxidizers.CLAY_part_l waste.CLAY_part_l CO3-2.DFA_part Ca+2.DFA_part H.DFA_part N2.DFA_part NH4+.DFA_part NO3-.DFA_part O.DFA_part O2.DFA_part SO4-2.DFA_part acetate.DFA_part denitrifiers.DFA_part methanogens.DFA_part nitrifiers.DFA_part oxidizers.DFA_part waste.DFA_part CO3-2.DHA_part Ca+2.DHA_part H.DHA_part N2.DHA_part NH4+.DHA_part NO3-.DHA_part O.DHA_part O2.DHA_part SO4-2.DHA_part acetate.DHA_part denitrifiers.DHA_part methanogens.DHA_part nitrifiers.DHA_part oxidizers.DHA_part waste.DHA_part CO3-2.FA_part Ca+2.FA_part H.FA_part N2.FA_part NH4+.FA_part NO3-.FA_part O.FA_part O2.FA_part SO4-2.FA_part acetate.FA_part denitrifiers.FA_part methanogens.FA_part nitrifiers.FA_part oxidizers.FA_part waste.FA_part CO3-2.Goethite_part Ca+2.Goethite_part H.Goethite_part N2.Goethite_part NH4+.Goethite_part NO3-.Goethite_part O.Goethite_part O2.Goethite_part SO4-2.Goethite_part acetate.Goethite_part denitrifiers.Goethite_part methanogens.Goethite_part nitrifiers.Goethite_part oxidizers.Goethite_part waste.Goethite_part CO3-2.Goethite_part_l Ca+2.Goethite_part_l H.Goethite_part_l N2.Goethite_part_l NH4+.Goethite_part_l NO3-.Goethite_part_l O.Goethite_part_l O2.Goethite_part_l SO4-2.Goethite_part_l acetate.Goethite_part_l denitrifiers.Goethite_part_l methanogens.Goethite_part_l nitrifiers.Goethite_part_l oxidizers.Goethite_part_l waste.Goethite_part_l CO3-2.HA_part Ca+2.HA_part H.HA_part N2.HA_part NH4+.HA_part NO3-.HA_part O.HA_part O2.HA_part SO4-2.HA_part acetate.HA_part denitrifiers.HA_part methanogens.HA_part nitrifiers.HA_part oxidizers.HA_part waste.HA_part CO3-2.HFO_part Ca+2.HFO_part H.HFO_part N2.HFO_part NH4+.HFO_part NO3-.HFO_part O.HFO_part O2.HFO_part SO4-2.HFO_part acetate.HFO_part denitrifiers.HFO_part methanogens.HFO_part nitrifiers.HFO_part oxidizers.HFO_part waste.HFO_part CO3-2.HFO_part_l Ca+2.HFO_part_l H.HFO_part_l N2.HFO_part_l NH4+.HFO_part_l NO3-.HFO_part_l O.HFO_part_l O2.HFO_part_l SO4-2.HFO_part_l acetate.HFO_part_l denitrifiers.HFO_part_l methanogens.HFO_part_l nitrifiers.HFO_part_l oxidizers.HFO_part_l waste.HFO_part_l CO3-2.SFA_part_l Ca+2.SFA_part_l H.SFA_part_l N2.SFA_part_l NH4+.SFA_part_l NO3-.SFA_part_l O.SFA_part_l O2.SFA_part_l SO4-2.SFA_part_l acetate.SFA_part_l denitrifiers.SFA_part_l methanogens.SFA_part_l nitrifiers.SFA_part_l oxidizers.SFA_part_l waste.SFA_part_l CO3-2.SHA_part_l Ca+2.SHA_part_l H.SHA_part_l N2.SHA_part_l NH4+.SHA_part_l NO3-.SHA_part_l O.SHA_part_l O2.SHA_part_l SO4-2.SHA_part_l acetate.SHA_part_l denitrifiers.SHA_part_l methanogens.SHA_part_l nitrifiers.SHA_part_l oxidizers.SHA_part_l waste.SHA_part_l CO3-2.ads Ca+2.ads H.ads N2.ads NH4+.ads NO3-.ads O.ads O2.ads SO4-2.ads acetate.ads denitrifiers.ads methanogens.ads nitrifiers.ads oxidizers.ads waste.ads CO3-2.adsorbed Ca+2.adsorbed H.adsorbed N2.adsorbed NH4+.adsorbed NH4_ads.con NH4_ads.logact NO3-.adsorbed O.adsorbed O2.adsorbed SO4-2.adsorbed acetate.adsorbed denitrifiers.adsorbed methanogens.adsorbed nitrifiers.adsorbed oxidizers.adsorbed waste.adsorbed CO3-2.colloid Ca+2.colloid H.colloid N2.colloid NH4+.colloid NO3-.colloid O.colloid O2.colloid SO4-2.colloid acetate.colloid denitrifiers.colloid methanogens.colloid nitrifiers.colloid oxidizers.colloid waste.colloid CO3-2.gas CH4[g].con CH4[g].logact CO2[g].con CO2[g].logact Ca+2.gas H.gas CH4[g].con CH4[g].logact CO2[g].con CO2[g].logact N2.gas NH4+.gas NO3-.gas O.gas CH4[g].con CH4[g].logact CO2[g].con CO2[g].logact O2.gas CH4[g].con CH4[g].logact O2[g].con O2[g].logact SO4-2.gas acetate.gas denitrifiers.gas methanogens.gas nitrifiers.gas oxidizers.gas waste.gas CO3-2.liter Ca+2.liter H.liter N2.liter NH4+.liter NO3-.liter O.liter H2O.con H2O.logact O2.liter SO4-2.liter acetate.liter denitrifiers.liter methanogens.liter nitrifiers.liter oxidizers.liter waste.liter CO3-2.part Ca+2.part H.part N2.part NH4+.part NO3-.part O.part O2.part SO4-2.part acetate.part denitrifiers.part methanogens.part nitrifiers.part oxidizers.part waste.part CO3-2.solid Ca+2.solid H.solid N2.solid NH4+.solid NO3-.solid O.solid O2.solid SO4-2.solid acetate.solid denitrifiers.solid methanogens.solid nitrifiers.solid oxidizers.solid waste.solid CO3-2.solution Ca+2.solution H.solution N2.solution NH4+.solution NO3-.solution O.solution O2.solution SO4-2.solution acetate.solution denitrifiers.solution methanogens.solution nitrifiers.solution oxidizers.solution waste.solution CO3-2.temporary Ca+2.temporary H.temporary N2.temporary NH4+.temporary NO3-.temporary O.temporary O2.temporary SO4-2.temporary acetate.temporary denitrifiers.temporary methanogens.temporary nitrifiers.temporary oxidizers.temporary waste.temporary CO3-2.tot Alkalinity.con Alkalinity.logact C[+4].con C[+4].logact Ca+2.tot Ca.con Ca.logact H.tot E.con E.logact H[+1].con H[+1].logact N2.tot NH4+.tot NO3-.tot O.tot E.con E.logact H[+0].con H[+0].logact O[-2].con O[-2].logact O2.tot E.con E.logact H[+0].con H[+0].logact O[+0].con O[+0].logact SO4-2.tot acetate.tot denitrifiers.tot methanogens.tot nitrifiers.tot oxidizers.tot waste.tot CO3-2.wastephase Ca+2.wastephase H.wastephase N2.wastephase NH4+.wastephase NO3-.wastephase O.wastephase O2.wastephase SO4-2.wastephase acetate.wastephase denitrifiers.wastephase methanogens.wastephase nitrifiers.wastephase oxidizers.wastephase waste.wastephase }

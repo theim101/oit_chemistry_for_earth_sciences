@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This ORCHESTRA concert file defines a model system for performing batch calculations. -->
+
+<Concert>
+
+   <!--  First we define a single cell/node, which reads the input.dat file to see if any specific cell/node variables are defined. -->
+   <!--  In this case we just use the default variables that are defined in input, output and chemistry file.  -->   
+   <Nodes TypeFile="input.dat" NrNodes="1" />
+
+
+   <!--  Now we define a task that reads the input.dat file and put the values given there in cell 0 -->
+   <Task Name="Read node composition" Type="InstreamGroup">
+      <File>input.dat</File>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+
+   <!--  The we define a task that equilibrates cell 0, using the chemical calculator/solver as defined in chemistry.inp -->
+   <Task Name="Equilibrate node" Type="NodeGroup" >
+      <Calculator>chemistry1</Calculator>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+
+   <!--  And finally we define a task that writes the equilibrated output in cell 0 to the file output.dat -->
+   <!--  Note that the actual variables that are written to this file are defined by the column headers in the first line of the file. -->
+   <!--  If no column headers are present, by default all cell variables are written to the file. -->
+   <Task Name="Write output" Type="OutstreamGroup">
+      <File>output.dat</File>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+
+   <!-- Now we create a loop that repeatedly performs the three tasks, and stops when all data records from the input files are read. -->
+   <Task Name="loop" Type="RepeatingTaskGroup">
+     <DoTask Name="Read node composition" />
+     <DoTask Name="Equilibrate node" />
+     <DoTask Name="Write output" />
+   </Task>
+
+
+   <!-- The run task is the main task that is called when the run button is clicked in the GUI, so this is where the calculations start -->
+   <Task Name="Run" Type="TaskGroup">
+     <DoTask Name="loop" />
+   </Task>
+
+</Concert>

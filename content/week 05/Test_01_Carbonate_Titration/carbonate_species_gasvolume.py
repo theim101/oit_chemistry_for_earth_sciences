@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Feb 1 11:50:00 2024
+
+@author: theimovara
+
+Example script for using PyORCHESTRA
+CASE: Ca CO3 speciation in 1 liter of water in equilibrium with 1 liter
+of gas. Background gas is 1 atm Ar with a limited solubility.
+
+Python script iterates over pH range
+
+"""
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+import PyORCHESTRA # here, the ORCHESTRA submodule is imported
+import pandas as pd
+import seaborn as sns
+
+%matplotlib qt5
+sns.set()
+
+p = PyORCHESTRA.ORCHESTRA()
+
+# %%
+InputFile = 'chemistry1.inp'
+NoCells = 1 #only 1 cell to have a 0-D system 
+
+InVars = np.array(['H.tot', 'Ca+2.tot', 'CO3-2.tot', 
+        'Ar[g].logact', 'gasvolume','watervolume'])
+
+OutVars = np.array(['pH', 'H+.con', 'H+.tot' 'CO2[g].logact', 'H2CO3.con', 'HCO3-.con', 'CO3-2.con', 
+            'Ca+2.con', 'CaCO3.con', 'Calcite[s].tot', 'pressure', 'gasvolume'])
+
+p.initialise(InputFile, NoCells, InVars, OutVars)
+
+# %%
+# Initialize and run problem
+IN = np.array([np.ones_like(InVars)]).astype(float)
+
+IN[0][np.where(InVars == 'Ca+2.tot')] = 0.5 # moles
+IN[0][np.where(InVars == 'CO3-2.tot')] = 0.5 # moles
+IN[0][np.where(InVars == 'H.tot')] = 1e-4 # background pressure Ar = 1 atm
+IN[0][np.where(InVars == 'gasvolume')] = 1 # liter
+IN[0][np.where(InVars == 'watervolume')] = 1 # liter
+IN[0][np.where(InVars == 'Ar[g].logact')] = 0 # liter
+
+# run orchestra with default settings
+# OUT = p.set_and_calculate(IN)
+
+# Define range for pH titration
+# because of instablity solution for low pH, run problem from high to low pH
+# this is a trial and error approach
+H_list = np.linspace(1e-4, 1, 100) # range of pH
+gas_vol_list = np.linspace(0.1,1,10)
+#Initialize output
+all_Res = np.zeros([len(gas_vol_list)*len(pH_list),len(OutVars)])
+
+# loop over every pH
+ii = -1
+for gasvolume in gas_vol_list:
+    # change gasvolume in InVars
+    IN[0][np.where(InVars == 'gasvolume')] = gasvolume
+
+    for H in H_list:
+        # change gasvolume in InVars
+        IN[0][np.where(InVars == 'H.tot')] = H
+
+        # run ORCHESTRA
+        OUT = p.set_and_calculate(IN)
+        ii = ii + 1
+        all_Res[ii] = OUT[0]
+
+    # Create a dataframe from all_Res
+Orch_Res = pd.DataFrame(all_Res,columns=OutVars)
+
+    # %%
+    # """ PLOTTING RESULTS """
+
+    # #initialise figure
+#fig, ax = plt.subplots(2,2, figsize=(10,5))
+
+# #plotting...
+# Orch_Res.plot(x='gasvolume',y='H2CO3.con',style='r+-',ax=ax[0,0])
+# Orch_Res.plot(x='gasvolume',y='HCO3-.con',style='g+-',ax=ax[0,0])
+# Orch_Res.plot(x='gasvolume',y='CO3-2.con',style='y+-',ax=ax[0,0])
+# Orch_Res.plot(x='gasvolume',y='CO2[g].logact',style='+-',ax=ax[1,0])
+# Orch_Res.plot(x='gasvolume',y='Ca+2.con',style='r+-',ax=ax[0,1])
+# Orch_Res.plot(x='gasvolume',y='Calcite[s].tot',style='g+-',ax=ax[0,1])
+# Orch_Res.plot(x='gasvolume',y='pressure',style='+-',ax=ax[1,1])
+fig = plt.figure()
+ax = fig.add_subplot(221, projection='3d')
+ax.scatter(Orch_Res['pH'],Orch_Res['gasvolume'],Orch_Res['pressure'])
+ax.set_xlabel('pH')
+ax.set_ylabel('gasvol')
+ax.set_zlabel('pressure')
+
+ax = fig.add_subplot(222, projection='3d')
+ax.scatter(Orch_Res['pH'],Orch_Res['gasvolume'],Orch_Res['HCO3-.con'])
+ax.set_xlabel('pH')
+ax.set_ylabel('gasvol')
+ax.set_zlabel('HCO3-')
+
+ax = fig.add_subplot(223, projection='3d')
+ax.scatter(Orch_Res['pH'],Orch_Res['gasvolume'],Orch_Res['CO3-2.con'])
+ax.set_xlabel('pH')
+ax.set_ylabel('gasvol')
+ax.set_zlabel('CO3-2')
+
+ax = fig.add_subplot(224, projection='3d')
+ax.scatter(Orch_Res['pH'],Orch_Res['gasvolume'],Orch_Res['Calcite[s].tot'])
+ax.set_xlabel('pH')
+ax.set_ylabel('gasvol')
+ax.set_zlabel('Calcite')
+
+# %%

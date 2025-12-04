@@ -1,0 +1,32 @@
+version: 1
+project:
+  title: Template Chemistry in Earth Sciences
+  authors:
+    - name: Timo Heimovaara
+    - name: Your Name
+  copyright: Delft University of Technology, CC BY 4.0
+  exclude:
+    - _build
+    - Thumbs.db
+    - .DS_Store
+    - '**.ipynb_checkpoints'
+  bibliography:
+    - references.bib
+  exports:
+    - format: pdf
+      template: plain_latex_book
+      output: exports/book.pdf
+  toc:
+    - file: intro.md
+    - title: Chemistry for Earth Sciences
+      children:
+        - file: content/week 02/Week_Plan_Chemical_Reactions_in_Water.md
+          children:
+            - file: content/week 02/Chemical_Reactions_in_Water.ipynb
+site:
+  options:
+    logo: content/images/tudelft.png
+    favicon: content/images/favicon.ico
+    analytics_google: ''
+    folders: true
+  template: book-theme
