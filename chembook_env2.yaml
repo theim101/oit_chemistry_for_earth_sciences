@@ -1,0 +1,37 @@
+name: mystmd-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - jupyter-book
+  - mystmd
+  - jupyterlab
+  - ipykernel
+  - ipywidgets
+  - ipython
+  - numpy
+  - pandas
+  - matplotlib
+  - ipympl
+  - seaborn
+  - scipy
+  - sympy
+  - texlive-core
+  - latexmk
+  - tabulate
+  - altair
+  - vega_datasets
+  - jupyter_bokeh
+  - bokeh
+  - jupyterlab-myst
+  - jupyter_server
+  - myst-nb
+  - xarray
+  - plotly
+  - jupyterquiz
+  - sphinx-exercise
+  - sphinx-proof
+  - pydata-sphinx-theme
+
+prefix: /home/theimovaara/miniconda3/envs/mystmd-env
