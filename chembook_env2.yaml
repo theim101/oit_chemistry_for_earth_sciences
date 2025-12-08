@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.12
+  - python=3.13
   - jupyter-book
   - mystmd
   - jupyterlab
@@ -33,5 +33,7 @@ dependencies:
   - sphinx-exercise
   - sphinx-proof
   - pydata-sphinx-theme
+  - jupyterlite-sphinx
+  - jupyterlite-xeus-ptyhon
 
 prefix: /home/theimovaara/miniconda3/envs/mystmd-env

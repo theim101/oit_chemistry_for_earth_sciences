@@ -1,0 +1,139 @@
+
+Pinned packages:
+
+  - python=3.13
+
+
+Transaction
+
+  Prefix: /home/theimovaara/miniconda3/envs/jupyterbook-env
+
+  Updating specs:
+
+   - jupyter-book
+
+
+  Package                               Version  Build              Channel           Size
+────────────────────────────────────────────────────────────────────────────────────────────
+  Install:
+────────────────────────────────────────────────────────────────────────────────────────────
+
+  + _python_abi3_support                    1.0  hd8ed1ab_2         conda-forge     Cached
+  + anyio                                4.12.0  pyhcf101f3_0       conda-forge     Cached
+  + argon2-cffi                          25.1.0  pyhd8ed1ab_0       conda-forge     Cached
+  + argon2-cffi-bindings                 25.1.0  py313h07c4f96_2    conda-forge     Cached
+  + arrow                                 1.4.0  pyhcf101f3_0       conda-forge     Cached
+  + asttokens                             3.0.1  pyhd8ed1ab_0       conda-forge     Cached
+  + attrs                                25.4.0  pyhcf101f3_1       conda-forge       65kB
+  + beautifulsoup4                       4.14.3  pyha770c72_0       conda-forge     Cached
+  + bleach                                6.3.0  pyhcf101f3_0       conda-forge     Cached
+  + bleach-with-css                       6.3.0  h5f6438b_0         conda-forge     Cached
+  + c-ares                               1.34.5  hb9d3cd8_0         conda-forge     Cached
+  + cached-property                       1.5.2  hd8ed1ab_1         conda-forge     Cached
+  + cached_property                       1.5.2  pyha770c72_1       conda-forge     Cached
+  + cffi                                  2.0.0  py313hf46b229_1    conda-forge     Cached
+  + comm                                  0.2.3  pyhe01879c_0       conda-forge     Cached
+  + cpython                             3.13.11  py313hd8ed1ab_100  conda-forge       48kB
+  + debugpy                              1.8.17  py313h5d5ffb9_1    conda-forge        3MB
+  + decorator                             5.2.1  pyhd8ed1ab_0       conda-forge     Cached
+  + defusedxml                            0.7.1  pyhd8ed1ab_0       conda-forge     Cached
+  + exceptiongroup                        1.3.1  pyhd8ed1ab_0       conda-forge     Cached
+  + executing                             2.2.1  pyhd8ed1ab_0       conda-forge     Cached
+  + fqdn                                  1.5.1  pyhd8ed1ab_1       conda-forge     Cached
+  + icu                                    75.1  he02047a_0         conda-forge     Cached
+  + idna                                   3.11  pyhd8ed1ab_0       conda-forge     Cached
+  + importlib-metadata                    8.7.0  pyhe01879c_1       conda-forge     Cached
+  + ipykernel                             7.1.0  pyha191276_0       conda-forge     Cached
+  + ipython                               9.8.0  pyh53cf698_0       conda-forge     Cached
+  + ipython_pygments_lexers               1.1.1  pyhd8ed1ab_0       conda-forge     Cached
+  + isoduration                         20.11.0  pyhd8ed1ab_1       conda-forge     Cached
+  + jedi                                 0.19.2  pyhd8ed1ab_1       conda-forge     Cached
+  + jinja2                                3.1.6  pyhcf101f3_1       conda-forge     Cached
+  + jsonpointer                           3.0.0  pyhcf101f3_3       conda-forge       14kB
+  + jsonschema                           4.25.1  pyhe01879c_0       conda-forge     Cached
+  + jsonschema-specifications          2025.9.1  pyhcf101f3_0       conda-forge     Cached
+  + jsonschema-with-format-nongpl        4.25.1  he01879c_0         conda-forge     Cached
+  + jupyter-book                          2.1.0  pyhcf101f3_0       conda-forge        2MB
+  + jupyter_client                        8.6.3  pyhd8ed1ab_1       conda-forge     Cached
+  + jupyter_core                          5.9.1  pyhc90fa1f_0       conda-forge     Cached
+  + jupyter_events                       0.12.0  pyh29332c3_0       conda-forge     Cached
+  + jupyter_server                       2.17.0  pyhcf101f3_0       conda-forge     Cached
+  + jupyter_server_terminals              0.5.3  pyhd8ed1ab_1       conda-forge     Cached
+  + jupyterlab_pygments                   0.3.0  pyhd8ed1ab_2       conda-forge     Cached
+  + keyutils                              1.6.3  hb9d3cd8_0         conda-forge     Cached
+  + krb5                                 1.21.3  h659f571_0         conda-forge     Cached
+  + lark                                  1.3.1  pyhd8ed1ab_0       conda-forge     Cached
+  + libbrotlicommon                       1.1.0  hb03c661_4         conda-forge     Cached
+  + libbrotlidec                          1.1.0  hb03c661_4         conda-forge     Cached
+  + libbrotlienc                          1.1.0  hb03c661_4         conda-forge     Cached
+  + libedit                        3.1.20250104  pl5321h7949ede_0   conda-forge     Cached
+  + libev                                  4.33  hd590300_2         conda-forge     Cached
+  + libgcc-ng                            15.2.0  h69a702a_15        conda-forge     Cached
+  + libnghttp2                           1.67.0  had1ee68_0         conda-forge     Cached
+  + libsodium                            1.0.20  h4ab18f5_0         conda-forge     Cached
+  + libstdcxx                            15.2.0  h934c35e_15        conda-forge     Cached
+  + libstdcxx-ng                         15.2.0  hdf11a46_15        conda-forge     Cached
+  + libuv                                1.51.0  hb03c661_1         conda-forge     Cached
+  + markupsafe                            3.0.3  py313h3dea7bd_0    conda-forge     Cached
+  + matplotlib-inline                     0.2.1  pyhd8ed1ab_0       conda-forge     Cached
+  + mistune                               3.1.4  pyhcf101f3_0       conda-forge     Cached
+  + nbclient                             0.10.2  pyhd8ed1ab_0       conda-forge     Cached
+  + nbconvert-core                       7.16.6  pyhcf101f3_1       conda-forge     Cached
+  + nbformat                             5.10.4  pyhd8ed1ab_1       conda-forge     Cached
+  + nest-asyncio                          1.6.0  pyhd8ed1ab_1       conda-forge     Cached
+  + nodejs                              24.10.0  h8c692ec_1         conda-forge     Cached
+  + overrides                             7.7.0  pyhd8ed1ab_1       conda-forge     Cached
+  + packaging                              25.0  pyh29332c3_1       conda-forge     Cached
+  + pandocfilters                         1.5.0  pyhd8ed1ab_0       conda-forge     Cached
+  + parso                                 0.8.5  pyhcf101f3_0       conda-forge     Cached
+  + pexpect                               4.9.0  pyhd8ed1ab_1       conda-forge     Cached
+  + platformdirs                          4.5.1  pyhcf101f3_0       conda-forge       24kB
+  + prometheus_client                    0.23.1  pyhd8ed1ab_0       conda-forge     Cached
+  + prompt-toolkit                       3.0.52  pyha770c72_0       conda-forge     Cached
+  + psutil                                7.1.3  py313h54dd161_0    conda-forge     Cached
+  + ptyprocess                            0.7.0  pyhd8ed1ab_1       conda-forge     Cached
+  + pure_eval                             0.2.3  pyhd8ed1ab_1       conda-forge     Cached
+  + pycparser                              2.22  pyh29332c3_1       conda-forge     Cached
+  + pygments                             2.19.2  pyhd8ed1ab_0       conda-forge     Cached
+  + python-dateutil                 2.9.0.post0  pyhe01879c_2       conda-forge     Cached
+  + python-fastjsonschema                2.21.2  pyhe01879c_0       conda-forge     Cached
+  + python-gil                          3.13.11  h4df99d1_100       conda-forge       48kB
+  + python-json-logger                    2.0.7  pyhd8ed1ab_0       conda-forge     Cached
+  + python-tzdata                        2025.2  pyhd8ed1ab_0       conda-forge     Cached
+  + pyyaml                                6.0.3  py313h3dea7bd_0    conda-forge     Cached
+  + pyzmq                                27.1.0  py312hfb55c3c_0    conda-forge     Cached
+  + referencing                          0.37.0  pyhcf101f3_0       conda-forge     Cached
+  + rfc3339-validator                     0.1.4  pyhd8ed1ab_1       conda-forge     Cached
+  + rfc3986-validator                     0.1.1  pyh9f0ad1d_0       conda-forge     Cached
+  + rfc3987-syntax                        1.1.0  pyhe01879c_1       conda-forge     Cached
+  + rpds-py                              0.30.0  py313h843e2db_0    conda-forge     Cached
+  + send2trash                            1.8.3  pyh0d859eb_1       conda-forge     Cached
+  + six                                  1.17.0  pyhe01879c_1       conda-forge     Cached
+  + soupsieve                               2.8  pyhd8ed1ab_0       conda-forge     Cached
+  + stack_data                            0.6.3  pyhd8ed1ab_1       conda-forge     Cached
+  + terminado                            0.18.1  pyh0d859eb_0       conda-forge     Cached
+  + tinycss2                              1.5.1  pyhcf101f3_0       conda-forge     Cached
+  + tornado                               6.5.2  py313h07c4f96_2    conda-forge     Cached
+  + traitlets                            5.14.3  pyhd8ed1ab_1       conda-forge     Cached
+  + typing-extensions                    4.15.0  h396c80c_0         conda-forge     Cached
+  + typing_extensions                    4.15.0  pyhcf101f3_0       conda-forge     Cached
+  + typing_utils                          0.1.0  pyhd8ed1ab_1       conda-forge     Cached
+  + uri-template                          1.3.0  pyhd8ed1ab_1       conda-forge     Cached
+  + wcwidth                              0.2.14  pyhd8ed1ab_0       conda-forge     Cached
+  + webcolors                           25.10.0  pyhd8ed1ab_0       conda-forge     Cached
+  + webencodings                          0.5.1  pyhd8ed1ab_3       conda-forge     Cached
+  + websocket-client                      1.9.0  pyhd8ed1ab_0       conda-forge     Cached
+  + yaml                                  0.2.5  h280c20c_3         conda-forge     Cached
+  + zeromq                                4.3.5  h387f397_9         conda-forge     Cached
+  + zipp                                 3.23.0  pyhcf101f3_1       conda-forge     Cached
+
+  Summary:
+
+  Install: 108 packages
+
+  Total download: 5MB
+
+────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Confirm changes: [Y/n] 
