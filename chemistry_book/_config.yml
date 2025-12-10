@@ -1,6 +1,14 @@
 # Enable Theebe
 launch_buttons:
   thebe: true
+  notebook_interface: "jupyterlab"
+
+thebe_config:
+  use_thebe: true
+  binderhub_url: ""  # leave empty
+  kernel_options:
+    kernelName: "python3"
+    serverSettings:
 
 sphinx:
   config:

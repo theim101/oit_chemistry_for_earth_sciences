@@ -8,6 +8,7 @@ project:
     copyright: Delft University of Technology, CC BY 4.0
     license: CC-BY-4.0
     open_access: true
+    github: theim101/oit_chemistry_for_earth_sciences
     jupyter: true
     exclude:
         - _build
