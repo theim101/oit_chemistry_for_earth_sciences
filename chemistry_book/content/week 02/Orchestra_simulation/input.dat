@@ -2,8 +2,10 @@
 // Here we can give any variable of the chemical system a value
 // In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
 
-Var:	      H.tot     CO3-2.tot 	Ca+2.tot 	Na+.tot	Ar[g].logact	gasvolume	watervolume 
-Default:      1e-7   	0.5       	0.1		0.1	0		1		1   
+Var:	      H.tot     F-.tot 		Ca+2.tot 	Gypsum[s].tot	gasvolume	watervolume 
+Default:      1e-7   	2.89e-4       	2.49e-4		0		1		1   
+Data: 	      1e-7   	2.89e-4       	2.49e-4		0		1		1   
+Data: 	      1e-7   	2.89e-4       	2.49e-4		1		1		1   
 //Data:	      3   	0.1      	0.1     	0		1		1    
 //Data:	      4   	0.1      	0.1     	0		1		1    
 //Data:	      5   	0.1      	0.1     	0		1		1    
@@ -12,8 +14,8 @@ Default:      1e-7   	0.5       	0.1		0.1	0		1		1
 // we want to vary the pH from 2 to 12 in 21 steps
 // click run and then look in output.dat for the results
 
-Sweep: 21
-	Swept: CO3-2.tot 0.0001 0.5 log
+Sweep: 2
+	Swept: Ca+2.tot 0.0001 0.5 lin
 }
 
 

@@ -1,5 +1,3 @@
-execute:
-  execute_notebooks: "auto"
 # Enable Theebe
 launch_buttons:
   thebe: true
@@ -11,8 +9,6 @@ thebe_config:
   kernel_options:
     kernelName: "python3"
     serverSettings:
-        baseUrl: "http://localhost:8888"
-        token: ""
 
 sphinx:
   config:

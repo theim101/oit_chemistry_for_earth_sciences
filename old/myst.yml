@@ -31,7 +31,8 @@ project:
             - file: content/week 02/Week_Plan_Chemical_Reactions_in_Water.md
               children:
                 - file: content/week 02/Chemical_Reactions_in_Water.ipynb
-                - file: content/week 02/Orchestra_simulation/Fluorite-Gypsum-Water.ipynb
+                - file: content/week 02/Others.ipynb
+                - file: content/week 02/Scratch.ipynb
     # title:
     # description:
     # keywords: []
