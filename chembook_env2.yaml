@@ -34,6 +34,6 @@ dependencies:
   - sphinx-proof
   - pydata-sphinx-theme
   - jupyterlite-sphinx
-  - jupyterlite-xeus-ptyhon
+  - jupyterlite-xeus-python
 
 prefix: /home/theimovaara/miniconda3/envs/mystmd-env
