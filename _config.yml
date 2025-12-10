@@ -1,0 +1,10 @@
+# Enable Theebe
+launch_buttons:
+  thebe: true
+
+sphinx:
+  config:
+    html_static_path: ["_static"]
+    html_js_files:
+      - _static/thebe-local-config.html
+      - https://unpkg.com/thebe@latest

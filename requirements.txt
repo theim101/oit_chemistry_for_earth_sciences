@@ -1,0 +1,10 @@
+jupyter-book
+numpy
+scipy
+matplotlib
+plotly==5.24.1
+myst_nb
+jupyterquiz
+sphinx-exercise
+sphinx-proof
+pydata-sphinx-theme

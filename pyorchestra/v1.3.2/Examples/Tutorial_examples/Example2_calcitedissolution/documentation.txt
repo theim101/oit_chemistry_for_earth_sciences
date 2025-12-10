@@ -1,0 +1,69 @@
+ORCHESTRA Example: Simple chemical speciation example
+
+Hans Meeussen
+Updated: Januari  2022
+
+This system example is a kind of 'hello world' example simulation for geochemical modelling with ORCHESTRA!
+It contains  just CO2, water and protons and is set up to calculate the distribution of CO2, HCO3-, CO32- as a function of pH.
+
+
+To run the simulation, you just need a (windows, linux, OSX) computer with a recent Java virtual machine (version 8)
+Just click on the runorchestra.bat file, or directly on the orchestra2022.jar file.
+Alternatively you can start up ORCHESTRA in a command line window in this folder with the command: 
+
+java -cp orchestra2022.jar orchestra2.composer
+
+This starts up the interactive orchestra composer. 
+Clicking the run button will start the calculations.
+After the run has finished, the output is written to the output file.
+
+For convenience all required files are placed in one self-contained folder:
+
+orchestra2022.jar  (The ORCHESTRA program executable)
+objects2022.txt    (The text file with all chemical model definitions (objects)
+adsmodels2022.txt  (Text file with adsorption models and constants)
+
+minteq.v4_2021.txt       (A thermodynamic database, used by the GUI to interactively select reactions) 
+
+composer.inp       (Defines which files are shown in the composer)
+concert.xml        (Defines the model system in terms of cells, input and output files etc.)
+chemistry1.inp     (Defines the chemical substances and reactions taken into account in the simulation)
+input.dat          (Defines input data for the calculations)
+output.dat         (Defines which output variables are used, an contains data for each variable after a run)
+documentation.txt  (This file)
+
+
+The tabs on the right: 
+
+Chemistry
+Here you can define the substances and reactions that are included in the calculations.
+The "Change View" button allows to switch between text and graphical input mode.
+
+Input
+Here you can give values for selected cell variables.
+You can use (nested) sweeps/ loops of variables, but also directly  
+paste tables from a spreadsheet here. 
+Any variable that is used within the chemistry module can be given a value here.
+
+Examples of possible input variables:
+C.tot // total amount of CO2 per liter ( in all forms)
+T     // temperature
+pH    // pH
+
+
+Output 
+After a run the calculated output appears here.
+Note that ORCHESTRA uses the column headers in the output file to determine the output for the next run. 
+So you can change the output by editing the column headers, and re-run the model.
+
+
+Any variable that is used within the chemistry module can used for output.
+
+Examples of output variables:
+HCO3-.con     // concentration  of HCO3- species
+HCO3-.logact  // log activity of HCO3- species
+
+For primary entities (or called master species, components) also amounts in each phase are available
+C.liter
+
+

@@ -1,0 +1,16 @@
+
+// Here we can give any variable of the chemical system a value
+// In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
+
+Var:	     totvolume  porosity  saturation pH   pe   C.tot   
+Default:       1         1         1         7    7    1e-3   
+
+// Now we can define a "sweep", which is a kind of loop.
+// we want to vary the pH from 2 to 12 in 21 steps
+// click run and then look in output.dat for the results
+
+Sweep: 21
+    Swept: pH 2 12   lin 
+}
+
+
