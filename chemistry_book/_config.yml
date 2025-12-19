@@ -7,16 +7,16 @@ launch_buttons:
 
 thebe_config:
   use_thebe: true
-  binderhub_url: ""  # leave empty
-  kernel_options:
-    kernelName: "python3"
-    serverSettings:
-        baseUrl: "http://localhost:8888"
-        token: ""
+  useBinder: false
+  useJupyterLite: false
+  codeMirrorConfig:
+    theme: "default"
+  mountActivateWidget: true
+  mountStatusWidget: true
+  serverSettings:
+    baseUrl: "http://localhost:8890"
+    token: "abcd1234"
+    appendToken: true
+  kernelOptions:
+    name: "python3"
 
-sphinx:
-  config:
-    html_static_path: ["_static"]
-    html_js_files:
-      - _static/thebe-local-config.html
-      - https://unpkg.com/thebe@latest
