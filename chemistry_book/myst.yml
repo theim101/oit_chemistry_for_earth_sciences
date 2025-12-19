@@ -9,7 +9,7 @@ project:
     license: CC-BY-4.0
     open_access: true
     github: theim101/oit_chemistry_for_earth_sciences
-    jupyter:
+    thebe:
       server:
         url: http://localhost:8890/
         token: abcd1234
