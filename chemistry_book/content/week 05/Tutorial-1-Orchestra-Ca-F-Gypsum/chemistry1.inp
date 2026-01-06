@@ -163,7 +163,7 @@
 @species(F-, -1)
 @primary_entity(F-, -9.0, tot, 2.89E-4)
 @mineral(Gypsum[s])
-@primary_entity(Gypsum[s], 0.0, tot, 1.0)
+@primary_entity(Gypsum[s], 0.0, tot, 10.0)
 @Global: pH
 @Calc:(1, "H.logact = -pH")
 @entity(H, tot, 0)

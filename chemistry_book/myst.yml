@@ -65,20 +65,17 @@ project:
               - file: content/test_space/untitled.md
           - title: Week 02
             children:
-              - file: content/week 02/Chemical_Reactions_in_Water.ipynb
-              - file: content/week 02/Chemical_Reactions_in_Water.md
-              - file: content/week 02/DissolutionGypsum0_highF.ipynb
-              - file: content/week 02/Others.ipynb
-              - file: content/week 02/Scratch.ipynb
               - file: content/week 02/Week_Plan_Chemical_Reactions_in_Water.md
+              - file: content/week 02/Chemical_Reactions_in_Water.ipynb
               - title: Orchestra Simulation
                 children:
                   - file: content/week 02/Orchestra_simulation/Fluorite-Gypsum-Water.ipynb
           - title: Week 05
             children:
-              - title: Test 01 Carbonate Titration
-                children:
-                  - file: content/week 05/Test_01_Carbonate_Titration/Carbonate_Gas.ipynb
+              - file: content/week 05/Week_Plan_Chemistry_with_Computer_models.md
+              - file: content/week 05/Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
+              - file: content/week 05/Chemistry_with_Computer_models.ipynb
+              
 theme:
   name: "book-theme"
 highlight_style: "default"

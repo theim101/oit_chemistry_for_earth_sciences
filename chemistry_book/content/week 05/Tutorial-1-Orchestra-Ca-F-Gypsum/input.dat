@@ -1,0 +1,19 @@
+
+// Here we can give any variable of the chemical system a value
+// In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
+
+Var:	      F-.tot 		Ca+2.tot 	Gypsum[s].tot	gasvolume	watervolume 
+Default:      2.89e-4       	2.49e-4		1e-20		0		1   
+Data: 	      2.89e-4       	2.49e-4		1e-20		0		1   
+Data: 	      2.89e-4       	2.49e-4		1		0		1   
+// Data: 	      2.89e-4       	2.49e-4		1		1		1   
+ 
+// Now we can define a "sweep", which is a kind of loop.
+// we want to vary the pH from 2 to 12 in 21 steps
+// click run and then look in output.dat for the results
+
+Sweep: 5
+	Swept: Gypsum[s].tot 1e-12 1e-3 lin
+}
+
+
