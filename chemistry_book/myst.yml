@@ -74,6 +74,7 @@ project:
             children:
               - file: content/week 05/Week_Plan_Chemistry_with_Computer_models.md
               - file: content/week 05/Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
+              - file: content/week 05/Tutorial-2-Orchestra-Carbonate-system/Tutorial_2_Carbonate_Water_Calcite_fixed_volume.ipynb
               - file: content/week 05/Chemistry_with_Computer_models.ipynb
               
 theme:
