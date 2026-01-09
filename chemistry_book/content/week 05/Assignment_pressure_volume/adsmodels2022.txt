@@ -1,0 +1,1430 @@
+//----------------------------------------------------------------------------------------
+// ORCHESTRA ADSORPTION MODEL DEFINITIONS 
+//
+// 06-03-2019  J.C.L. Meeussen & J.J. Dijkstra
+// Updated 29-11-2021
+// 
+// This file contains reactions, parameters and specific code for the following adsorption models: 
+// -  A pure Donnan model for Clay
+// -  A NICA-Donnan model for Humic acid and Fulvic acid with parameters as published in Milne, ES&T 37, 958-971, 2003.
+// -  A GTLM model for hydrous ferric oxide with the parameters by Dzombak and Morel
+// -  A GTLM model with parameters for manganese oxide by Tonkin, Applied Geochemistry 2004, 19(1),29-53.
+// -  A GTLM model for gibbsite and goethite with the parameters by karamalidis & Dzombak and Mathur & Dzombak
+// -  CD-Music model for Goethite Hiemstra & Van Riemsdijk, 
+// -  A Basic Stern model for silica
+//
+//
+//  From ORCHESTRA version 2018: 
+//  - model specific code and adsorption reactions can be defined in one place/file (e.g. this file)
+//  - model specific code and description are copied from this file to the input file by the GUI
+//  - the code in the input file is used in the calculations, and can be adapted there. 
+//  - so the model database file is not used in the calculations. 
+//
+//----------------------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------------------
+// A default particle "part" phase that acts as a default parent phase for all adsorption models in this file.
+// Appropriate phases/particles/surfaces can be selected interactively in the GUI
+
+@phase(part)
+
+@donnanmodel(Clay, part, 1, "0.1", -.25) // with given fixed volume and CEC 
+
+@Class: adsorptionmodeltext(Clay){
+//----------------------------------------------------------------------------------------
+// Donnan Clay Model
+// Non-specific adsorption to clay surfaces (Donnan model)
+// Default Cation Exchange Capacity (CEC) = -0.25 eq/kg and Donnan gel volume of 0.1 L/kg
+// (Mc Bride, Environmental Chemistry of soils, 1994)
+//
+// Donnan models are special: for all aqueous species automatically an accompanying Donnan
+// species is defined.
+//----------------------------------------------------------------------------------------
+}
+
+
+
+@donnanmodel(HA, part, 1, "10^(-0.49*log10(I)- -0.49-1)") // with literal expression for the volume of the Donnan layer
+
+@Class: adsorptionmodeltext(HA){
+//----------------------------------------------------------------------------------------
+// The NICA-Donnan model with set of parameters for humic (HA) and fulvic (FA) acid.
+// This model is composed of a Donnan model and 2 Nica sites.
+// In this case the volume of the Donnan layer is not fixed but calculated according 
+// to the literal expression given.
+// (Milne, ES&T 37, 958-971, 2003)
+//----------------------------------------------------------------------------------------
+}
+
+@nicasite(HA1, HA, HA_don, 0.62, 3.15) 
+@nicasite(HA2, HA, HA_don, 0.41, 2.55)
+
+//----------- name,    site,  ion,    n,       nH,   logK   
+@nicaspecies(HA1-H,  HA1,  H+_HA_don,   0.81,  0.81,   2.93)
+@nicaspecies(HA1-Ba, HA1,  Ba+2_HA_don, 0.90,  0.81,  -1.1)
+@nicaspecies(HA1-Sr, HA1,  Sr+2_HA_don, 0.78,  0.81,  -1.36)
+@nicaspecies(HA1-Ca, HA1,  Ca+2_HA_don, 0.78,  0.81,  -1.37)
+@nicaspecies(HA1-Mg, HA1,  Mg+2_HA_don, 0.77,  0.81,  -.60)
+@nicaspecies(HA1-Mn, HA1,  Mn+2_HA_don, 0.72,  0.81,  -.30)
+@nicaspecies(HA1-Cd, HA1,  Cd+2_HA_don, 0.73,  0.81,  -.20)
+@nicaspecies(HA1-Ni, HA1,  Ni+2_HA_don, 0.64,  0.81,  -.26)
+@nicaspecies(HA1-Co, HA1, Co+2_HA_don, 0.79,  0.81,  -.24)
+@nicaspecies(HA1-FeII,HA1, Fe+2_HA_don, 0.30,  0.81,   .10)
+@nicaspecies(HA1-Zn, HA1,  Zn+2_HA_don, 0.67,  0.81,   .11)
+@nicaspecies(HA1-Cu, HA1,  Cu+2_HA_don, 0.56,  0.81,  2.23)
+@nicaspecies(HA1-Pb, HA1,  Pb+2_HA_don, 0.60,  0.81,  1.25)
+@nicaspecies(HA1-Al, HA1,  Al+3_HA_don, 0.40,  0.81, -1.05)
+@nicaspecies(HA1-Cr, HA1, Cr+3_HA_don, 0.35,  0.81,  4.3)
+@nicaspecies(HA1-FeIII,HA1, Fe+3_HA_don, 0.30,  0.81, 3.5)
+@nicaspecies(HA1-Hg, HA1, Hg+2_HA_don, 0.32,  0.81, 5.2)
+@nicaspecies(HA1-UO2+2, HA1, UO2+2_HA_don, 0.45,  0.81, 2.45)
+@nicaspecies(HA1-Th+4, HA1, Th+4_HA_don, 0.26,  0.81, 7.4)
+@nicaspecies(HA1-VO+2, HA1, VO+2_HA_don, 0.45,  0.81, 2.4)
+
+@nicaspecies(HA2-H,  HA2,  H+_HA_don,  0.63,   0.63,   8.0)
+@nicaspecies(HA2-Ba, HA2,  Ba+2_HA_don, 0.70,  0.63,  -0.7)
+@nicaspecies(HA2-Sr, HA2,  Sr+2_HA_don, 0.75,  0.63,  -0.43)
+@nicaspecies(HA2-Ca, HA2,  Ca+2_HA_don, 0.75,  0.63,  -0.43)
+@nicaspecies(HA2-Mg, HA2,  Mg+2_HA_don, 0.59,  0.63,   0.60)
+@nicaspecies(HA2-Mn, HA2,  Mn+2_HA_don, 0.56,  0.63,   1.30)
+@nicaspecies(HA2-Cd, HA2,  Cd+2_HA_don, 0.54,  0.63,   2.37)
+@nicaspecies(HA2-Ni, HA2,  Ni+2_HA_don, 0.55,  0.63,   1.0)
+@nicaspecies(HA2-Co, HA2, Co+2_HA_don, 0.66,  0.63,   1.0)
+@nicaspecies(HA2-FeII,HA2, Fe+2_HA_don, 0.50,  0.63,   2.2)
+@nicaspecies(HA2-Zn, HA2,  Zn+2_HA_don, 0.27,  0.63,   2.39)
+@nicaspecies(HA2-Cu, HA2,  Cu+2_HA_don, 0.34,  0.63,   6.85)
+@nicaspecies(HA2-Pb, HA2,  Pb+2_HA_don, 0.69,  0.63,   4.84)
+@nicaspecies(HA2-Al, HA2,  Al+3_HA_don, 0.30,  0.63,   8.89)
+@nicaspecies(HA2-Cr, HA2, Cr+3_HA_don, 0.27,  0.63,  12.0)
+@nicaspecies(HA2-FeIII,HA2, Fe+3_HA_don, 0.25,  0.63,  17.5)
+@nicaspecies(HA2-Hg, HA2, Hg+2_HA_don, 0.25,  0.63, 14.0)
+@nicaspecies(HA2-UO2+2, HA2, UO2+2_HA_don, 0.32,  0.63, 4.81)
+@nicaspecies(HA2-Th+4, HA2, Th+4_HA_don, 0.2,  0.63, 20)
+@nicaspecies(HA2-VO+2, HA2, VO+2_HA_don, 0.34,  0.63, 7.7)
+
+
+
+@donnanmodel(FA, part, 1, "10^(-0.57*log10(I)- -0.57-1)") // with literal expression for donnan volume
+
+@Class: adsorptionmodeltext(FA){
+//----------------------------------------------------------------------------------------
+// The NICA-Donnan model with set of parameters for fulvic (FA) acid.
+// This model is composed of a Donnan model and 2 Nica sites.
+// In this case the volume of the Donnan layer is not fixed but calculated according 
+// to the literal expression given.
+// (Milne, ES&T 37, 958-971, 2003)
+//
+// Donnan models are special: for all aqueous species automatically an accompanying Donnan
+// species is defined.
+//----------------------------------------------------------------------------------------
+}
+
+@nicasite(FA1, FA, FA_don, 0.59, 5.88) 
+@nicasite(FA2, FA, FA_don, 0.70, 1.86)
+
+//----------- name,    site,  ion,    n,       nH,   logK        
+@nicaspecies(FA1-H,  FA1,  H+_FA_don,   0.66,  0.66,   2.34)
+@nicaspecies(FA1-Ba, FA1,  Ba+2_FA_don, 0.90,  0.66,  -2.6) 
+@nicaspecies(FA1-Sr, FA1,  Sr+2_FA_don, 0.85,  0.66,  -2.5) 
+@nicaspecies(FA1-Ca, FA1,  Ca+2_FA_don, 0.85,  0.66,  -2.13)
+@nicaspecies(FA1-Mg, FA1,  Mg+2_FA_don, 0.77,  0.66,  -2.1) 
+@nicaspecies(FA1-Mn, FA1,  Mn+2_FA_don, 0.72,  0.66,  -1.55) 
+@nicaspecies(FA1-Cd, FA1,  Cd+2_FA_don, 0.68,  0.66,  -0.97) 
+@nicaspecies(FA1-Ni, FA1,  Ni+2_FA_don, 0.65,  0.66,  -2.07) 
+@nicaspecies(FA1-Co, FA1,  Co+2_FA_don, 0.71,  0.66,  -2.64) 
+@nicaspecies(FA1-FeII,FA1, Fe+2_FA_don, 0.30,  0.66,   -1.02)
+@nicaspecies(FA1-Zn, FA1,  Zn+2_FA_don, 0.67,  0.66,   -3.84)
+@nicaspecies(FA1-Cu, FA1,  Cu+2_FA_don, 0.53,  0.66,  0.26) 
+@nicaspecies(FA1-Pb, FA1,  Pb+2_FA_don, 0.60,  0.66,  -1.16)
+@nicaspecies(FA1-Al, FA1,  Al+3_FA_don, 0.42,  0.66, -4.11) 
+@nicaspecies(FA1-Cr, FA1,  Cr+3_FA_don, 0.35,  0.66,  2.8) 
+@nicaspecies(FA1-FeIII, FA1, Fe+3_FA_don, 0.25,  0.66,   6.0)
+
+@nicaspecies(FA2-H,  FA2,  H+_FA_don,  0.76,   0.76,   8.60)
+@nicaspecies(FA2-Ba, FA2,  Ba+2_FA_don, 0.70,  0.76,  -4.8) 
+@nicaspecies(FA2-Sr, FA2,  Sr+2_FA_don, 0.70,  0.76,  -4.6) 
+@nicaspecies(FA2-Ca, FA2,  Ca+2_FA_don, 0.80,  0.76,  -3.00)
+@nicaspecies(FA2-Mg, FA2,  Mg+2_FA_don, 0.59,  0.76,   -2.4)
+@nicaspecies(FA2-Mn, FA2,  Mn+2_FA_don, 0.56,  0.76,   -1.1)
+@nicaspecies(FA2-Cd, FA2,  Cd+2_FA_don, 0.50,  0.76,   0.50)
+@nicaspecies(FA2-Ni, FA2,  Ni+2_FA_don, 0.53,  0.76,   2.03) 
+@nicaspecies(FA2-Co, FA2,  Co+2_FA_don, 0.65,  0.76,   -2.21)
+@nicaspecies(FA2-FeII,FA2, Fe+2_FA_don, 0.51,  0.76,   -1.1)
+@nicaspecies(FA2-Zn, FA2,  Zn+2_FA_don, 0.61,  0.76,   -0.73)
+@nicaspecies(FA2-Cu, FA2,  Cu+2_FA_don, 0.36,  0.76,   8.26)
+@nicaspecies(FA2-Pb, FA2,  Pb+2_FA_don, 0.69,  0.76,   6.92)
+@nicaspecies(FA2-Al, FA2,  Al+3_FA_don, 0.31,  0.76,   12.16)
+@nicaspecies(FA2-Cr, FA2,  Cr+3_FA_don, 0.27,  0.76,  20.0)
+@nicaspecies(FA2-FeIII,	FA2,	Fe+3_FA_don, 0.19,  0.76,  36.0)
+//----------------------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------------------
+// Definition of the Generalized two layer model by Dzombak and Morel.
+// First we define an adsorptionmodel with the name Hfo, and of the type ddl_surface
+// We place the definition of the ddl_surface in the adsorptio model code here.
+// We could also use the version in the objects.txt file,
+// but advantage of putting it here is that in this way the complete adsorption model code
+// is present in the input file. 
+
+@adsmodel(Hfo, part ,6e5, ddl_surface)
+
+@Class: adsorptionmodeltext(Hfo){
+//----------------------------------------------------------------------------------------
+// Generalized two layer model by Dzombak and Morel + adsorption reactions.
+// Tables 10.1 - 10.5 of the Dzombak and Morel book and some additional constants
+// This is an input file for the Orchestra chemical user interface.
+// It contains the Dzombak and Morel surface object with the Dzombak and Morel model equations  +
+// a set of adsorption reactions.
+// The ORCHESTRA user interface will automatically select the appropriate adsorption reactions
+// that are relevant for the selected set of primary entities / components.
+//----------------------------------------------------------------------------------------
+}
+
+
+@class: adsorptionmodelcode(ddl_surface){
+   @class: ddl_surface(name, parent_phase, surface_area){
+      // The surface phase
+      @phase(<name>, <parent_phase>, <surface_area>)
+
+      // The electrostatic plane is a phase as well as an entity
+      // The _e phase, contains entity masses(charges)  in coulomb/m2
+      // because of  conversion factor from mol to coulomb
+      @phase(<name>_e)
+      @link_phase(<name>,<name>_e, 96484.56)
+      
+      // We place the electrostatic plane entity in the electrostatice plane phase      
+      @e_layer(<name>_e, <name>_e)
+      // in this way (<name>_e.<name>_e) will contain total charge in coulomb/m2 after stage 4
+
+      // Now we define a diffuse double layer that uses the potential (psi) of the electrostatic layer 
+      // as input to calculate its charge. (see definition below).
+
+      @ddl_dzombak(<name>, <name>_e)
+
+
+      @GlobalVar: <name>.eq 0 // this defines eq as global variables with initial value 0.
+      
+      // Define the equation that needs to be solved (sum of charge in electrostatic layer and surface is zero)      
+      @Calc:(5, "<name>.eq = {<name>.ddl} + {<name>_e.<name>_e}")
+      @Solve: unknown:(name:, <name>_e.logact,  delta:, 1e-6, type:, lin, step: , 1, default:, 0, iia:, true) equation:(name:, <name>.eq, tol: , 1e-6)
+   }
+
+
+   // Note that this model only calculates the total charge of the double layer, but does not keep track of the composition of the double layer.
+   // so this will introduce charge/mass balance errors when this model is used in transport conditions!
+   // 
+   // One way to remedie this is to use a donnan model to keep track of the composition.
+   // We simply use the calculated potential as input (volume)
+   @Class: ddl_dzombak (name, e_layer){
+      @Var: F    96484.56
+      // This version of ddl model is used by the Generalized two layer model of Dzombak and Morel.
+      @Var: <name>.ddl 0.0  
+      @Calc:(4,"<name>.ddl = -2.5*sqrt(I)*{<e_layer>.psi} ")  //dzombak & morel p12
+   }
+
+}
+
+
+@surfplane(Hfo, e)
+
+@surfsite(Hfo, wOH, 3.745e-6, 1)
+@surfsite(Hfo, sOH, 9.363e-8, 1)
+
+@surfspecies(Hfo, wOH, wO- ,1)
+@surfreaction(Hfo_wO-, 1.1748975549395303E-9, 1.0, Hfo_wOH, -1.0, H+, -1.0, Hfo_e)
+
+@surfspecies(Hfo, wOH, wOH2+ ,1)
+@surfreaction(Hfo_wOH2+, 1.9498445997580454E7, 1.0, Hfo_wOH, 1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sO- ,1)
+@surfreaction(Hfo_sO-, 1.1748975549395303E-9, 1.0, Hfo_sOH, -1.0, H+, -1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOH2+ ,1)
+@surfreaction(Hfo_sOH2+, 1.9498445997580454E7, 1.0, Hfo_sOH, 1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, wOH, wOZn+ ,1)
+@surfreaction(Hfo_wOZn+, 0.01023292992280754, 1.0, Hfo_wOH, 1.0, Zn+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOZn+ ,1)
+@surfreaction(Hfo_sOZn+, 9.77237221, 1.0, Hfo_sOH, 1.0, Zn+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, wOH, wOCd+ ,1)
+@surfreaction(Hfo_wOCd+, 0.0012589254117941675, 1.0, Hfo_wOH, 1.0, Cd+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOCd+ ,1)
+@surfreaction(Hfo_sOCd+, 2.951209227, 1.0, Hfo_sOH, 1.0, Cd+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOCu+ ,1)
+@surfreaction(Hfo_sOCu+, 776.247116, 1.0, Hfo_sOH, 1.0, Cu+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, wOH, wOCu+ ,1)
+@surfreaction(Hfo_wOCu+, 3.9810717055349722, 1.0, Hfo_wOH, 1.0, Cu+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOBe+ ,1)
+@surfreaction(Hfo_sOBe+, 79.06786279998249, 1.0, Hfo_sOH, 1.0, Be+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, wOH, wOBe+ ,1)
+@surfreaction(Hfo_wOBe+, 0.13721449765730573, 1.0, Hfo_wOH, 1.0, Be+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sONi+ ,1)
+@surfreaction(Hfo_sONi+, 2.344228815, 1.0, Hfo_sOH, 1.0, Ni+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wONi+ ,1)
+@surfreaction(Hfo_wONi+, 0.0031622776601683794, 1.0, Hfo_wOH, 1.0, Ni+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOPb+ ,1)
+@surfreaction(Hfo_sOPb+, 44668.36, 1.0, Hfo_sOH, 1.0, Pb+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOPb+ ,1)
+@surfreaction(Hfo_wOPb+, 1.999, 1.0, Hfo_wOH, 1.0, Pb+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, wOH, wOCa+ ,1)
+@surfreaction(Hfo_wOCa+, 1.4125375446227554E-6, 1.0, Hfo_wOH, 1.0, Ca+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHCa+2 ,1)
+@surfreaction(Hfo_sOHCa+2, 93325.43007969906, 1.0, Hfo_sOH, 1.0, Ca+2, 2.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOHBa+2 ,1)
+@surfreaction(Hfo_sOHBa+2, 288403.15031266055, 1.0, Hfo_sOH, 1.0, Ba+2, 2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOBa+ ,1)
+@surfreaction(Hfo_wOBa+, 6.30957344480193E-8, 1.0, Hfo_wOH, 1.0, Ba+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sSO4- ,1)
+@surfreaction(Hfo_sSO4-, 6.025595860743581E7, 1.0, Hfo_sOH, 1.0, H+, 1.0, SO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wSO4- ,1)
+@surfreaction(Hfo_wSO4-, 6.025595860743581E7, 1.0, Hfo_wOH, 1.0, H+, 1.0, SO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHSO4-2 ,1)
+@surfreaction(Hfo_sOHSO4-2, 6.165950018614822, 1.0, Hfo_sOH, 1.0, SO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHSO4-2 ,1)
+@surfreaction(Hfo_wOHSO4-2, 6.165950018614822, 1.0, Hfo_wOH, 1.0, SO4-2, -2.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sH2PO4 ,1)
+@surfreaction(Hfo_sH2PO4, 1.9498445997580414E31, 1.0, Hfo_sOH, 1.0, PO4-3, 3.0, H+, -1.0, H2O)
+@surfspecies(Hfo, wOH, wH2PO4 ,1)
+@surfreaction(Hfo_wH2PO4, 1.9498445997580414E31, 1.0, Hfo_wOH, 1.0, PO4-3, 3.0, H+, -1.0, H2O)
+@surfspecies(Hfo, sOH, sHPO4- ,1)
+@surfreaction(Hfo_sHPO4-, 2.4547089156850337E25, 1.0, Hfo_sOH, 1.0, PO4-3, 2.0, H+, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wHPO4- ,1)
+@surfreaction(Hfo_wHPO4-, 2.4547089156850337E25, 1.0, Hfo_wOH, 1.0, PO4-3, 2.0, H+, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sPO4-2 ,1)
+@surfreaction(Hfo_sPO4-2, 5.248074602497712E17, 1.0, Hfo_sOH, 1.0, PO4-3, 1.0, H+, -1.0, H2O, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wPO4-2 ,1)
+@surfreaction(Hfo_wPO4-2, 5.248074602497712E17, 1.0, Hfo_wOH, 1.0, PO4-3, 1.0, H+, -1.0, H2O, -2.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sH2AsO3 ,1)
+@surfreaction(Hfo_sH2AsO3, 257039.57827688646, 1.0, Hfo_sOH, 1.0, H3AsO3, -1.0, H2O)
+@surfspecies(Hfo, wOH, wH2AsO3 ,1)
+@surfreaction(Hfo_wH2AsO3, 257039.57827688646, 1.0, Hfo_wOH, 1.0, H3AsO3, -1.0, H2O)
+@surfspecies(Hfo, sOH, sH2AsO4 ,1)
+@surfreaction(Hfo_sH2AsO4, 4.677351412871981E8, 1.0, Hfo_sOH, 1.0, H3AsO4, -1.0, H2O)
+@surfspecies(Hfo, wOH, wH2AsO4 ,1)
+@surfreaction(Hfo_wH2AsO4, 4.677351412871981E8, 1.0, Hfo_wOH, 1.0, H3AsO4, -1.0, H2O)
+@surfspecies(Hfo, sOH, sHAsO4- ,1)
+@surfreaction(Hfo_sHAsO4-, 977.2372209558112, 1.0, Hfo_sOH, 1.0, H3AsO4, -1.0, H2O, -1.0, H+, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wHAsO4- ,1)
+@surfreaction(Hfo_wHAsO4-, 977.2372209558112, 1.0, Hfo_wOH, 1.0, H3AsO4, -1.0, H2O, -1.0, H+, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sAsO4-2 ,1)
+@surfreaction(Hfo_sAsO4-2, 1.9952623149688786E-5, 1.0, Hfo_sOH, 1.0, H3AsO4, -1.0, H2O, -2.0, H+, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wAsO4-2 ,1)
+@surfreaction(Hfo_wAsO4-2, 1.9952623149688786E-5, 1.0, Hfo_wOH, 1.0, H3AsO4, -1.0, H2O, -2.0, H+, -2.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHAsO4-3 ,1)
+@surfreaction(Hfo_sOHAsO4-3, 7.079457843841373E-11, 1.0, Hfo_sOH, 1.0, H3AsO4, -3.0, H+, -3.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHAsO4-3 ,1)
+@surfreaction(Hfo_wOHAsO4-3, 7.079457843841373E-11, 1.0, Hfo_wOH, 1.0, H3AsO4, -3.0, H+, -3.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sH2BO3 ,1)
+@surfreaction(Hfo_sH2BO3, 4.168693834703354, 1.0, Hfo_sOH, 1.0, H3BO3, -1.0, H2O)
+@surfspecies(Hfo, wOH, wH2BO3 ,1)
+@surfreaction(Hfo_wH2BO3, 4.168693834703354, 1.0, Hfo_wOH, 1.0, H3BO3, -1.0, H2O)
+
+@surfspecies(Hfo, sOH, sOHSr+2 ,1)
+@surfreaction(Hfo_sOHSr+2, 102329.29922807537, 1.0, Hfo_sOH, 1.0, Sr+2, 2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOSr+ ,1)
+@surfreaction(Hfo_wOSr+, 2.6302679918953816E-7, 1.0, Hfo_wOH, 1.0, Sr+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOSrOH ,1)
+@surfreaction(Hfo_wOSrOH, 2.5118864315095718E-18, 1.0, Hfo_wOH, 1.0, Sr+2, 1.0, H2O, -2.0, H+)
+
+@surfspecies(Hfo, wOH, wOMg+ ,1)
+@surfreaction(Hfo_wOMg+, 2.511886432E-5, 1.0, Hfo_wOH, 1.0, Mg+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOMn+ ,1)
+@surfreaction(Hfo_sOMn+, 0.3981071705534972, 1.0, Hfo_sOH, 1.0, Mn+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOMn+ ,1)
+@surfreaction(Hfo_wOMn+, 3.1622776601683794E-4, 1.0, Hfo_wOH, 1.0, Mn+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOCo+ ,1)
+@surfreaction(Hfo_sOCo+, 0.3467368504525316, 1.0, Hfo_sOH, 1.0, Co+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOCo+ ,1)
+@surfreaction(Hfo_wOCo+, 9.77237220955811E-4, 1.0, Hfo_wOH, 1.0, Co+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOCrOH+ ,1)
+@surfreaction(Hfo_sOCrOH+, 114.8153621, 1.0, Hfo_sOH, 1.0, Cr+3, 1.0, H2O,  -2.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOSn+ ,1)
+@surfreaction(Hfo_sOSn+, 1.0E8, 1.0, Hfo_sOH, 1.0, Sn+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOSn+ ,1)
+@surfreaction(Hfo_wOSn+, 794328.2347242822, 1.0, Hfo_wOH, 1.0, Sn+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sMoO4- ,1)
+@surfreaction(Hfo_sMoO4-, 3.1622776601683793E9, 1.0, Hfo_sOH, 1.0, H+, 1.0, MoO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wMoO4- ,1)
+@surfreaction(Hfo_wMoO4-, 3.1622776601683793E9, 1.0, Hfo_wOH, 1.0, H+, 1.0, MoO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHMoO4-2 ,1)
+@surfreaction(Hfo_sOHMoO4-2, 251.18864315095797, 1.0, Hfo_sOH, 1.0, MoO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHMoO4-2 ,1)
+@surfreaction(Hfo_wOHMoO4-2, 251.18864315095797, 1.0, Hfo_wOH, 1.0, MoO4-2, -2.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sSbO3 ,1)
+@surfreaction(Hfo_sSbO3, 2.511886431509582E8, 1.0, Hfo_sOH, 1.0, H+, 1.0, SbO3-, -1.0, H2O)
+@surfspecies(Hfo, wOH, wSbO3 ,1)
+@surfreaction(Hfo_wSbO3, 2.511886431509582E8, 1.0, Hfo_wOH, 1.0, H+, 1.0, SbO3-, -1.0, H2O)
+@surfspecies(Hfo, sOH, sOHSbO3- ,1)
+@surfreaction(Hfo_sOHSbO3-, 19.952623149688797, 1.0, Hfo_sOH, 1.0, SbO3-, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHSbO3- ,1)
+@surfreaction(Hfo_wOHSbO3-, 19.952623149688797, 1.0, Hfo_wOH, 1.0, SbO3-, -1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sH2SiO4- ,1)
+@surfreaction(Hfo_sH2SiO4-, 7.943282347242822E15, 1.0, Hfo_sOH, 1.0, H+, 1.0, H2SiO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wH2SiO4- ,1)
+@surfreaction(Hfo_wH2SiO4-, 7.943282347242822E15, 1.0, Hfo_wOH, 1.0, H+, 1.0, H2SiO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHH2SiO4-2 ,1)
+@surfreaction(Hfo_sOHH2SiO4-2, 1.9952623149688828E8, 1.0, Hfo_sOH, 1.0, H2SiO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHH2SiO4-2 ,1)
+@surfreaction(Hfo_wOHH2SiO4-2, 1.9952623149688828E8, 1.0, Hfo_wOH, 1.0, H2SiO4-2, -2.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sSeO4- ,1)
+@surfreaction(Hfo_sSeO4-, 5.370317963702533E7, 1.0, Hfo_sOH, 1.0, H+, 1.0, SeO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wSeO4- ,1)
+@surfreaction(Hfo_wSeO4-, 5.370317963702533E7, 1.0, Hfo_wOH, 1.0, H+, 1.0, SeO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHSeO4-2 ,1)
+@surfreaction(Hfo_sOHSeO4-2, 6.309573444801933, 1.0, Hfo_sOH, 1.0, SeO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHSeO4-2 ,1)
+@surfreaction(Hfo_wOHSeO4-2, 6.309573444801933, 1.0, Hfo_wOH, 1.0, SeO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, sOH, sSeO3- ,1)
+@surfreaction(Hfo_sSeO3-, 4.897788193684456E12, 1.0, Hfo_sOH, 1.0, H+, 1.0, SeO3-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wSeO3- ,1)
+@surfreaction(Hfo_wSeO3-, 4.897788193684456E12, 1.0, Hfo_wOH, 1.0, H+, 1.0, SeO3-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHSeO3-2 ,1)
+@surfreaction(Hfo_sOHSeO3-2, 147910.8388168207, 1.0, Hfo_sOH, 1.0, SeO3-2, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHSeO3-2 ,1)
+@surfreaction(Hfo_wOHSeO3-2, 147910.8388168207, 1.0, Hfo_wOH, 1.0, SeO3-2, -2.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sCrO4- ,1)
+@surfreaction(Hfo_sCrO4-, 6.606934480075964E10, 1.0, Hfo_sOH, 1.0, H+, 1.0, CrO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wCrO4- ,1)
+@surfreaction(Hfo_wCrO4-, 6.606934480075964E10, 1.0, Hfo_wOH, 1.0, H+, 1.0, CrO4-2, -1.0, H2O, -1.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOHCrO4-2 ,1)
+@surfreaction(Hfo_sOHCrO4-2, 7943.282347242814, 1.0, Hfo_sOH, 1.0, CrO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHCrO4-2 ,1)
+@surfreaction(Hfo_wOHCrO4-2, 7943.282347242814, 1.0, Hfo_wOH, 1.0, CrO4-2, -2.0, Hfo_e)
+@surfspecies(Hfo, sOH, sOCrOH+ ,1)
+@surfreaction(Hfo_sOCrOH+, 114.81536214968828, 1.0, Hfo_sOH, 1.0, Cr+3, 1.0, H2O, -2.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sF ,1)
+@surfreaction(Hfo_sF, 5.011872336272715E8, 1.0, Hfo_sOH, 1.0, H+, 1.0, F-, -1.0, H2O)
+@surfspecies(Hfo, wOH, wF ,1)
+@surfreaction(Hfo_wF, 5.011872336272715E8, 1.0, Hfo_wOH, 1.0, H+, 1.0, F-, -1.0, H2O)
+@surfspecies(Hfo, sOH, sOHF- ,1)
+@surfreaction(Hfo_sOHF-, 39.810717055349734, 1.0, Hfo_sOH, 1.0, F-, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHF- ,1)
+@surfreaction(Hfo_wOHF-, 39.810717055349734, 1.0, Hfo_wOH, 1.0, F-, -1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sCN ,1)
+@surfreaction(Hfo_sCN, 1e13, 1.0, Hfo_sOH, 1.0, H+, 1.0, CN-, -1.0, H2O)
+@surfspecies(Hfo, wOH, wCN ,1)
+@surfreaction(Hfo_wCN, 1e13, 1.0, Hfo_wOH, 1.0, H+, 1.0, CN-, -1.0, H2O)
+@surfspecies(Hfo, sOH, sOHCN- ,1)
+@surfreaction(Hfo_sOHCN-, 501187, 1.0, Hfo_sOH, 1.0, CN-, -1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHCN- ,1)
+@surfreaction(Hfo_wOHCN-, 501187, 1.0, Hfo_wOH, 1.0, CN-, -1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOHg+ ,1)
+@surfreaction(Hfo_sOHg+, 5.754399373371567E7, 1.0, Hfo_sOH, 1.0, Hg+2, -1.0, H+, 1.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHg+ ,1)
+@surfreaction(Hfo_wOHg+, 2818382.931264455, 1.0, Hfo_wOH, 1.0, Hg+2, -1.0, H+, 1.0, Hfo_e)
+
+@surfspecies(Hfo, sOH, sOHVO4-3,1)
+@surfreaction(Hfo_sOHVO4-3, 3.715352290971728E13, 1.0, Hfo_sOH, 1.0, VO4-3, -3.0, Hfo_e)
+@surfspecies(Hfo, wOH, wOHVO4-3,1)
+@surfreaction(Hfo_wOHVO4-3, 3.715352290971728E13, 1.0, Hfo_wOH, 1.0, VO4-3, -3.0, Hfo_e)
+
+
+
+
+@adsmodel(Hmo, part ,7.46e5, ddl_surface)
+
+@Class: adsorptionmodeltext(Hmo){
+//----------------------------------------------------------------------------------------
+// Generalized two layer model by Dzombak and Morel + adsorption reactions.
+// and model parameters for adsorption of cations to manganese (hydr)oxides.
+// Tonkin, Applied Geochemistry 2004, 19(1),29-53.
+//  27-06-2007   J.J. Dijkstra: 
+//----------------------------------------------------------------------------------------
+}
+
+@surfplane(Hmo, e)
+
+@surfsite(Hmo, XOH, 2.815013E-6, 1)
+@surfsite(Hmo, YOH, 2.815013E-6, 1)
+
+@surfspecies(Hmo, XOH, XO- ,1)
+@surfreaction(Hmo_XO-, 0.004466836, 1.0, Hmo_XOH, -1.0, H+, -1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YO- ,1)
+@surfreaction(Hmo_YO-, 8.7096359E-7, 1.0, Hmo_YOH, -1.0, H+, -1.0, Hmo_e)
+
+@surfspecies(Hmo, XOH, XOBa+ ,1)
+@surfreaction(Hmo_XOBa+, 2.818382931, 1.0, Hmo_XOH, 1.0, Ba+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCa+ ,1)
+@surfreaction(Hmo_XOCa+, 3.1622777E-2, 1.0, Hmo_XOH, 1.0, Ca+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCd+ ,1)
+@surfreaction(Hmo_XOCd+, 3.981072E-3, 1.0, Hmo_XOH, 1.0, Cd+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCdOH ,1)
+@surfreaction(Hmo_XOCdOH, 1E-8, 1.0, Hmo_XOH, 1.0, Cd+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOCd+ ,1)
+@surfreaction(Hmo_YOCd+, 3.16227766E-4, 1.0, Hmo_YOH, 1.0, Cd+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOCdOH ,1)
+@surfreaction(Hmo_YOCdOH, 3.16227766E-9, 1.0, Hmo_YOH, 1.0, Cd+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCo+ ,1)
+@surfreaction(Hmo_XOCo+, 10.000000, 1.0, Hmo_XOH, 1.0, Co+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCoOH ,1)
+@surfreaction(Hmo_XOCoOH, 1.25892541E-4, 1.0, Hmo_XOH, 1.0, Co+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCu+ ,1)
+@surfreaction(Hmo_XOCu+, 7.079457844, 1.0, Hmo_XOH, 1.0, Cu+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOCuOH ,1)
+@surfreaction(Hmo_XOCuOH, 1.584893E-3, 1.0, Hmo_XOH, 1.0, Cu+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOCu+ ,1)
+@surfreaction(Hmo_YOCu+, 7.244359601, 1.0, Hmo_YOH, 1.0, Cu+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOCuOH ,1)
+@surfreaction(Hmo_YOCuOH, 1.99526231E-6, 1.0, Hmo_YOH, 1.0, Cu+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOMg+ ,1)
+@surfreaction(Hmo_XOMg+, 3.981072E-3, 1.0, Hmo_XOH, 1.0, Mg+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOMgOH ,1)
+@surfreaction(Hmo_XOMgOH, 1.99526231E-8, 1.0, Hmo_XOH, 1.0, Mg+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOMn+ ,1)
+@surfreaction(Hmo_XOMn+, 15.84893192, 1.0, Hmo_XOH, 1.0, Mn+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOMnOH ,1)
+@surfreaction(Hmo_XOMnOH, 1.995262E-3, 1.0, Hmo_XOH, 1.0, Mn+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XONi+ ,1)
+@surfreaction(Hmo_XONi+, 0.331131121, 1.0, Hmo_XOH, 1.0, Ni+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XONiOH ,1)
+@surfreaction(Hmo_XONiOH, 1.00000E-5, 1.0, Hmo_XOH, 1.0, Ni+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOPbOH ,1)
+@surfreaction(Hmo_XOPbOH, 0.138038426, 1.0, Hmo_XOH, 1.0, Pb+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOPb+ ,1)
+@surfreaction(Hmo_YOPb+, 2511.886432, 1.0, Hmo_YOH, 1.0, Pb+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOPbOH ,1)
+@surfreaction(Hmo_YOPbOH, 2.51188643E-2, 1.0, Hmo_YOH, 1.0, Pb+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOSr+ ,1)
+@surfreaction(Hmo_XOSr+, 2.51188643E-2, 1.0, Hmo_XOH, 1.0, Sr+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOSrOH ,1)
+@surfreaction(Hmo_XOSrOH, 2.51188643E-7, 1.0, Hmo_XOH, 1.0, Sr+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOZn+ ,1)
+@surfreaction(Hmo_XOZn+, 0.977237221, 1.0, Hmo_XOH, 1.0, Zn+2, -1.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, XOH, XOZnOH ,1)
+@surfreaction(Hmo_XOZnOH, 3.98107171E-5, 1.0, Hmo_XOH, 1.0, Zn+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+@surfspecies(Hmo, YOH, YOZnOH ,1)
+@surfreaction(Hmo_YOZnOH, 2.51188643E-8, 1.0, Hmo_YOH, 1.0, Zn+2, 1.0, H2O, -2.0, H+, 1.0, Hmo_e)
+//-------------------------------------------------------------
+
+
+
+
+@adsmodel(Gibb, part ,3.20E4, ddl_surface)
+
+@Class: adsorptionmodeltext(Gibb){
+//----------------------------------------------------------------------------------------
+// Generalized two layer model by Dzombak and Morel + adsorption reactions.
+// and model parameters for adsorption of cations and anions to Gibbsite
+// Karamalidis and Dzombak 2010, model parameters for adsorption of anions and cations on GIBBSITE surface.
+// table 8.2 (cations) and table 8.7 (anions)
+// Explanation: surface area 32 m2/g, see p. 80 karamalidis & Dzombak
+// This model is different from the models for HFO and Manganese oxide, in this case there is only a single
+// site type for gibbsite, see p. 208 Karamalidis and Dzombak.
+// Site density in Orchestra given in mol sites/m2. karamalidis & Dzombak give assume 8 sites / nm2 (p 80)
+// this number is equal to 8 * 10^9 * 10^9 * 1/Navogadro = 1.328E-05 mol sites/m2
+//
+// (See addtional comments in database file)
+//
+// J.J. Dijkstra
+//----------------------------------------------------------------------------------------
+}
+
+@surfplane(Gibb, e)
+@surfsite(Gibb, XOH, 1.328E-5, 1)
+
+
+// Surface protonation reactions 
+
+@surfspecies(Gibb, XOH, XO- ,1)
+@surfreaction(Gibb_XO-, 6.61E-12, 1.0, Gibb_XOH, -1.0, H+, -1.0, Gibb_e) // p 69 Karamalidis&Dzombak
+
+@surfspecies(Gibb, XOH, XOH2+ ,1)
+@surfreaction(Gibb_XOH2+, 1.48E7, 1.0, Gibb_XOH, 1.0, H+, 1.0, Gibb_e) // p 69 Karamalidis&Dzombak
+
+
+// CATIONS binding reactions table 8.2
+
+@surfspecies(Gibb, XOH, XOBa+ ,1)
+@surfreaction(Gibb_XOBa+, 3.16E-9, 1.0, Gibb_XOH, 1.0, Ba+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOSr+ ,1)
+@surfreaction(Gibb_XOSr+, 5.50E-9, 1.0, Gibb_XOH, 1.0, Sr+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOCa+ ,1)
+@surfreaction(Gibb_XOCa+, 3.24E-11, 1.0, Gibb_XOH, 1.0, Ca+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOMg+ ,1)
+@surfreaction(Gibb_XOMg+, 1.17E-6, 1.0, Gibb_XOH, 1.0, Mg+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOAg ,1)
+@surfreaction(Gibb_XOAg, 2.00E-7, 1.0, Gibb_XOH, 1.0, Ag+, -1.0, H+)
+
+
+@surfspecies(Gibb, XOH, XOMn+ ,1)
+@surfreaction(Gibb_XOMn+, 3.24E-6, 1.0, Gibb_XOH, 1.0, Mn+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOCo+ ,1)
+@surfreaction(Gibb_XOCo+, 3.02E-3, 1.0, Gibb_XOH, 1.0, Co+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XONi+ ,1)
+@surfreaction(Gibb_XONi+, 1.20E-4, 1.0, Gibb_XOH, 1.0, Ni+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOCd+ ,1)
+@surfreaction(Gibb_XOCd+, 1.86E-3, 1.0, Gibb_XOH, 1.0, Cd+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOZn+ ,1)
+@surfreaction(Gibb_XOZn+, 1.10E-1, 1.0, Gibb_XOH, 1.0, Zn+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOCu+ ,1)
+@surfreaction(Gibb_XOCu+, 1.78E+00, 1.0, Gibb_XOH, 1.0, Cu+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOPb+ ,1)
+@surfreaction(Gibb_XOPb+, 2.344E+00, 1.0, Gibb_XOH, 1.0, Pb+2, -1.0, H+, 1.0, Gibb_e)
+
+
+
+// K1
+@surfspecies(Gibb, XOH, XOUO2+ ,1)
+@surfreaction(Gibb_XOUO2+, 1.66E+1, 1.0, Gibb_XOH, 1.0, UO2+2, -1.0, H+, 1.0, Gibb_e)
+
+// K3
+@surfspecies(Gibb, XOH, XOUO2[OH]3-2 ,1)
+@surfreaction(Gibb_XOUO2[OH]3-2, 1.00E-22, 1.0, Gibb_XOH, 1.0, UO2+2, -4.0, H+, -2.0, Gibb_e, 3, H2O)
+
+// K4
+@surfspecies(Gibb, XOH, XO[UO2]3[OH]5 ,1)
+@surfreaction(Gibb_XO[UO2]3[OH]5, 2.40E-16, 1.0, Gibb_XOH, 3.0, UO2+2, -6.0, H+, 5, H2O)
+
+
+@surfspecies(Gibb, XOH, XOPuO2+ ,1)
+@surfreaction(Gibb_XOPuO2+, 2.04E+02, 1.0, Gibb_XOH, 1.0, PuO2+2, -1.0, H+, 1.0, Gibb_e)
+
+
+// Hg curve in the book can not be reproduced.
+// from table 8.1 p 200 and8.2 p 202:
+@surfspecies(Gibb, XOH, XOHg+ ,1)
+@surfreaction(Gibb_XOHg+, 1.48E+03, 1.0, Gibb_XOH, 1.0, Hg+2, -1.0, H+, 1.0, Gibb_e)
+
+// from table 6.43 p 133
+// @surfspecies(Gibb, XOH, XOHg[OH]2+ ,1)
+// @surfreaction(Gibb_XOHg[OH]2+, 2.69E+09, 1.0, Gibb_XOH, 1.0, Hg[OH]2, 1.0, H+, -2.0, H2O, 1.0, Gibb_e)
+
+@surfspecies(Gibb, XOH, XOSn+ ,1)
+@surfreaction(Gibb_XOSn+, 4.90E+4, 1.0, Gibb_XOH, 1.0, Sn+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOFe+ ,1)
+@surfreaction(Gibb_XOFe+, 1.70E-4, 1.0, Gibb_XOH, 1.0, Fe+2, -1.0, H+, 1.0, Gibb_e)
+
+
+// K1
+@surfspecies(Gibb, XOH, XOTh+3 ,1)
+@surfreaction(Gibb_XOTh+3, 6.76E+10, 1.0, Gibb_XOH, 1.0, Th+4, -1.0, H+, 3.0, Gibb_e)
+
+// K2
+@surfspecies(Gibb, XOH, XOTh[OH]+2 ,1)
+@surfreaction(Gibb_XOTh[OH]+2, 2.51E+3, 1.0, Gibb_XOH, 1.0, Th+4, -2.0, H+, 2.0, Gibb_e, 1.0, H2O)
+
+@surfspecies(Gibb, XOH, XOPd+ ,1)
+@surfreaction(Gibb_XOPd+, 3.16E+5, 1.0, Gibb_XOH, 1.0, Pd+2, -1.0, H+, 1.0, Gibb_e)
+
+
+@surfspecies(Gibb, XOH, XOPuO2+ ,1)
+@surfreaction(Gibb_XOPuO2+, 3.24E-11, 1.0, Gibb_XOH, 1.0, PuO2+2, -1.0, H+, 1.0, Gibb_e)
+
+
+//============
+// ANIONS, binding reactions table 8.7
+//============
+
+
+// log K1, AsO4-3, dont forget the log k value and the charge
+@surfspecies(Gibb, XOH, XH2AsO4 ,1)
+@surfreaction(Gibb_XH2AsO4, 8.71E+26, 1.0, Gibb_XOH, 1.0, AsO4-3, 3.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, AsO4-3
+@surfspecies(Gibb, XOH, XHAsO4- ,1)
+@surfreaction(Gibb_XHAsO4-, 6.17E+21, 1.0, Gibb_XOH, 1.0, AsO4-3, 2.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+//logk4, AsO4-3, check the anions specie and charge!!!!
+@surfspecies(Gibb, XOH, XOHAsO4-3 ,1)
+@surfreaction(Gibb_XOHAsO4-3, 2.45E+06, 1.0, Gibb_XOH, 1.0, AsO4-3, 0.0, H2O, -3.0, Gibb_e)
+
+
+// log K1, H3AsO3
+@surfspecies(Gibb, XOH, XH2AsO3 ,1)
+@surfreaction(Gibb_XH2AsO3, 6.03E+01, 1.0, Gibb_XOH, 1.0, H3AsO3, -1.0, H2O, 0.0, Gibb_e)
+
+
+
+// log K1, CO3-2
+@surfspecies(Gibb, XOH, XHCO3 ,1)
+@surfreaction(Gibb_XHCO3, 3.02E+21, 1.0, Gibb_XOH, 1.0, CO3-2, 2.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, CO3-2
+@surfspecies(Gibb, XOH, XCO3- ,1)
+@surfreaction(Gibb_XCO3-, 8.51E+15, 1.0, Gibb_XOH, 1.0, CO3-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+//logk2, SO4-2
+@surfspecies(Gibb, XOH, XSO4- ,1)
+@surfreaction(Gibb_XSO4-, 3.55E-01, 1.0, Gibb_XOH, 1.0, SO4-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+//logk3, SO4-2
+@surfspecies(Gibb, XOH, XOHSO4-2 ,1)
+@surfreaction(Gibb_XOHSO4-2, 1.55E+01, 1.0, Gibb_XOH, 1.0, SO4-2, -2.0, Gibb_e)
+
+
+// log K1, SO3-2
+@surfspecies(Gibb, XOH, XHSO3 ,1)
+@surfreaction(Gibb_XHSO3, 1.17E+20, 1.0, Gibb_XOH, 1.0, SO3-2, 2.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, SO3-2
+@surfspecies(Gibb, XOH, XSO3- ,1)
+@surfreaction(Gibb_XSO3-, 3.16E+13, 1.0, Gibb_XOH, 1.0, SO3-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+
+//NOTE: SEE ERRATUM KARAMALIDIS & DZOMBAK.FITTED K3 REFERS TO SELENITE; BELOW THIS NEW K3 IS ADDED TO SELENITE.
+
+
+//log K1, SeO3-2
+@surfspecies(Gibb, XOH, XHSeO3 ,1)
+@surfreaction(Gibb_XHSeO3, 2.75E+19, 1.0, Gibb_XOH, 1.0, SeO3-2, 3.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, SeO3-2
+@surfspecies(Gibb, XOH, XSeO3- ,1)
+@surfreaction(Gibb_XSeO3-, 2.51E+12, 1.0, Gibb_XOH, 1.0, SeO3-2, 2.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+//logk3, SeO3-2
+@surfspecies(Gibb, XOH, XOHSeO3-2 ,1)
+@surfreaction(Gibb_XOHSeO3-2, 1.15E+04, 1.0, Gibb_XOH, 1.0, SeO3-2, -2.0, Gibb_e)
+
+
+//NOTE: SEE ERRATUM KARAMALIDIS & DZOMBAK.THE SINGLE K3 REACTION AND DERIVED CONSTANT SELENATE REMAINS OK!
+
+//logk3, SeO4-2
+@surfspecies(Gibb, XOH, XOHSeO4-2 ,1)
+@surfreaction(Gibb_XOHSeO4-2, 3.39E+04, 1.0, Gibb_XOH, 1.0, SeO4-2, -2.0, Gibb_e)
+
+
+//log K2, H4SiO4
+@surfspecies(Gibb, XOH, XOH4SiO4 ,1)
+@surfreaction(Gibb_XOH4SiO4, 6.92E-05, 1.0, Gibb_XOH, 1.0, H4SiO4, -1.0, H+, -1.0, Gibb_e)
+
+
+//log K1, S2O3-2
+@surfspecies(Gibb, XOH, XHS2O3 ,1)
+@surfreaction(Gibb_XHS2O3, 8.71E+11, 1.0, Gibb_XOH, 1.0, S2O3-2, 2.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, S2O3-2
+@surfspecies(Gibb, XOH, XS2O3- ,1)
+@surfreaction(Gibb_XS2O3-, 2.82E-01, 1.0, Gibb_XOH, 1.0, S2O3-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, CrO4-2
+@surfspecies(Gibb, XOH, XHCrO4 ,1)
+@surfreaction(Gibb_XHCrO4, 2.51E+13, 1.0, Gibb_XOH, 1.0, CrO4-2, 2.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, CrO4-2
+@surfspecies(Gibb, XOH, XCrO4- ,1)
+@surfreaction(Gibb_XCrO4-, 3.16E+09, 1.0, Gibb_XOH, 1.0, CrO4-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, WO4-2
+@surfspecies(Gibb, XOH, XHWO4 ,1)
+@surfreaction(Gibb_XHWO4, 1.41E+14, 1.0, Gibb_XOH, 1.0, WO4-2, 2.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, WO4-2
+@surfspecies(Gibb, XOH, XWO4- ,1)
+@surfreaction(Gibb_XWO4-, 1.82E+03, 1.0, Gibb_XOH, 1.0, WO4-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, MoO4-2
+@surfspecies(Gibb, XOH, XHMoO4 ,1)
+@surfreaction(Gibb_XHMoO4, 5.89E+14, 1.0, Gibb_XOH, 1.0, MoO4-2, 2.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, MoO4-2
+@surfspecies(Gibb, XOH, XMoO4- ,1)
+@surfreaction(Gibb_XMoO4-, 5.25E+03, 1.0, Gibb_XOH, 1.0, MoO4-2, 1.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+//logk3, MoO4-2
+@surfspecies(Gibb, XOH, XOHMoO4-2 ,1)
+@surfreaction(Gibb_XOHMoO4-2, 7.41E+01, 1.0, Gibb_XOH, 1.0, MoO4-2, 0.0, H+, -2.0, Gibb_e)
+
+
+//log K1, VO4-3
+@surfspecies(Gibb, XOH, XH2VO4 ,1)
+@surfreaction(Gibb_XH2VO4, 3.31E+28, 1.0, Gibb_XOH, 1.0, VO4-3, 3.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, VO4-3
+@surfspecies(Gibb, XOH, XHVO4- ,1)
+@surfreaction(Gibb_XHVO4-, 2.57E+23, 1.0, Gibb_XOH, 1.0, VO4-3, 2.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, Sb[OH]6-
+@surfspecies(Gibb, XOH, XOH2Sb[OH]6 ,1)
+@surfreaction(Gibb_XOH2Sb[OH]6, 1.45E+13, 1.0, Gibb_XOH, 1.0, Sb[OH]6-, -1.0, H+, 0.0, H2O, 0.0, Gibb_e)
+
+
+//logk2, Sb[OH]6-
+@surfspecies(Gibb, XOH, XOHSb[OH]6- ,1)
+@surfreaction(Gibb_XOHSb[OH]6-, 3.63E+01, 1.0, Gibb_XOH, 1.0, Sb[OH]6-, 0.0, H+, 0.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, CNO-
+@surfspecies(Gibb, XOH, XOH2CNO ,1)
+@surfreaction(Gibb_XOH2CNO, 9.77E+13, 1.0, Gibb_XOH, 1.0, CNO-, -1.0, H+, 0.0, H2O, 0.0, Gibb_e)
+
+//logk2, CNO-
+@surfspecies(Gibb, XOH, XOHCNO- ,1)
+@surfreaction(Gibb_XOHCNO-, 1.00E+03, 1.0, Gibb_XOH, 1.0, CNO-, 0.0, H+, 0.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, CN-
+@surfspecies(Gibb, XOH, XOH2CN ,1)
+@surfreaction(Gibb_XOH2CN, 1.82E+20, 1.0, Gibb_XOH, 1.0, CN-, -1.0, H+, 0.0, H2O, 0.0, Gibb_e)
+
+//logk2, CN-
+@surfspecies(Gibb, XOH, XOHCN- ,1)
+@surfreaction(Gibb_XOHCN-, 6.61E+13, 1.0, Gibb_XOH, 1.0, CN-, 0.0, H+, 0.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, SCN-
+@surfspecies(Gibb, XOH, XOH2SCN ,1)
+@surfreaction(Gibb_XOH2SCN, 9.77E+08, 1.0, Gibb_XOH, 1.0, SCN-, -1.0, H+, 0.0, H2O, 0.0, Gibb_e)
+
+//logk2, SCN-
+@surfspecies(Gibb, XOH, XOHSCN- ,1)
+@surfreaction(Gibb_XOHSCN-, 2.24E-06, 1.0, Gibb_XOH, 1.0, SCN-, 0.0, H+, 0.0, H2O, -1.0, Gibb_e)
+
+
+//log K1, F-
+@surfspecies(Gibb, XOH, XF,1)
+@surfreaction(Gibb_XF, 6.03E+08, 1.0, Gibb_XOH, 1.0, F-, 1.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, F-
+@surfspecies(Gibb, XOH, XOHF-,1)
+@surfreaction(Gibb_XOHF-, 7.59E+02, 1.0, Gibb_XOH, 1.0, F-, 0.0, H+, 0.0, H2O, -1.0, Gibb_e)
+
+//logk3, F-
+@surfspecies(Gibb, XOH, XF2- ,1)
+@surfreaction(Gibb_XF2-, 8.71E+11, 1.0, Gibb_XOH, 2.0, F-, 1.0, H+, -1.0, Gibb_e, -1.0, H2O)
+
+
+//log K1, PO4-3
+@surfspecies(Gibb, XOH, XH2PO4 ,1)
+@surfreaction(Gibb_XH2PO4, 7.76E+26, 1.0, Gibb_XOH, 1.0, PO4-3, 3.0, H+, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, PO4-3
+@surfspecies(Gibb, XOH, XHPO4- ,1)
+@surfreaction(Gibb_XHPO4-, 2.34E+19, 1.0, Gibb_XOH, 1.0, PO4-3, 2.0, H+, -1.0, H2O, -1.0, Gibb_e)
+
+//logk3, PO4-3
+@surfspecies(Gibb, XOH, XPO4-2 ,1)
+@surfreaction(Gibb_XPO4-2, 3.72E+13, 1.0, Gibb_XOH, 1.0, PO4-3, 1.0, H+, -2.0, Gibb_e, -1.0, H2O)
+
+
+//log K1, H3BO3
+@surfspecies(Gibb, XOH, XH2BO3 ,1)
+@surfreaction(Gibb_XH2BO3, 3.72E+01, 1.0, Gibb_XOH, 1.0, H3BO3, -1.0, H2O, 0.0, Gibb_e)
+
+//logk2, H3BO3
+@surfspecies(Gibb, XOH, XOH3BO3- ,1)
+@surfreaction(Gibb_XOH3BO3-, 2.34E-08, 1.0, Gibb_XOH, 1.0, H3BO3, -1.0, H+, 0.0, H2O, -1.0, Gibb_e)
+
+
+
+
+@adsmodel(Goethite_GTLM, part ,6E+4, ddl_surface)
+
+@Class: adsorptionmodeltext(Goethite_GTLM){
+//-------------------------------------------------------------
+// Marthur and Dzombak 2006, model parameters for adsorption of anions and cations on Goethite_GTLM surface.
+// GTLM stands for Generalized Two Layer Model. 
+// table 8.9 (cations) and table 8.10 (anions)
+//
+// Explanation: generic specific surface area of goethite is assumed to be 60 m2/g, see Mathur & Dzombak, page 450 -451
+// Site density in Orchestra given in mol sites/m2. Mathur & Dzombak ssume 2.0 sites / nm2 (p 451 M&D)
+// this number is equal to 2 * 10^9 * 10^9 * 1/Navogadro = 3.321E-06 mol sites/m2
+//
+// J.J. Dijkstra
+//-------------------------------------------------------------
+}
+
+@surfplane(Goethite_GTLM, e)
+@surfsite(Goethite_GTLM, XOH, 3.321E-06, 1)
+
+// Surface protonation reactions 
+
+//logK2
+@surfspecies(Goethite_GTLM, XOH, XO- ,1)
+@surfreaction(Goethite_GTLM_XO-, 2.24E-10, 1.0, Goethite_GTLM_XOH, -1.0, H+, -1.0, Goethite_GTLM_e) // p 69 Karamalidis&Dzombak
+
+//log K1
+@surfspecies(Goethite_GTLM, XOH, XOH2+ ,1)
+@surfreaction(Goethite_GTLM_XOH2+, 8.51E+6, 1.0, Goethite_GTLM_XOH, 1.0, H+, 1.0, Goethite_GTLM_e) // p 69 Karamalidis&Dzombak
+
+
+// CATIONS binding reactions table 4, p.456 sorption modeling on "Goethite_GTLM", Mathur and Dzombak 
+
+
+//log K1, Ba+2
+@surfspecies(Goethite_GTLM, XOH, XOBa+ ,1)
+@surfreaction(Goethite_GTLM_XOBa+, 2.399E-06, 1.0, Goethite_GTLM_XOH, 1.0, Ba+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Ba+2
+@surfspecies(Goethite_GTLM, XOH, XOHBa+ ,1)
+@surfreaction(Goethite_GTLM_XOHBa+, 2.692E+03, 1.0, Goethite_GTLM_XOH, 1.0, Ba+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Sr+2
+@surfspecies(Goethite_GTLM, XOH, XOSr+ ,1)
+@surfreaction(Goethite_GTLM_XOSr+, 3.63E-06, 1.0, Goethite_GTLM_XOH, 1.0, Sr+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Sr+2
+@surfspecies(Goethite_GTLM, XOH, XOHSr+ ,1)
+@surfreaction(Goethite_GTLM_XOHSr+, 3.89E+03, 1.0, Goethite_GTLM_XOH, 1.0, Sr+2, 2.0, Goethite_GTLM_e)
+
+
+//log K1, Mn+2
+@surfspecies(Goethite_GTLM, XOH, XOMn+ ,1)
+@surfreaction(Goethite_GTLM_XOMn+, 2.19E-03, 1.0, Goethite_GTLM_XOH, 1.0, Mn+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Mn+2
+@surfspecies(Goethite_GTLM, XOH, XOHMn+ ,1)
+@surfreaction(Goethite_GTLM_XOHMn+, 9.77E+05, 1.0, Goethite_GTLM_XOH, 1.0, Mn+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Cu+2
+@surfspecies(Goethite_GTLM, XOH, XOCu+ ,1)
+@surfreaction(Goethite_GTLM_XOCu+, 2.45E+1, 1.0, Goethite_GTLM_XOH, 1.0, Cu+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Cu+2
+@surfspecies(Goethite_GTLM, XOH, XOHCu+ ,1)
+@surfreaction(Goethite_GTLM_XOHCu+, 8.32E+08, 1.0, Goethite_GTLM_XOH, 1.0, Cu+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Cd+2
+@surfspecies(Goethite_GTLM, XOH, XOCd+ ,1)
+@surfreaction(Goethite_GTLM_XOCd+, 1.10E-2, 1.0, Goethite_GTLM_XOH, 1.0, Cd+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Cd+2
+@surfspecies(Goethite_GTLM, XOH, XOHCd+ ,1)
+@surfreaction(Goethite_GTLM_XOHCd+, 1.91E+06, 1.0, Goethite_GTLM_XOH, 1.0, Cd+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Zn+2
+@surfspecies(Goethite_GTLM, XOH, XOZn+ ,1)
+@surfreaction(Goethite_GTLM_XOZn+, 1.10E-1, 1.0, Goethite_GTLM_XOH, 1.0, Zn+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Zn+2
+@surfspecies(Goethite_GTLM, XOH, XOHZn+ ,1)
+@surfreaction(Goethite_GTLM_XOHZn+, 3.16E+07, 1.0, Goethite_GTLM_XOH, 1.0, Zn+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Pb+2
+@surfspecies(Goethite_GTLM, XOH, XOPb+ ,1)
+@surfreaction(Goethite_GTLM_XOPb+, 2.75E+00, 1.0, Goethite_GTLM_XOH, 1.0, Pb+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Pb+2
+@surfspecies(Goethite_GTLM, XOH, XOHPb+ ,1)
+@surfreaction(Goethite_GTLM_XOHPb+, 1.78E+08, 1.0, Goethite_GTLM_XOH, 1.0, Pb+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Co+2
+@surfspecies(Goethite_GTLM, XOH, XOCo+ ,1)
+@surfreaction(Goethite_GTLM_XOCo+, 1.62E-1, 1.0, Goethite_GTLM_XOH, 1.0, Co+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Co+2
+@surfspecies(Goethite_GTLM, XOH, XOHCo+ ,1)
+@surfreaction(Goethite_GTLM_XOHCo+, 1.91E+07, 1.0, Goethite_GTLM_XOH, 1.0, Co+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Ni+2
+@surfspecies(Goethite_GTLM, XOH, XONi+ ,1)
+@surfreaction(Goethite_GTLM_XONi+, 1.10E-02, 1.0, Goethite_GTLM_XOH, 1.0, Ni+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Ni+2
+@surfspecies(Goethite_GTLM, XOH, XOHNi+ ,1)
+@surfreaction(Goethite_GTLM_XOHNi+, 2.40E+06, 1.0, Goethite_GTLM_XOH, 1.0, Ni+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K0, Hg+2
+@surfspecies(Goethite_GTLM, XOH, XOHgOH ,1)
+@surfreaction(Goethite_GTLM_XOHgOH, 4.68E-04, 1.0, Goethite_GTLM_XOH, 1.0, Hg+2, -2.0, H+, 1.0, H2O)
+
+//log K1, Hg+2
+@surfspecies(Goethite_GTLM, XOH, XOHg+ ,1)
+@surfreaction(Goethite_GTLM_XOHg+, 6.92E+03, 1.0, Goethite_GTLM_XOH, 1.0, Hg+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Hg+2
+@surfspecies(Goethite_GTLM, XOH, XOHHg+ ,1)
+@surfreaction(Goethite_GTLM_XOHHg+, 2.455E+12, 1.0, Goethite_GTLM_XOH, 1.0, Hg+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Mg+2
+@surfspecies(Goethite_GTLM, XOH, XOMg+ ,1)
+@surfreaction(Goethite_GTLM_XOMg+, 9.55E-04, 1.0, Goethite_GTLM_XOH, 1.0, Mg+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Mg+2
+@surfspecies(Goethite_GTLM, XOH, XOHMg+ ,1)
+@surfreaction(Goethite_GTLM_XOHMg+, 1.738E+05, 1.0, Goethite_GTLM_XOH, 1.0, Mg+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Ca+2
+@surfspecies(Goethite_GTLM, XOH, XOCa+ ,1)
+@surfreaction(Goethite_GTLM_XOCa+, 3.31E-07, 1.0, Goethite_GTLM_XOH, 1.0, Ca+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Ca+2
+@surfspecies(Goethite_GTLM, XOH, XOHCa+ ,1)
+@surfreaction(Goethite_GTLM_XOHCa+, 9.55E+03, 1.0, Goethite_GTLM_XOH, 1.0, Ca+2, 2.0, Goethite_GTLM_e)
+
+//log K3, Ca+2
+@surfspecies(Goethite_GTLM, XOH, XOHCa+ ,1)
+@surfreaction(Goethite_GTLM_XOHCa+, 1.82E+12, 1.0, Goethite_GTLM_XOH, 1.0, Ca+2, 1.0, H+, -1.0, H2O, 3.0, Goethite_GTLM_e)
+
+
+
+//log K1, UO2+2
+@surfspecies(Goethite_GTLM, XOH, XOUO2+ ,1)
+@surfreaction(Goethite_GTLM_XOUO2+, 1.91E+02, 1.0, Goethite_GTLM_XOH, 1.0, UO2+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, UO2+2
+@surfspecies(Goethite_GTLM, XOH, XOHUO2+ ,1)
+@surfreaction(Goethite_GTLM_XOHUO2+, 1.82E+10, 1.0, Goethite_GTLM_XOH, 1.0, UO2+2, 2.0, Goethite_GTLM_e)
+
+
+//log K1, PuO2+2
+@surfspecies(Goethite_GTLM, XOH, XOPuO2+ ,1)
+@surfreaction(Goethite_GTLM_XOPuO2+, 3.02E+02, 1.0, Goethite_GTLM_XOH, 1.0, PuO2+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, PuO2+2
+@surfspecies(Goethite_GTLM, XOH, XOHPuO2+ ,1)
+@surfreaction(Goethite_GTLM_XOHPuO2+, 2.75E+10, 1.0, Goethite_GTLM_XOH, 1.0, PuO2+2, 2.0, Goethite_GTLM_e)
+
+
+
+//log K1, Be+2
+@surfspecies(Goethite_GTLM, XOH, XOBe+ ,1)
+@surfreaction(Goethite_GTLM_XOBe+, 4.90E+02, 1.0, Goethite_GTLM_XOH, 1.0, Be+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Be+2
+@surfspecies(Goethite_GTLM, XOH, XOHBe+ ,1)
+@surfreaction(Goethite_GTLM_XOHBe+, 4.07E+10, 1.0, Goethite_GTLM_XOH, 1.0, Be+2, 2.0, Goethite_GTLM_e)
+
+
+//log K1, NpO2+2
+@surfspecies(Goethite_GTLM, XOH, XONpO2+ ,1)
+@surfreaction(Goethite_GTLM_XONpO2+, 8.32E+02, 1.0, Goethite_GTLM_XOH, 1.0, NpO2+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, NpO2+2
+@surfspecies(Goethite_GTLM, XOH, XOHNpO2+ ,1)
+@surfreaction(Goethite_GTLM_XOHNpO2+, 6.61E+10, 1.0, Goethite_GTLM_XOH, 1.0, NpO2+2, 2.0, Goethite_GTLM_e)
+
+
+//log K1, Sn+2
+@surfspecies(Goethite_GTLM, XOH, XOSn+ ,1)
+@surfreaction(Goethite_GTLM_XOSn+, 5.62E+04, 1.0, Goethite_GTLM_XOH, 1.0, Sn+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Sn+2
+@surfspecies(Goethite_GTLM, XOH, XOHSn+ ,1)
+@surfreaction(Goethite_GTLM_XOHSn+, 2.45E+12, 1.0, Goethite_GTLM_XOH, 1.0, Sn+2, 2.0, Goethite_GTLM_e)
+
+
+//log K1, Pd+2
+@surfspecies(Goethite_GTLM, XOH, XOPd+ ,1)
+@surfreaction(Goethite_GTLM_XOPd+, 1.55E+06, 1.0, Goethite_GTLM_XOH, 1.0, Pd+2, -1.0, H+, 1.0, Goethite_GTLM_e)
+
+//log K2, Pd+2
+@surfspecies(Goethite_GTLM, XOH, XOHPd+ ,1)
+@surfreaction(Goethite_GTLM_XOHPd+, 4.37E+13, 1.0, Goethite_GTLM_XOH, 1.0, Pd+2, 2.0, Goethite_GTLM_e)
+
+
+
+//===========
+// ANIONS binding reactions table 7 and 8, p.460-464 sorption modeling on "Goethite_GTLM", Mathur and Dzombak 
+//===========
+
+//log K1, PO4-3
+@surfspecies(Goethite_GTLM, XOH, XH2PO4 ,1)
+@surfreaction(Goethite_GTLM_XH2PO4, 5.25E+30, 1.0, Goethite_GTLM_XOH, 1.0, PO4-3, 3.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, PO4-3
+@surfspecies(Goethite_GTLM, XOH, XHPO4- ,1)
+@surfreaction(Goethite_GTLM_XHPO4-, 8.13E+24, 1.0, Goethite_GTLM_XOH, 1.0, PO4-3, 2.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+//logk3, PO4-3
+@surfspecies(Goethite_GTLM, XOH, XPO4-2 ,1)
+@surfreaction(Goethite_GTLM_XPO4-2, 4.47E+19, 1.0, Goethite_GTLM_XOH, 1.0, PO4-3, 1.0, H+, -1.0, H2O, -2.0, Goethite_GTLM_e)
+
+
+
+
+//log K1, SO4-2
+@surfspecies(Goethite_GTLM, XOH, XHSO4 ,1)
+@surfreaction(Goethite_GTLM_XHSO4, 7.76E+12, 1.0, Goethite_GTLM_XOH, 1.0, SO4-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, SO4-2
+@surfspecies(Goethite_GTLM, XOH, XSO4- ,1)
+@surfreaction(Goethite_GTLM_XSO4-, 5.50E+06, 1.0, Goethite_GTLM_XOH, 1.0, SO4-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+//logk4, SO4-2 
+@surfspecies(Goethite_GTLM, XOH, XOSO4-3 ,1)
+@surfreaction(Goethite_GTLM_XOSO4-3, 5.50E-07, 1.0, Goethite_GTLM_XOH, 1.0, SO4-2, -1.0, H+, -3.0, Goethite_GTLM_e)
+
+
+
+
+//log K1, CrO4-2
+@surfspecies(Goethite_GTLM, XOH, XHCrO4 ,1)
+@surfreaction(Goethite_GTLM_XHCrO4, 1.29E+17, 1.0, Goethite_GTLM_XOH, 1.0, CrO4-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, CrO4-2
+@surfspecies(Goethite_GTLM, XOH, XCrO4- ,1)
+@surfreaction(Goethite_GTLM_XCrO4-, 1.48E+11, 1.0, Goethite_GTLM_XOH, 1.0, CrO4-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+//logk3, CrO4-2
+@surfspecies(Goethite_GTLM, XOH, XOHCrO4-2 ,1)
+@surfreaction(Goethite_GTLM_XOHCrO4-2, 1.12E+04, 1.0, Goethite_GTLM_XOH, 1.0, CrO4-2, 0.0, H+, 0.0, H2O, -2.0, Goethite_GTLM_e)
+
+
+
+
+//log K2, SeO3-2
+@surfspecies(Goethite_GTLM, XOH, XSeO3- ,1)
+@surfreaction(Goethite_GTLM_XSeO3-, 3.09E+10, 1.0, Goethite_GTLM_XOH, 1.0, SeO3-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+//logk4, SeO3-2 
+@surfspecies(Goethite_GTLM, XOH, XOSeO3-3 ,1)
+@surfreaction(Goethite_GTLM_XOSeO3-3, 1.41E-06, 1.0, Goethite_GTLM_XOH, 1.0, SeO3-2, -1.0, H+, -3.0, Goethite_GTLM_e)
+
+
+
+//log K1, SeO4-2
+@surfspecies(Goethite_GTLM, XOH, XHSeO4 ,1)
+@surfreaction(Goethite_GTLM_XHSeO4, 4.47E+11, 1.0, Goethite_GTLM_XOH, 1.0, SeO4-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, SeO4-2
+@surfspecies(Goethite_GTLM, XOH, XSeO4- ,1)
+@surfreaction(Goethite_GTLM_XSeO4-, 3.47E+06, 1.0, Goethite_GTLM_XOH, 1.0, SeO4-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+
+//log K1, F-
+@surfspecies(Goethite_GTLM, XOH, XOH2F ,1)
+@surfreaction(Goethite_GTLM_XOH2F, 1.58E+09, 1.0, Goethite_GTLM_XOH, 1.0, F-, 1.0, H+, 0.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, F-
+@surfspecies(Goethite_GTLM, XOH, XOHF- ,1)
+@surfreaction(Goethite_GTLM_XOHF-, 3.89E+01, 1.0, Goethite_GTLM_XOH, 1.0, F-, 0.0, H+, 0.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+// additions from table 8 p 464
+
+//log K1, SO3-2
+@surfspecies(Goethite_GTLM, XOH, XHSO3 ,1)
+@surfreaction(Goethite_GTLM_XHSO3, 7.59E+19, 1.0, Goethite_GTLM_XOH, 1.0, SO3-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, SO3-2
+@surfspecies(Goethite_GTLM, XOH, XSO3- ,1)
+@surfreaction(Goethite_GTLM_XSO3-, 7.41E+12, 1.0, Goethite_GTLM_XOH, 1.0, SO3-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+//log K1, H2SiO4-2
+@surfspecies(Goethite_GTLM, XOH, XHH2SiO4 ,1)
+@surfreaction(Goethite_GTLM_XHH2SiO4, 2.63E+30, 1.0, Goethite_GTLM_XOH, 1.0, H2SiO4-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, H2SiO4-2
+@surfspecies(Goethite_GTLM, XOH, XH2SiO4- ,1)
+@surfreaction(Goethite_GTLM_XH2SiO4-, 2.04E+22, 1.0, Goethite_GTLM_XOH, 1.0, H2SiO4-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+//log K1, S2O3-2
+@surfspecies(Goethite_GTLM, XOH, XHS2O3 ,1)
+@surfreaction(Goethite_GTLM_XHS2O3, 8.91E+09, 1.0, Goethite_GTLM_XOH, 1.0, S2O3-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, S2O3-2
+@surfspecies(Goethite_GTLM, XOH, XS2O3- ,1)
+@surfreaction(Goethite_GTLM_XS2O3-, 9.33E+03, 1.0, Goethite_GTLM_XOH, 1.0, S2O3-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+
+//log K1, WO4-2
+@surfspecies(Goethite_GTLM, XOH, XHWO4 ,1)
+@surfreaction(Goethite_GTLM_XHWO4, 1.32E+14, 1.0, Goethite_GTLM_XOH, 1.0, WO4-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, WO4-2
+@surfspecies(Goethite_GTLM, XOH, XWO4- ,1)
+@surfreaction(Goethite_GTLM_XWO4-, 5.01E+07, 1.0, Goethite_GTLM_XOH, 1.0, WO4-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+//log K1, MoO4-2
+@surfspecies(Goethite_GTLM, XOH, XHMoO4 ,1)
+@surfreaction(Goethite_GTLM_XHMoO4, 4.47E+14, 1.0, Goethite_GTLM_XOH, 1.0, MoO4-2, 2.0, H+, -1.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, MoO4-2
+@surfspecies(Goethite_GTLM, XOH, XMoO4- ,1)
+@surfreaction(Goethite_GTLM_XMoO4-, 1.51E+08, 1.0, Goethite_GTLM_XOH, 1.0, MoO4-2, 1.0, H+, -1.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+//log K1, Sb[OH]6-
+@surfspecies(Goethite_GTLM, XOH, XOH2Sb[OH]6 ,1)
+@surfreaction(Goethite_GTLM_XOH2Sb[OH]6, 8.71E+11, 1.0, Goethite_GTLM_XOH, 1.0, Sb[OH]6-, 1.0, H+, 0.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, Sb[OH]6-
+@surfspecies(Goethite_GTLM, XOH, XOHSb[OH]6- ,1)
+@surfreaction(Goethite_GTLM_XOHSb[OH]6-, 5.62E+05, 1.0, Goethite_GTLM_XOH, 1.0, Sb[OH]6-, 0.0, H+, 0.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+//log K1, CN-
+@surfspecies(Goethite_GTLM, XOH, XOH2CN ,1)
+@surfreaction(Goethite_GTLM_XOH2CN, 3.02E+23, 1.0, Goethite_GTLM_XOH, 1.0, CN-, 1.0, H+, 0.0, H2O, 0.0, Goethite_GTLM_e)
+
+//logk2, CN-
+@surfspecies(Goethite_GTLM, XOH, XOHCN- ,1)
+@surfreaction(Goethite_GTLM_XOHCN-, 1.26E+16, 1.0, Goethite_GTLM_XOH, 1.0, CN-, 0.0, H+, 0.0, H2O, -1.0, Goethite_GTLM_e)
+
+
+//-------------------------------------------------------------
+
+
+
+
+
+
+//----------------------------------------------------------------------------------
+// BASIC STERN adsorption model + adsorption reactions.
+//----------------------------------------------------------------------------------
+
+@class: adsorptionmodelcode(bstern){
+   @Class: bstern(name, phase, surface_area) 
+   A Stern model has two electrostatic layers (e0 and e1) 
+   and a diffuse double layer that uses the potential of the e1 layer.
+   {
+	@Var: <name>.c 3.9 // capacitance in F/m2
+	@phase(<name>, <phase>, <surface_area>)
+      
+	@phase(<name>_e) 
+	@link_phase(<name>, <name>_e, 96484.56)
+
+	@e_layer (<name>_e0, <name>_e) // electrostatic layer e0
+	@e_layer (<name>_e1, <name>_e) // electrostatic layer e1
+	@ddl(<name>, <name>_e1)        // diffuse doulbe layer with potential of e1
+
+	@Var: <name>.eq1 0.0			// first equation that needs to be solved: sum of charges = zero
+	@Calc:(5, "<name>.eq1 = <name>.ddl + <name>_e0.<name>_e + <name>_e1.<name>_e") 
+        @Uneq2: unknown:(name:, <name>_e0.logact, delta:, 1e-6, type:, lin, step: , 1) equation:(name:, <name>.eq1, tol: , 1e-6)
+
+	@Var: <name>.eq2 0.0        // eq2 = (psi0-psi1)* c - e0.sigma
+	@Calc:(5, "<name>.eq2 = (<name>_e0.psi-<name>_e1.psi) * <name>.c - <name>_e0.<name>_e") 
+        @Uneq2: unknown:(name:, <name>_e1.logact, delta:, 1e-6, type:, lin, step: , 1) equation:(name:, <name>.eq2, tol: , 1e-6)
+
+   }
+
+}
+
+//----------------------------------------------------------------------------------------
+@adsmodel (silica, part ,180000, bstern)
+
+@surfplane(silica, e0)
+@surfplane(silica, e1)
+
+@surfsite (silica, s1, 7.75e-6, 1, -1, e0)
+
+@surfspecies (silica, s1, OH, 1)
+@surfreaction(silica_OH, 3.162277e7, 1, silica_s1, 1, H+, 1, silica_e0)
+//----------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------
+// CD-MUSIC adsorption model + adsorption reactions.
+// This is an input file for the Orchestra chemical user interface.
+// It contains the cd music surface object with the cd music model equations  +
+// a set of adsorption reactions.
+// The user interface will automatically select the appropriate adsorption reactions
+// that are relevant for the selected set of primary entities / components.
+//----------------------------------------------------------------------------------------
+
+@class: adsorptionmodelcode(cdmusicsurf){
+
+@Class: cdmusicsurf(name,  parent_phase, surface_area)
+{
+   @cdmusicsurf(<name>, <parent_phase>, <surface_area>, 1.1, 5)
+}
+
+@Class: cdmusicsurf(name,  parent_phase, surface_area, c1, c2)
+{
+   @globalvar: <name>.c1            <c1>  // default values for capacitance
+   @globalvar: <name>.c2            <c2>   // 
+   @phase(<name>, <parent_phase>, <surface_area>)
+   @phase(<name>_e)
+   @link_phase(<name>, <name>_e, 96484.56)
+
+   // The electrostatic layers are child phases of the <name>_e fase, and linked to this phase
+   // via the conversion factor  96484.56.
+   // This makes the charge balances (<name>_e0.<name>_e) available in coulomb/m2 after phase 4.
+   @e_layer (<name>_e0, <name>_e)
+   @e_layer (<name>_e1, <name>_e)
+   @e_layer (<name>_e2, <name>_e)
+
+   // a diffuse double layer that uses the potential of the e2 layer
+   //@ddl(<name>, <name>_e2)     
+   //@ddl_old(<name>, <name>_e2)  
+   @ddl_notyetcompatible(<name>, <name>_e2)       
+
+   @Var: <name>.eq1 0.0      // eq1= ddl.sigma + e0.sigma + e1.sigma + e2.sigma
+   @Calc:(5,"<name>.eq1 = {<name>.ddl} + {<name>_e0.<name>_e} + {<name>_e1.<name>_e} + {<name>_e2.<name>_e} ")
+   @Solve: unknown:(name:, <name>_e0.logact, delta:, 1e-6, type:, lin, step: , 1) equation:(name:, <name>.eq1, tol: , 1e-6)
+
+
+   @Var: <name>.eq2 0.0      // eq2 = (psi0-psi1)* c1 - e0.sigma
+   @Calc:(5,"<name>.eq2 = ({<name>.c1}*({<name>_e0.psi}-{<name>_e1.psi}))-{<name>_e0.<name>_e}")
+   @Solve: unknown:(name:, <name>_e1.logact, delta:, 1e-6, type:, lin, step: , 1) equation:(name:, <name>.eq2, tol: , 1e-6)
+
+   @Var: <name>.eq3 0.0      // eq3 = (psi1-psi2)* c2 - e0.sigma - e1.sigma
+   @Calc:(5,"<name>.eq3 = {<name>.c2}*({<name>_e1.psi}-{<name>_e2.psi})-{<name>_e0.<name>_e} - {<name>_e1.<name>_e}")
+   @Solve: unknown:(name:, <name>_e2.logact, delta:, 1e-6, type:, lin, step: , 1) equation:(name:, <name>.eq3, tol: , 1e-6)
+}
+}
+
+
+@adsmodel(goethite, part , 400000, cdmusicsurf)
+
+@class: adsorptionmodeltext(goethite){
+// Here we need some text to describe the source of the cd music model parameters
+}
+
+@surfplane(goethite, e0)
+@surfplane(goethite, e1)
+@surfplane(goethite, e2)
+
+@surfsite(goethite, s1, 5.7e-6,   1, -0.5, e0) // site density in moles/m2   3.42 * 1.666e-6  and 2.7 *1.666e-6 s/nm
+@surfsite(goethite, s2, 4.5e-6,   1, -0.5, e0, 0, e1)
+
+@surfspecies(goethite, s1, s1-H ,1)
+@surfreaction(goethite_s1-H,  1.58489e9, 1, H+, 1, goethite_s1, 1, goethite_e0)
+
+@surfspecies(goethite, s2, s2-H ,1)
+@surfreaction(goethite_s2-H,  1.58489e9, 1, H+, 1, goethite_s2, 1, goethite_e0)
+
+@surfspecies(goethite, s1, s1-Cl, 1)
+@surfreaction(goethite_s1-Cl,  1.58489e8   , 1.0, Cl-, 1.0, H+, 1.0, goethite_s1, 1, goethite_e0, -1, goethite_e2)
+
+@surfspecies(goethite, s2, s2-Cl, 1)
+@surfreaction(goethite_s2-Cl,  1.58489e8   , 1.0, Cl-, 1.0, H+, 1.0, goethite_s2, 1, goethite_e0, -1, goethite_e2)
+
+@surfspecies(goethite, s1, s1-Na, 1)   
+@surfreaction(goethite_s1-Na, .1, 1, goethite_s1, 1, Na+, 1, goethite_e2)  
+
+@surfspecies(goethite, s2, s2-Na, 1)   
+@surfreaction(goethite_s2-Na, .1, 1, goethite_s2, 1, Na+, 1, goethite_e2)  
+
+@surfspecies(goethite, s1, s1-SO4, 1) 
+@surfreaction(goethite_s1-SO4, 3.1622e19, 2, goethite_s1, 1, SO4-2, 2,  H+, 1.7, goethite_e0,  -1.7, goethite_e1)  
+
+
+
+
+// Phosphate model Geelhoed 
+//Title: Simulation of the effect of citrate exudation from roots on the plant availability of phosphate adsorbed on goethite
+//Author(s): Geelhoed JS, Van Riemsdijk WH, Findenegg GR
+//Source: EUROPEAN JOURNAL OF SOIL SCIENCE   Volume: 50   Issue: 3   Pages: 379-390   Published: SEP 1999 
+
+@surfspecies(goethite, s1, s1-PO4_1, 1) 
+@surfreaction(goethite_s1-PO4_1,  3.162277e20  , 1.0, H+, 1.0, PO4-3, 0.2, goethite_e0, -2.2, goethite_e1, 1.0, goethite_s1)
+
+@surfspecies(goethite, s1, s1-PO4_2, 1) 
+@surfreaction(goethite_s1-PO4_2,  1.00000e30  , 2.0, H+, 1.0, PO4-3, 0.75, goethite_e0, -1.75, goethite_e1, 2.0, goethite_s1)
+
+@surfspecies(goethite, s1, s1-PO4_3, 1) 
+@surfreaction(goethite_s1-PO4_3,  2.511886e35  , 3.0, H+, 1.0, PO4-3, 1.0, goethite_e0, -1.0, goethite_e1, 2.0, goethite_s1)
+
+@surfspecies(goethite, s1, s1-Citrate_1, 1) 
+@surfreaction(goethite_s1-Citrate_1, 3.98e39, 4, goethite_s1, 1, Citrate-3, 4,  H+, 2.4, goethite_e0,  -0.4, goethite_e1, -1, goethite_e2)  
+
+@surfspecies(goethite, s1, s1-Citrate_2, 1) 
+@surfreaction(goethite_s1-Citrate_2, 4.467e29, 3, goethite_s1, 1, Citrate-3, 3,  H+, 1.7, goethite_e0,  -0.7, goethite_e1, -1, goethite_e2)  
+
+@surfspecies(goethite, s1, s1-Citrate_3, 1) 
+@surfreaction(goethite_s1-Citrate_3, 2.512e34, 3, goethite_s1, 1, Citrate-3, 4,  H+, 1.7, goethite_e0,  -0.2, goethite_e1, -.5, goethite_e2)  
+
+
+
+//----------------------------------------------------------------------------------------
+@adsmodel(goethite_2, part , 400000, cdmusicsurf)
+
+@class: adsorptionmodeltext(goethite_2){
+// Here we need some text to describe the source of the goethite2 cd music model parameters
+}
+
+@surfplane(goethite_2, e0)
+@surfplane(goethite_2, e1)
+@surfplane(goethite_2, e2)
+
+@surfsite(goethite_2, s1, 5.75e-6, 1, -0.5, e0) // site density in moles/m2 3.444*1.666e-6
+@surfsite(goethite_2, s2, 4.5e-6,  1, -0.5, e0)
+
+@surfspecies(goethite_2, s1, s1-H ,1)
+@surfreaction(goethite_2_s1-H,  2.0e9, 1, H+, 1, goethite_2_s1, 1, goethite_2_e0)
+
+@surfspecies(goethite_2, s2, s2-H ,1)
+@surfreaction(goethite_2_s2-H,  2.0e9, 1, H+, 1, goethite_2_s2, 1, goethite_2_e0)
+
+@surfspecies(goethite_2, s1, s1-Cl, 1)
+@surfreaction(goethite_2_s1-Cl,  4.36000e8   , 1.0, Cl-, 1.0, H+, 1.0, goethite_2_s1, 1, goethite_2_e0, -1, goethite_2_e1)
+
+@surfspecies(goethite_2, s2, s2-Cl, 1)
+@surfreaction(goethite_2_s2-Cl,  4.36000e8   , 1.0, Cl-, 1.0, H+, 1.0, goethite_2_s2, 1, goethite_2_e0, -1, goethite_2_e1)
+
+@surfspecies(goethite_2, s1, s1-Na, 1)   
+@surfreaction(goethite_2_s1-Na, 0.537, 1, goethite_2_s1, 1, Na+, .5, goethite_2_e1, .5, goethite_2_e2)  
+
+@surfspecies(goethite_2, s2, s2-Na, 1)   
+@surfreaction(goethite_2_s2-Na, 0.537, 1, goethite_2_s2, 1, Na+, .5, goethite_2_e1, .5, goethite_2_e2) 
+
+@surfspecies(goethite_2, s1, s1-SO4_is, 1) 
+@surfreaction(goethite_2_s1-SO4_is, 6.918e9, 1, goethite_2_s1, 1, SO4-2, 1,  H+, 0.6, goethite_2_e0,  -1.6, goethite_2_e1)  
+
+@surfspecies(goethite_2, s1, s1-SO4_os, 1) 
+@surfreaction(goethite_2_s1-SO4_os, 5.623e10, 1, goethite_2_s1, 1, SO4-2, 1,  H+, 1, goethite_2_e0,  -2.0, goethite_2_e1)  
+//----------------------------------------------------------------------------------------

@@ -48,10 +48,12 @@
 @Var: density 1.5 // 
 @Var: e-.logact 1.0 // 
 @Var: gasvolume 1 // 
+@Var: gasvolume_fixed 2 // 
 @Var: pH 7 // 
 @Var: pe 3.0 // 
 @Var: porosity .7 // 
 @Var: pressure 1 // 
+@Var: pressure_fixed 2 // 
 @Var: saturation .711 // 
 @Var: totvolume 2 // 
 @Var: watervolume 1 // 
@@ -61,18 +63,13 @@
 //********* Extra text 1 *******
 @class: extra_text_1(){
 	// Here you can write ORCHESTRA extra expressions new style. 
+	@Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
 	@Calc: (1,  "totvolume = watervolume + gasvolume")     // is total volume per cell
 	//@Calc: (1,  "gasvolume   = porosity * (1-saturation)")             // is tot gas volume per liter water
 	//@Calc: (1,  "SL = ((1-porosity)*density) / (porosity*saturation)")
-	
-	// Fixed gasvolume, variable pressure
-	//@Calc: (5,  "pressure = {CO2[g].con} + {Ar[g].con}")     // is total fluid volume in cell
 
 	// We introduce two variables:
-	@Var: gas_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
-	// estimate initial gasvolume for time step
-	//@Calc: (4, "gas_u = (CO2[g].tot + Ar[g].tot)*R*T/pressure")	
-
+	@Var: gas_u  1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
 	@Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
 
 	// We introduce two expressions:
@@ -86,12 +83,13 @@
 	// Effectively: 
 	// the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
 	// the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-	@Calc:(1, "gasvolume = if(gas_u> 0, gas_u, 0)")
-	@Calc:(5, "gas_res    = pressure - {CO2[g].con} - {Ar[g].con}") //  + if(gas_u <0, gas_u, 0)")
-
+	@Calc:(1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_u>0, gas_u, 0))")
+	@Calc:(5, "pressure = if(gas_type==0, {CO2[g].con} + {Ar[g].con}, pressure_fixed)")
+	@Calc:(5, "gas_res = if(gas_type==0, 1.0, pressure - {CO2[g].con} - {Ar[g].con})") //  + if(gas_u <0, gas_u, 0)")
+	@Calc:(5, "gas_u = if(gas_type==0, gasvolume_fixed+1e-5, 1.0)") // To sensure that gas_res is already zero for fixed volume
 
 	// Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-	@solve: unknown:(name:, gas_u, type:, lin, step:, 1) equation:(name:, gas_res)
+	//@solve: unknown:(name:, gas_u, type:, lin, step:, 1) equation:(name:, gas_res)
 
 }
 @extra_text_1()
