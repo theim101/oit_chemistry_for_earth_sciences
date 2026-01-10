@@ -2,11 +2,11 @@
 // Here we can give any variable of the chemical system a value
 // In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
 
-Var:	      watervolume	CO2[g].tot 	Ar[g].tot 	
-Default:      1e-3   		1e-10		4.2e-2		
-Data: 	      1   		1e-10		1
-Data: 	      1e-3   		1e-1		4.2e-2		
-Data: 	      1 		1e-10		4.2e-2		
+Var:	      watervolume	gasvolume_fixed	CO2[g].tot 	Ar[g].tot       pressure_fixed  gas_type
+Default:      1   		1		1e-10		4.1e-2		1		0
+Data: 	      1   		1		1e-10		4.1e-2		1		0
+Data: 	      1e-3   		1		1e-10		4.1e-2		1		0
+Data: 	      1 		1		1e-10		1	 	1		0	
 // Now we can define a "sweep", which is a kind of loop.
 // we want to vary the pH from 2 to 12 in 21 steps
 // click run and then look in output.dat for the results
