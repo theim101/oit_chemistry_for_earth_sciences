@@ -12,30 +12,42 @@
    <!--  Now we define a task that reads the input.dat file and put the values given there in cell 0 -->
    <Task Name="Read node composition" Type="InstreamGroup">
       <File>input.dat</File>
-      <Nodes>(0)</Nodes>
+      <Nodes>(0-1)</Nodes>
    </Task>
 
 
    <!--  The we define a task that equilibrates cell 0, using the chemical calculator/solver as defined in chemistry.inp -->
-   <Task Name="Equilibrate node" Type="NodeGroup" >
-     <Calculator>chemistry_pressure_volume</Calculator>
+   <Task Name="Equilibrate node pressure" Type="NodeGroup" >
+     <Calculator>chemistry_pressure</Calculator>
       <Nodes>(0)</Nodes>
+   </Task>
+
+   <Task Name="Equilibrate node volume" Type="NodeGroup" >
+     <Calculator>chemistry_volume</Calculator>
+     <Nodes>(1)</Nodes>
    </Task>
 
 
    <!--  And finally we define a task that writes the equilibrated output in cell 0 to the file output.dat -->
    <!--  Note that the actual variables that are written to this file are defined by the column headers in the first line of the file. -->
    <!--  If no column headers are present, by default all cell variables are written to the file. -->
-   <Task Name="Write output" Type="OutstreamGroup">
-      <File>output.dat</File>
+   <Task Name="Write output pressure" Type="OutstreamGroup">
+      <File>output_pressure.dat</File>
       <Nodes>(0)</Nodes>
+   </Task>
+
+   <Task Name="Write output volume" Type="OutstreamGroup">
+     <File>output_volume.dat</File>
+     <Nodes>(1)</Nodes>
    </Task>
 
    <!-- Now we create a loop that repeatedly performs the three tasks, and stops when all data records from the input files are read. -->
    <Task Name="loop" Type="RepeatingTaskGroup">
      <DoTask Name="Read node composition" />
-     <DoTask Name="Equilibrate node" />
-     <DoTask Name="Write output" />
+     <DoTask Name="Equilibrate node pressure" />
+     <DoTask Name="Equilibrate node volume" />
+     <DoTask Name="Write output pressure" />
+     <DoTask Name="Write output volume" />
    </Task>
 
 
