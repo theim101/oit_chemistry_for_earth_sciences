@@ -84,7 +84,7 @@
   // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
   // This calculation is defined during stage 1, so before all other calculations and we can thus use
   // the gasvolume as input in the rest of the chemistry
-  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0))")
+  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
   @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
 
   // In the second step we define the the equation(s) that should go to zero.
@@ -146,7 +146,7 @@
 @link_phase(FA_part, DFA_part, "DFA_kgl")
 @link_phase(FA_part, SFA_part_l, "FA_kgkg*SL")
 @phase(gas_l)
-@link_phase(gas_l, liter, "gasvolume/watervolume")
+@link_phase(gas_l, liter, "1/watervolume")
 @phase(gas)
 @link_phase(gas, gas_l, "gasvolume /(R*T)")
 @end_of_gui_phases:
