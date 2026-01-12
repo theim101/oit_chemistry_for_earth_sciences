@@ -94,7 +94,7 @@
   // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
   @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
   //@Calc: (5, "pressure_res = pressure - ({CO2[g].con} + {Ar[g].con}))"
-	
+
   // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
   @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
   //@solve: unknown:(name:, pressure_u, delta:, 1e-9, type:, lin, step:, 0.1) equation:(name:, pressure_res)

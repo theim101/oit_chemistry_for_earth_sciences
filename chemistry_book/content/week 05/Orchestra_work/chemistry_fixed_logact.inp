@@ -19,10 +19,10 @@
 //********* Extra text 0 *******
 
 @class: extra_text_0(){
- // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
-@scan: objects2022.txt
-@scan: kinetics_db.txt
-@stop:
+  // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI.
+  @scan: objects2024.txt
+  @scan: kinetics_db.txt
+  @stop:
 }
 @extra_text_0()
 //********* End of extra text 0 *******
@@ -49,7 +49,7 @@
 @Var: density 1.5 // 
 @Var: e-.logact 1.0 // 
 @Var: gasvolume 1 // 
-@Var: gasvolume_fixed 0.5 // 
+@Var: gasvolume_fixed 1 // 
 @Var: pH 7 // 
 @Var: pe 3.0 // 
 @Var: porosity .7 // 
@@ -63,36 +63,41 @@
 
 //********* Extra text 1 *******
 @class: extra_text_1(){
-	// Here you can write ORCHESTRA extra expressions new style. 
-	@Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
-	@Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
-	//@Calc: (1, "gasvolume   = porosity * (1-saturation)")             // is tot gas volume per liter water
-	//@Calc: (1, "SL = ((1-porosity)*density) / (porosity*saturation)")
-	
-	//@Calc:(5, "pressure = (10^{CO2[g].logact} + 10^{Ar[g].logact})")
-	// We introduce two variables:
-	@Var: gas_u  25  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
-	@Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
+  // Here you can write ORCHESTRA extra expressions new style.
+  @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
+  //@Calc: (1, "gasvolume   = porosity * (1-saturation)")             // is tot gas volume per liter water
+  //@Calc: (1, "SL = ((1-porosity)*density) / (porosity*saturation)")
 
-	// We introduce two expressions:
+  // We want to be able to work with either a fixed_volume or a fixed_pressure
+  @Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
 
-	// The first one calculates the gasvolume from the unknown (0 if unknown is negative) 
-	// This calculation is defined during stage 1, so before all other calculations and we can thus use
-	// the gasvolume as input in the rest of the chemistry
-	// The second expression calculates the value of the equation that should go to zero.
-	//  It is defined during stage 5, so after all other chemical calculations are ready.
+  // We introduce two variables:
 
-	// Effectively: 
-	// the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
-	// the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-	@Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_u>0, gas_u, 0))")
-	
-	//@Calc:(5, "pressure = 10^{CO2[g].logact} + 10^{Ar[g].logact}")
-	@Calc: (5, "pressure = if(gas_type==0, 10^{CO2[g].logact} + 10^{Ar[g].logact}, pressure_fixed)")
-	@Calc: (5, "gas_res = if(gas_type==0, 0.0, pressure_fixed - (10^{CO2[g].logact} + 10^{Ar[g].logact})/watervolume)" 
-	
-	// Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-	//@solve: unknown:(name:, gas_u, delta:, 1e-3, type:, lin, step:, 1) equation:(name:, gas_res)
+  @Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+  @Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
+
+  //@Var: pressure_u  4  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+  //@Var: pressure_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
+
+  // We introduce extra expressions in three steps:
+
+  // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
+  // This calculation is defined during stage 1, so before all other calculations and we can thus use
+  // the gasvolume as input in the rest of the chemistry
+  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
+  @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
+
+  // In the second step we define the the equation(s) that should go to zero.
+  // It is defined during stage 5, so after all other chemical calculations are ready.
+  // Effectively:
+  // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
+  // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
+  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
+  //@Calc: (5, "pressure_res = pressure - ({CO2[g].con} + {Ar[g].con}))"
+
+  // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
+  @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
+  //@solve: unknown:(name:, pressure_u, delta:, 1e-9, type:, lin, step:, 0.1) equation:(name:, pressure_res)
 
 }
 @extra_text_1()
@@ -141,7 +146,7 @@
 @link_phase(FA_part, DFA_part, "DFA_kgl")
 @link_phase(FA_part, SFA_part_l, "FA_kgkg*SL")
 @phase(gas_l)
-@link_phase(gas_l, liter, "1")
+@link_phase(gas_l, liter, "1/watervolume")
 @phase(gas)
 @link_phase(gas, gas_l, "gasvolume /(R*T)")
 @end_of_gui_phases:
@@ -154,14 +159,15 @@
 @extra_text_2()
 //********* End of extra text 2 *******
 
-@davies(.1)
+@globalvar: I .1
+@davies()
 
 //********* The primary entities *******
 @balance_charge(pH)
 @gas(Ar[g])
-@primary_entity(Ar[g], -9.0, tot, 1.0E-9)
+@primary_entity(Ar[g], -9.0)
 @gas(CO2[g])
-@primary_entity(CO2[g], -9.0, tot, 1.0E-9)
+@primary_entity(CO2[g], -9.0)
 @Global: pH
 @Calc:(1, "H.logact = -pH")
 @entity(H, tot, 0)
