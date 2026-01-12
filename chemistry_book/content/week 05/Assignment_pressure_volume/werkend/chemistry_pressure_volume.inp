@@ -73,7 +73,7 @@
 
   // We introduce two variables:
 
-  @Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+  @Var: gas_u  25  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
   @Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
 
   //@Var: pressure_u  4  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
@@ -84,20 +84,25 @@
   // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
   // This calculation is defined during stage 1, so before all other calculations and we can thus use
   // the gasvolume as input in the rest of the chemistry
-  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0))")
-  @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
+  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_u>0, gas_u, 0))")
 
-  // In the second step we define the the equation(s) that should go to zero.
+  // In the second step we calculate the pressure using
+  //	fixed_volume: the sum of the logact values of the species present in the gas-phase.
+  //    fixed_pressure: the predefined pressure: pressure_fixed
+  @Calc: (5, "pressure = if(gas_type==0, {CO2[g].con} + {Ar[g].con}, pressure_fixed)")
+  //@Calc: (1, "pressure = if(gas_type==1, pressure_fixed, pressure_u)"
+
+  // In the third step we define the the equation(s) that should go to zero.
   // It is defined during stage 5, so after all other chemical calculations are ready.
   // Effectively:
   // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
   // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
-  //@Calc: (5, "pressure_res = pressure - ({CO2[g].con} + {Ar[g].con}))"
+  @Calc: (5, "gas_res = if(gas_type==0, pressure - ({CO2[g].con} + {Ar[g].con}),0))"
+  //@Calc: (5, "pressure_res = if(gas_type==1, 0, pressure - ({CO2[g].con} + {Ar[g].con})))"
 	
   // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-  @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
-  //@solve: unknown:(name:, pressure_u, delta:, 1e-9, type:, lin, step:, 0.1) equation:(name:, pressure_res)
+  //@solve: unknown:(name:, gas_u, type:, lin, step:, 1) equation:(name:, gas_res)
+  //@solve: unknown:(name:, pressure_u, delta:, 1e-3, type:, lin, step:, 1) equation:(name:, pressure_res)
 
 }
 @extra_text_1()

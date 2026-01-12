@@ -1,6 +1,6 @@
 Primary entities
 @gas(Ar[g])
-@primary_entity(Ar[g], -1.0, tot, 1.41)
+@primary_entity(Ar[g], -9, tot, 1.41)
 The entities
 @species(Ar, 0)
 @logKreaction(Ar, -20.0, 1.0, Ar[g])
