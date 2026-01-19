@@ -1,9 +1,9 @@
 // Composer settings. 
 Font:  13
-HSize: 1920
+HSize: 1751
 VSize: 1080
-HPos:  0
-VPos:  35
+HPos:  1991
+VPos:  18
 ProxyHost: name
 ProxyPort: port
 Intropage:  none

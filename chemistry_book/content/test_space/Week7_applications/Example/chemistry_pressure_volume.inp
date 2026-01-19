@@ -22,7 +22,6 @@
   // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI.
   @scan: objects2024.txt
   @scan: kinetics_db.txt
-  @concentrations_as_input:
   @stop:
 }
 @extra_text_0()
@@ -74,8 +73,8 @@
 
   // We introduce two variables:
 
-  @Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
-  @Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
+  //@Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+  //@Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
 
   //@Var: pressure_u  4  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
   //@Var: pressure_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
@@ -85,19 +84,19 @@
   // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
   // This calculation is defined during stage 1, so before all other calculations and we can thus use
   // the gasvolume as input in the rest of the chemistry
-  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
-  @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
+  //@Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
+  //@Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
 
   // In the second step we define the the equation(s) that should go to zero.
   // It is defined during stage 5, so after all other chemical calculations are ready.
   // Effectively:
   // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
   // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
+  //@Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
   //@Calc: (5, "pressure_res = pressure - ({CO2[g].con} + {Ar[g].con}))"
 
   // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-  @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
+  //@solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
   //@solve: unknown:(name:, pressure_u, delta:, 1e-9, type:, lin, step:, 0.1) equation:(name:, pressure_res)
 
 }
@@ -149,13 +148,13 @@
 @phase(gas_l)
 @link_phase(gas_l, liter, "1/watervolume")
 @phase(gas)
-@link_phase(gas, gas_l, "gasvolume/(R*T)")
+@link_phase(gas, gas_l, "gasvolume /(R*T)")
 @end_of_gui_phases:
 //********* End of the phases *******
 
 //********* Extra text 2 *******
 @class: extra_text_2(){
-   @include: objects2024.txt
+   @include: objects2022.txt
 }
 @extra_text_2()
 //********* End of extra text 2 *******
@@ -164,11 +163,12 @@
 @davies()
 
 //********* The primary entities *******
-@balance_charge(pH)
-@gas(Ar[g])
-@primary_entity(Ar[g], -9.0)
-@gas(CO2[g])
-@primary_entity(CO2[g], -9.0)
+@species(CO3-2, -2)
+@primary_entity(CO3-2, -9.0, tot, 0.25)
+@species(Ca+2, 2)
+@primary_entity(Ca+2, -9.0, tot, 0.25)
+@species(Cl-, -1)
+@primary_entity(Cl-, -9.0, tot, 0.25)
 @Global: pH
 @Calc:(1, "H.logact = -pH")
 @entity(H, tot, 0)
@@ -188,18 +188,24 @@
 
 //********* The entities *******
 
-@species(H+, 1)
-@logKreaction(H+, 0.0, 1.0, H)
-@species(CO3-2, -2)
-@logKreaction(CO3-2, "-(-1 * (( (1.0 / log(10)) * ((-18.147 * log(10)) - (4059.9999999999995 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))", 1.0, CO2[g], -2.0, H+, 1.0, H2O)
 @entity(Alkalinity, tot, 0)
 @logKreaction(Alkalinity, "-(0)", 1.0, CO3-2)
-@species(Ar, 0)
-@logKreaction(Ar, -20.0, 1.0, Ar[g])
 @entity(C, tot, 0)
 @logKreaction(C, "-(0)", 1.0, CO3-2)
 @entity(C[+4], tot, 0)
 @logKreaction(C[+4], "-(0)", 1.0, CO3-2)
+@entity(Ca, tot, 0)
+@logKreaction(Ca, "-(-(0))", 1.0, Ca+2)
+@species(CaCO3, 0, 0, 0)
+@logKreaction(CaCO3, "(( (1.0 / log(10)) * ((3.2 * log(10)) - (16000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@species(H+, 1)
+@logKreaction(H+, 0.0, 1.0, H)
+@species(CaHCO3+, 1, 6, 0)
+@logKreaction(CaHCO3+, "(( (1.0 / log(10)) * ((11.599 * log(10)) - (5400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2, 1.0, H+)
+@species(CaOH+, 1, 6, 0)
+@logKreaction(CaOH+, "(( (1.0 / log(10)) * ((-12.697 * log(10)) - (64110.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
+@entity(Cl, tot, 0)
+@logKreaction(Cl, "-(0)", 1.0, Cl-)
 @species(H2CO3, 0, 0, 0)
 @logKreaction(H2CO3, "(( (1.0 / log(10)) * ((16.681 * log(10)) - (-23760.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+)
 @gas(H2O[g])
@@ -238,5 +244,13 @@
 
 //********* Write SI_minerals ************************* 
 @Write_SI_minerals:
+@SI_mineral(Aragonite[s])
+@logKreaction(Aragonite[s], "-1 * (( (1.0 / log(10)) * ((-8.3 * log(10)) - (-12000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@SI_mineral(Calcite[s])
+@logKreaction(Calcite[s], "-1 * (( (1.0 / log(10)) * ((-8.48 * log(10)) - (-8000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@SI_mineral(Lime[s])
+@logKreaction(Lime[s], "-1 * (( (1.0 / log(10)) * ((32.6993 * log(10)) - (-193910.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -2.0, H+, 1.0, H2O)
+@SI_mineral(Portlandite[s])
+@logKreaction(Portlandite[s], "-1 * (( (1.0 / log(10)) * ((22.804 * log(10)) - (-128620.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -2.0, H+, 2.0, H2O)
 //*************************************************** 
 //@PHREEQC_Output:

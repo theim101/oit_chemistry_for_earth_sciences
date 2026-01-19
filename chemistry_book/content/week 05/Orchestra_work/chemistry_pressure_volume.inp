@@ -148,7 +148,7 @@
 @phase(gas_l)
 @link_phase(gas_l, liter, "1/watervolume")
 @phase(gas)
-@link_phase(gas, gas_l, "gasvolume /(R*T)")
+@link_phase(gas, gas_l, "gasvolume/(R*T)")
 @end_of_gui_phases:
 //********* End of the phases *******
 

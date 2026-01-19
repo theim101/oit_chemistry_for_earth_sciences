@@ -45,21 +45,20 @@
    </Task>
 
    <!-- Now we create a loop that repeatedly performs the three tasks, and stops when all data records from the input files are read. -->
-   <Task Name="loop1" Type="RepeatingTaskGroup">
+   <Task Name="loop" Type="RepeatingTaskGroup">
      <DoTask Name="Read node composition 1" />
      <DoTask Name="Equilibrate node 1" />
      <DoTask Name="Write output 1" />
-   </Task>
-   <Task Name="loop2" Type="RepeatingTaskGroup">
      <DoTask Name="Read node composition 2" />
      <DoTask Name="Equilibrate node 2" />
      <DoTask Name="Write output 2" />
+
    </Task>
+
 
    <!-- The run task is the main task that is called when the run button is clicked in the GUI, so this is where the calculations start -->
    <Task Name="Run" Type="TaskGroup">
-     <DoTask Name="loop1" />
-     <DoTask Name="loop2" />
+     <DoTask Name="loop" />
    </Task>
 
 </Concert>

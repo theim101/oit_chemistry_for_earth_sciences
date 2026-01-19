@@ -1,0 +1,51 @@
+//-----------------------------------------------------------------------------------------------------------------
+// Here we define the input for the chemical equilibrium calculations.
+//
+// In the concert.xml file this file is used repetitively to read input for cell/node 0
+//
+// First a line with the names of the variables that we want to use as column headers starting with Var: 
+//
+// Subsequently we can give one or more data lines with values for all the listed variables (in the same order) 
+//
+// For each data line a calculation will be performed
+// So we want to initialize a system with 1 mol of CaCO3 (Calcite) and 1 mol of CaF2(Fluorite) in contact with a fixed CO2 pressure of 0.1 atmosphere
+// In chemistry0 we have selected Ca, F and CO2[g] as primary entities.
+// With for Ca and F a given total amount, and for CO2[g] a given log activity (partial pressure)
+// So we can now give the appropriate input variables the wanted values
+// Values given here overwrite the default values defined in the chemistry file.
+//
+// We do not have to specify the amount of protons in the system, as this is automatically done by chargebalancing on the pH
+// So the amount of protons and pH is adjusted to result in an electroneutral system. 
+//-----------------------------------------------------------------------------------------------------------------
+Var:    T       totvolume  Ca.tot F.tot  CO2[g].logact  Si.tot    Al.tot   Na.tot
+Data:   298.15   1.0        2       2      -1.0         1e-12      1e-12   1e-12
+
+//-----------------------------------------------------------------------------------------------------------------
+// After this first calculation, which is carried out with chemistry0 (see concert file),
+// we want to use the resulting solution as input and calculate the effect of addition of NaAlSi3O8 (7.5 mmol in 15 steps)
+// Rather than a fixed CO2[g] partial pressure we now specify the total amount of CO2[g] in the system as a given property.
+// So we need a different definition of the chemical system. 
+// Because ORCHESTRA chemical systems are immutable (can not be changed) we simply create a new one: chemistry1. 
+// In this chemical system the CO2[g].tot is given input. 
+// Also Al, Si and Na are added as primary entities (master species)  
+
+// Now we want to add 7.5 mmol NaAlSi3O8 in 15 steps
+// This can be done by adding a loop in which we add the amounts of constituent primary entities in NaAlSi3O8
+// We do not have to add the O/H+, as this is automatically done via the charge balance on protons. 
+// A Sweep results in a given number of data points with the listed variables varied from start to end value in lin or log steps 
+// Because the start point is included in the calculations, we specify one extra point to get the same 15 additions 
+// as in the PHREEQC example.
+//-----------------------------------------------------------------------------------------------------------------
+
+// PHREEQC statement:
+//REACTION
+//  NaAlSi3O8 1
+//  7.5e-3 in 15
+
+Sweep{ 16
+  Swept: Na.tot 1e-12  7.5e-3 lin
+  Swept: Al.tot 1e-12  7.5e-3 lin
+  Swept: Si.tot 3e-12 22.5e-3 lin
+}
+
+

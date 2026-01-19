@@ -1,0 +1,110 @@
+@class: surfsite(model, name, density, coef){
+-----------------------------------------------
+   @phase(<model>_<name>, <model>, <density>)
+   @entity(<model>_<name>, <model>_<name>, <coef>) 
+   @solve: unknown:(name:, <model>_<name>.logact,  delta:, 1e-6, type:, lin, step: , .1, default:, -1) equation:(name:, <model>_<name>.<model>_<name>, tol: , 1e-4, default:, 1)
+}
+@class: surfsite(model, name, density, coef, charge, plane){
+   @Var: <model>_<name>.logk_unit 0
+   @Calc:(1, "<name>_<name>.logk_unit = 0")
+
+   @surfsite(<model>, <name>, <density>, <coef>)
+   @link(<model>_<name>, <model>_<plane>, 0, <charge>)
+-----------------------------------------------
+}
+
+@class: surfsite(model, name, density, coef, charge, plane, charge2, plane2){
+   @surfsite(<model>, <name>, <density>, <coef>, <charge>, <plane>)
+   @link(<model>_<name>, <model>_<plane2>, 0, <charge2>)
+-----------------------------------------------
+}
+
+@class: surfsite(model, name, density, coef, charge, plane, charge2, plane2, plane3, charge3){
+   @surfsite(<model>, <name>, <density>, <coef>, <charge>, <plane>, <plane2>, <charge2>)
+   @link(<model>_<name>, <model>_<plane2>, 0, <charge2>)
+-----------------------------------------------
+}
+
+@surfsite(Hfo, wOH, 3.745e-6, 1)
+@surfsite(Hfo, wOH, 3.745e-6, 1, .1, e1)
+@surfsite(Hfo, wOH, 3.745e-6, 1, .1, e1, .2, e2)
+@surfsite(Hfo, wOH, 3.745e-6, 1, .1, e1, .2, e2, .3, e3)
+
+
+
+
+@link_phase(HFO_part, HFO_part_l, " Ferrihydrite[s].con HFO_kgkg*SL")
+
+
+// Output options
+
+@class: format(){
+   @PHREEQCOutput: chemistry1.inp
+}
+
+@format()
+
+
+
+
+    //Output_at: (time, from:, 0, to:, 10, steps:, 100 )
+
+
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+@def: phreeqccode(){
+Palandri_rate
+# in KINETICS, define 11 parms:
+# affinity_factor m^2/mol roughness, lgkH  e_H  nH, lgkH2O e_H2O, lgkOH e_OH nOH
+# parm number  1       2          3,    4    5   6,      7     8,   9     10  11
+10  affinity = get(-99, 1) # retrieve number from memory
+20 
+30  REM # specific area m2/mol, surface roughness
+40  sp_area  = get(-99, 2) : roughness = get(-99, 3) 
+50 
+60  REM # temperature factor, gas constant
+70  dif_temp = 1 / TK - 1 / 298 : R = 2.303 * 8.314e-3 : dT_R = dif_temp / R
+80  
+90  REM # rate by H+
+100 lgk_H    = get(-99, 4) : e_H = get(-99, 5) : nH = get(-99, 6)
+110 rate_H   = 10^(lgk_H - e_H * dT_R) * ACT("H+")^nH 
+120 
+130 REM # rate by hydrolysis
+140 lgk_H2O  = get(-99, 7) : e_H2O = get(-99, 8)
+150 rate_H2O = 10^(lgk_H2O - e_H2O * dT_R)
+160 
+170 REM # rate by OH-
+180 lgk_OH   = get(-99, 9) : e_OH = get(-99, 10) : nOH = get(-99, 11)
+190 rate_OH  = 10^(lgk_OH - e_OH * dT_R) * ACT("H+")^nOH
+200 
+210 rate     = rate_H + rate_H2O + rate_OH
+220 area     = sp_area * M0 * (M / M0)^0.67
+230 
+240 rate     = area * roughness * rate * affinity
+250 SAVE rate * TIME
+-end
+}
+
+@def: Palandri_rate(affinity, sp_area, roughness, lgk_H, e_H, nH, lgk_H2O, e_H2O, lgk_OH, e_OH, nOH){
+   @Var: M0 1
+   @Var: M  0.5
+
+   @Var: dT_R 0
+   @Calc: (1, "dT_R = (1/T)-(1/298.15)/2.303*8.314e-3")
+
+   @Var: rate_H 0
+   @Calc: (1, "rate_H = 10^(<lgk_H> - <e_H> * dT_R) * 10^({H+.logact} + <nH>) ")
+
+   // rate by hydrolysis
+   @Var: rate_H2O 0
+   @Calc: (1, "rate_H2O = 10^(<lgk_H2O> - <e_H2O> * dT_R)")
+
+   // rate by OH-
+   @Var: rate_OH  0
+   @Calc:(1, "rate_OH = 10^(<lgk_OH> - <e_OH> * dT_R) * 10^({H+.logact} + <nOH>) ")
+
+   @Var: rate 0
+   @Calc: (1, "rate = (<sp_area> * M0 * (M / M0)^0.67) * <roughness> * (rate_H + rate_H2O + rate_OH)*<affinity>")
+}
+
+@Palandri_rate(1, 1, 1, -10.16, 65.0, 0.317,   -12.56, 65,   -15.60, 66.5, -0.471)
+

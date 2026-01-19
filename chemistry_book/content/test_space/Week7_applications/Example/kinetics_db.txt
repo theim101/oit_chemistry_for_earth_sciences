@@ -1,0 +1,30 @@
+@class: composition(name, c1, n1){
+   @link(<name>, <n1>, 0, <c1>)
+}
+
+@class: composition(name, c1, n1, c2, n2){
+   @link(<name>, <n1>, 0, <c1>)
+   @link(<name>, <n2>, 0, <c2>)
+}
+
+@class: composition(name, c1, n1, c2, n2, c3, n3){
+   @link(<name>, <n1>, 0, <c1>)
+   @link(<name>, <n2>, 0, <c2>)
+   @link(<name>, <n3>, 0, <c3>)
+}
+
+@class: composition(name, c1, n1, c2, n2, c3, n3, c4, n4){
+   @link(<name>, <n1>, 0, <c1>)
+   @link(<name>, <n2>, 0, <c2>)
+   @link(<name>, <n3>, 0, <c3>)
+   @link(<name>, <n4>, 0, <c4>)
+}
+
+@class: composition(name, c1, n1, c2, n2, c3, n3, c4, n4, c5,n5){
+   @link(<name>, <n1>, 0, <c1>)
+   @link(<name>, <n2>, 0, <c2>)
+   @link(<name>, <n3>, 0, <c3>)
+   @link(<name>, <n4>, 0, <c4>)
+   @link(<name>, <n5>, 0, <c5>)
+}
+

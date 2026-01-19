@@ -1,0 +1,205 @@
+
+@class: adsorptionmodeltext(dummy){
+//----------------------------------------------------------------------------------------
+// For the Uranium system we define an exchange plane with 1 "site" 
+// Local concentrations are in equivalent fractions.
+// Note that the empty site has a mass balance factor of 0, so it does not contribute to the
+// total sum of equivalent fractions, so fraction of empty sites == 0
+// This results in all sites being occupied with either Na or U
+// The log K of the Na species is 0.
+// Also note that the GT_X2-U species has different mass-action and mass balance coefficients
+// to translate the equivalent fractions to moles (1 equivalent of this species agrees with 0.5 Mol U)
+//----------------------------------------------------------------------------------------
+}
+//**** End of model specific text **** 
+
+
+//**** Model type code **** 
+@class: adsorptionmodelcode(Basic_surface){
+   @class: Basic_surface(name, parent_phase ,concentration){
+      // The Basic surface model just contains of a single phase
+      // that is linked to its parent phase via its concentration
+      @phase(<name>, <parent_phase>, <concentration>)
+   }
+}
+@adsorptionmodelcode(Basic_surface)
+//**** End of model type code **** 
+
+
+//**** Model specific text **** 
+@class: adsorptionmodeltext(Edge){
+
+//The PHREEQC definition
+
+SURFACE_SPECIES
+Edge_sOH = Edge_sOH ; log_k 0
+Edge_wbOH = Edge_wbOH ; log_k 0
+Edge_waOH = Edge_waOH ; log_k 0
+
+SURFACE_SPECIES
+Edge_sOH = Edge_sO- + H+
+     log_k  -7.9
+
+Edge_sOH + H+ = Edge_sOH2+
+     log_k  4.5
+
+Edge_waOH = Edge_waO- + H+
+     log_k  -7.9
+
+Edge_waOH + H+ = Edge_waOH2+
+     log_k  4.5
+
+Edge_sOH + UO2+2 = Edge_sOUO2+ + H+
+     log_k  3.1
+
+Edge_sOH + UO2+2 + H2O = Edge_sOUO2OH + 2 H+
+     log_k  -4.6
+
+Edge_sOH + UO2+2 + 2 H2O = Edge_sOUO2(OH)2- + 3 H+
+     log_k  -12.6
+
+Edge_sOH + UO2+2 + 3 H2O = Edge_sOUO2(OH)3-2 + 4 H+
+     log_k  -20.9
+
+Edge_waOH + UO2+2 = Edge_waOUO2+ + H+
+     log_k  0.5
+
+Edge_waOH + UO2+2 + H2O = Edge_waOUO2OH + 2 H+
+     log_k  -5.7
+
+Edge_sOH + UO2+2 + CO3-2 = Edge_sOUO2CO3- + H+
+     log_k  9.8
+
+Edge_sOH + UO2+2 + 2 CO3-2 = Edge_sOUO2(CO3)2-3 + H+
+     log_k  15.5
+
+Edge_waOH + UO2+2 + CO3-2 = Edge_waOUO2CO3- + H+
+     log_k  9.3
+
+Edge_wbOH + H+ = Edge_wbOH2+
+     log_k  6.0
+
+Edge_wbOH = Edge_wbO- + H+
+     log_k  -10.5
+
+}
+//**** End of model specific text **** 
+
+//**** Model type code **** 
+@class: adsorptionmodelcode(Basic_surface){
+   @class: Basic_surface(name, parent_phase ,concentration){
+      // The Basic surface model just contains of a single phase
+      // that is linked to its parent phase via its concentration
+      @phase(<name>, <parent_phase>, <concentration>)
+   }
+}
+@adsorptionmodelcode(Basic_surface)
+//**** End of model type code **** 
+
+@adsmodel(Edge, surfcompl ,1e-3, Basic_surface)
+@surfsite(Edge, S_OH, 2.0e-3, 1)
+@surfsite(Edge, W1_OH, 4.0e-2, 1)
+@surfsite(Edge, W2_OH, 4.0e-2, 1)
+@surfspecies(Edge, S_OH, S_O-, 1)
+@logKreaction(Edge_S_O-, -7.9, 1.0, Edge_S_OH, -1.0, H+, -1.0, Z)
+@surfspecies(Edge, S_OH, S_OH2+, 1)
+@logKreaction(Edge_S_OH2+, 4.5, 1.0, Edge_S_OH, 1.0, H+, 1.0, Z)
+@surfspecies(Edge, S_OH, S_OUO2+, 1)
+@logKreaction(Edge_S_OUO2+, 3.1, 1.0, Edge_S_OH, -1.0, H+, 1.0, UO2+2, 1.0, Z)
+@surfspecies(Edge, S_OH, S_OUO2OH0, 1)
+@logKreaction(Edge_S_OUO2OH0, -4.6, 1.0, Edge_S_OH, -2.0, H+, 1.0, H2O, 1.0, UO2+2)
+@surfspecies(Edge, S_OH, S_OUO2[OH]2-, 1)
+@logKreaction(Edge_S_OUO2[OH]2-, -12.6, 1.0, Edge_S_OH, -3.0, H+, 2.0, H2O, 1.0, UO2+2, -1.0, Z)
+@surfspecies(Edge, S_OH, S_OUO2[OH]3-2, 1)
+@logKreaction(Edge_S_OUO2[OH]3-2, -20.9, 1.0, Edge_S_OH, -4.0, H+, 3.0, H2O, 1.0, UO2+2, -2.0, Z)
+@surfspecies(Edge, W1_OH, W1_O-, 1)
+@logKreaction(Edge_W1_O-, -7.9, 1.0, Edge_W1_OH, -1.0, H+, -1.0, Z)
+@surfspecies(Edge, W1_OH, W1_OH2+, 1)
+@logKreaction(Edge_W1_OH2+, 4.5, 1.0, Edge_W1_OH, 1.0, H+, 1.0, Z)
+@surfspecies(Edge, W1_OH, W1_OUO2+, 1)
+@logKreaction(Edge_W1_OUO2+, 0.5, 1.0, Edge_W1_OH, -1.0, H+, 1.0, UO2+2, 1.0, Z)
+@surfspecies(Edge, W1_OH, W1_OUO2OH0, 1)
+@logKreaction(Edge_W1_OUO2OH0, -5.7, 1.0, Edge_W1_OH, -2.0, H+, 1.0, H2O, 1.0, UO2+2)
+@surfspecies(Edge, W2_OH, W2_O-, 1)
+@logKreaction(Edge_W2_O-, -10.5, 1.0, Edge_W2_OH, -1.0, H+, -1.0, Z)
+@surfspecies(Edge, W2_OH, W2_OH2+, 1)
+@logKreaction(Edge_W2_OH2+, 6.0, 1.0, Edge_W2_OH, 1.0, H+, 1.0, Z)
+
+
+
+//Edge_sOH + UO2+2 + CO3-2 = Edge_sOUO2CO3- + H+
+//     log_k  9.8
+
+@surfspecies(Edge, S_OH, S_OUO2CO3-, 1)
+@logKreaction(Edge_S_OUO2CO3-, 9.8, 1.0, Edge_S_OH, -1.0, H+, 1, UO2+2, 1, CO3-2, -1.0, Z)
+
+
+//Edge_sOH + UO2+2 + 2 CO3-2 = Edge_sOUO2(CO3)2-3 + H+
+//     log_k  15.5
+
+@surfspecies(Edge, S_OH, S_OUO2[CO3]2-3, 1)
+@logKreaction(Edge_S_OUO2[CO3]2-3, 15.5, 1.0, Edge_S_OH, -1.0, H+, 1, UO2+2, 2, CO3-2, -3.0, Z)
+
+
+
+//Edge_waOH + UO2+2 + CO3-2 = Edge_waOUO2CO3- + H+
+//     log_k  9.3
+
+@surfspecies(Edge, W1_OH, W1_OUO2CO3-, 1)
+@logKreaction(Edge_W1_OUO2CO3-, 9.3, 1.0, Edge_W1_OH, -1.0, H+, 1, UO2+2, 1, CO3-2, -1.0, Z)
+
+
+
+//********* End of Adsorption Model Edge *************
+
+
+
+//********* Adsorption Model Exch *******************
+//**** Model specific text **** 
+@class: adsorptionmodeltext(Exch){
+
+//The PHREEQC definition for comparison
+
+EXCHANGE_MASTER_SPECIES
+ Exch  Exch-
+
+
+EXCHANGE_SPECIES
+Exch- = Exch- ; log_k 0
+
+EXCHANGE_SPECIES
+Exch- + Na+ = ExchNa
+     log_k  0
+
+2 ExchNa + UO2+2 = Exch2UO2 + 2 Na+
+     log_k  0.45
+}
+//**** End of model specific text **** 
+
+//**** Model type code **** 
+@class: adsorptionmodelcode(Basic_surface){
+   @class: Basic_surface(name, parent_phase ,concentration){
+      // The Basic surface model just contains of a single phase
+      // that is linked to its parent phase via its concentration
+      @phase(<name>, <parent_phase>, <concentration>)
+   }
+}
+@adsorptionmodelcode(Basic_surface)
+//**** End of model type code **** 
+
+@adsmodel(Exch, exchange ,1e-3, Basic_surface)
+@surfsite(Exch, X, 0.87, 0)
+@surfspecies(Exch, X, X-Na, 1)
+@logKreaction(Exch_X-Na, 0.0, 1.0, Exch_X, 1.0, Na+)
+@surfspecies(Exch, X, X2-U, 0.5)
+@logKreaction(Exch_X2-U, 0.45, 2.0, Exch_X, 1.0, UO2+2)
+@surfspecies(Exch, X, X2-Ca, 0.5)
+@logKreaction(Exch_X2-Ca, 0.45, 2.0, Exch_X, 1.0, Ca+2)
+@surfspecies(Exch, X, X2-Pb, 0.5)
+@logKreaction(Exch_X2-Pb, 0.45, 2.0, Exch_X, 1.0, Pb+2)
+@surfspecies(Exch, X, X-H, 1)
+@logKreaction(Exch_X-H, 0.0, 1.0, Exch_X, 1.0, H+)
+//********* End of Adsorption Model Exch *************
+
+
+
