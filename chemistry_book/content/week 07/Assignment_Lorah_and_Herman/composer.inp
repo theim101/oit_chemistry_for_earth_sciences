@@ -1,0 +1,24 @@
+// Composer settings. 
+Font:  13
+HSize: 1920
+VSize: 1080
+HPos:  640
+VPos:  156
+ProxyHost: name
+ProxyPort: port
+Intropage:  none
+Concertfile: concert.xml
+
+// The Composer will allow to edit the files listed here.
+// Changes in this file are effective after refreshing or restarting the composer.
+//    <Title>     <Tab>       <Filename>
+
+File: Documentation 	null 	documentation.txt
+File: Input_Travertine 	null 	input_Travertine.dat
+File: Input_fixed_logact 	null 	input_fixed_logact.dat
+CHEMFile: Chemistry_Travertine 	null 	chemistry_Travertine.inp
+CHEMFile: Chemistry_fixed_logact 	null 	chemistry_fixed_logact.inp
+File: MyDatabase 	null 	mydatabase.txt
+File: Output_Travertine 	null 	output_Travertine.dat
+File: Output_fixed_logact 	null 	output_fixed_logact.dat
+File: Concert 	null 	concert.xml

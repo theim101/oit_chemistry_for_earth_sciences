@@ -1,0 +1,26 @@
+Implementation of pressure dependent reaction "constants" in ORCHESTRA
+
+Hans Meeussen Casper Groot
+
+
+This document describes how pressure dependency of equilibrium reactions is implemented in ORCHESTRA.
+
+Explanation of underlying theory can be found on: hydrochemistry.eu
+
+
+
+Step 1 Extracting mineral and species volume information from PHREEQC databases
+
+In order to calculate pressure dependency of equilibrium reactions, it is necessary to take into account volume changes involved in a chemical reactions,
+which can be calculated from the volumes of all reactants and reaction products involved in a reaction.
+
+For solid phases (minerals) the molar volume is a fixed number, for aqueous species the volume is a function of the T, P and I (ionic strength) and is calculated with a set of empirical parameters. 
+
+
+The first step in the implementation is to extract the required information from a PHREEQC format database, and to add this info, in the form of extra parameters, to ORCHESTRA species and mineral definitions.
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.6.2-15100\database\phreeqc.dat
+
+SOLUTION 1
+    temp      85
+    pH        7
+    pe        4
+    redox     pe
+    units     mmol/kgw
+    density   1
+    -water    1 # kg
+
+EQUILIBRIUM_PHASES 1
+    Barite    0 10
+    Calcite   0 10
+    Chalcedony 0 10
+    Chlorite(14A) 0 10
+    Fluorite  0 10
+    Mackinawite 0 10
+    Pyrite    0 10
+    Willemite 0 10
+    Siderite  0 10
+END
+

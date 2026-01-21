@@ -1,0 +1,4 @@
+
+@Var: pressure_bar 1
+@Var: P_RT 0
+@Calc:(1, "P_RT = (pressure_bar -1)/(2.303 * R * T)")

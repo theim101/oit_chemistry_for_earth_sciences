@@ -1,0 +1,12 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.6.2-15100\database\minteq.v4.dat
+SOLUTION 1
+    temp      25
+    pH        7
+    pe        4
+    redox     pe
+    units     mmol/kgw
+    density   1
+    -water    1 # kg
+EQUILIBRIUM_PHASES 1
+    Portlandite 0 10
+END

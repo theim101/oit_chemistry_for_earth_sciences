@@ -1,0 +1,23 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.6.2-15100\database\minteq.v4.dat
+SOLUTION 1
+    temp      65
+    pH        5.85
+    pe        4
+    redox     pe
+    units     mmol/kgw
+    density   1
+    C(4)      22.32
+    Ca        17.3
+    Pb        0.01017
+    S(6)      13.69
+    -water    1 # kg
+SAVE solution 1
+END
+
+USE solution 1
+REACTION_TEMPERATURE 1
+    25
+EQUILIBRIUM_PHASES 3
+    CO2(g)    -3.38 10
+  
+END

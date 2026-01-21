@@ -6,12 +6,12 @@
 
    <!--  First we define a single cell/node, which reads the input.dat file to see if any specific cell/node variables are defined. -->
    <!--  In this case we just use the default variables that are defined in input, output and chemistry file.  -->   
-   <Nodes TypeFile="input.dat" NrNodes="2" />
+   <Nodes TypeFile="input_Travertine.dat" NrNodes="2" />
 
 
    <!--  Now we define a task that reads the input.dat file and put the values given there in cell 0 -->
    <Task Name="Read node composition 1" Type="InstreamGroup">
-      <File>input_pressure_volume.dat</File>
+      <File>input_Travertine.dat</File>
       <Nodes>(0)</Nodes>
    </Task>
 
@@ -22,7 +22,7 @@
 
    <!--  The we define a task that equilibrates cell 0, using the chemical calculator/solver as defined in chemistry.inp -->
    <Task Name="Equilibrate node 1" Type="NodeGroup" >
-     <Calculator>chemistry_pressure_volume</Calculator>
+     <Calculator>chemistry_Travertine</Calculator>
       <Nodes>(0)</Nodes>
    </Task>
 
@@ -35,7 +35,7 @@
    <!--  Note that the actual variables that are written to this file are defined by the column headers in the first line of the file. -->
    <!--  If no column headers are present, by default all cell variables are written to the file. -->
    <Task Name="Write output 1" Type="OutstreamGroup">
-      <File>output_pressure_volume.dat</File>
+      <File>output_Travertine.dat</File>
       <Nodes>(0)</Nodes>
    </Task>
 

@@ -1,0 +1,14 @@
+// Here we define the input for the chemical equilibrium calculations.
+// The values given here overwrite the default values defined within the chemistry file
+// We can give individual data points as follows:
+
+Var:  dummy        Calcite[s].con  Ca+2.con
+Default:   -5            .1        .1
+
+
+Var: CO2[g].logact  
+Data: -10
+
+Sweep: 50
+    Swept:  CO2[g].logact  @evaluate:("log10(275e-6)")  @evaluate:("log10(420e-6)") lin
+}
