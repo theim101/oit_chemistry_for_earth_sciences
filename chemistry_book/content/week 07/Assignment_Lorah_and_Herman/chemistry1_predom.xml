@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Composer>
+   <!--**** The predominance settings! ******-->
+   <title>Ca</title>
+   <synonym/>
+   <fontsize>1.0</fontsize>
+   <X-Axis>
+      <variable>pH</variable>
+      <min>2.0</min>
+      <max>10.0</max>
+      <scientificformat>false</scientificformat>
+      <nrdecimals>3</nrdecimals>
+      <logarithmic>false</logarithmic>
+      <steps>400</steps>
+      <minortics>2</minortics>
+      <majortics>8</majortics>
+   </X-Axis>
+   <Y-Axis>
+      <variable>pe</variable>
+      <min>-10.0</min>
+      <max>20.0</max>
+      <scientificformat>false</scientificformat>
+      <nrdecimals>3</nrdecimals>
+      <logarithmic>false</logarithmic>
+      <steps>400</steps>
+      <minortics>2</minortics>
+      <majortics>10</majortics>
+   </Y-Axis>
+   <datafile>userdata.dat</datafile>
+   <area colour="-1" factor="1" formationreaction="" variable="H2.liter.con"/>
+   <area colour="-1" factor="1" formationreaction="" variable="O2.liter.con"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="Ca.CLAY_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="Ca.SHA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="Ca.DHA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="Ca.DFA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="Ca.SFA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="Ca.Zeolite_part_l"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Ca+2, 0, 1.0, Ca)" variable="Ca+2.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CaCO3, &quot;(( (1.0 / log(10)) * ((3.22 * log(10)) - (14830.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CO3-2, 1.0, Ca+2)" variable="CaCO3.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CaF+, &quot;(( (1.0 / log(10)) * ((0.94 * log(10)) - (17238.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Ca+2, 1.0, F-)" variable="CaF+.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Ca[H2PO4]+, &quot;(( (1.0 / log(10)) * ((1.41 * log(10)) - (14226.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Ca+2, 1.0, H2[PO4]-)" variable="Ca[H2PO4]+.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Ca[HCO3]+, &quot;(( (1.0 / log(10)) * ((11.43 * log(10)) - (-23595.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CO3-2, 1.0, Ca+2, 1.0, H+)" variable="Ca[HCO3]+.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Ca[HPO4], &quot;(( (1.0 / log(10)) * ((-4.47 * log(10)) - (17407.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Ca+2, -1.0, H+, 1.0, H2[PO4]-)" variable="Ca[HPO4].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Ca[OH]+, &quot;(( (1.0 / log(10)) * ((-12.78 * log(10)) - (77207.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Ca+2, -1.0, H+, 1.0, H2O)" variable="Ca[OH]+.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(Ca[PO4]-, &quot;(( (1.0 / log(10)) * ((-13.1 * log(10)) - (31170.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Ca+2, -2.0, H+, 1.0, H2[PO4]-)" variable="Ca[PO4]-.liter.con"/>
+   <area colour="-8213866" factor="5.0" formationreaction="@logKreaction(Fluorapatite[s], &quot;-1 * (( (1.0 / log(10)) * ((-0.91 * log(10)) - (-115603.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 5.0, Ca+2, 1.0, F-, -6.0, H+, 3.0, H2[PO4]-)" variable="Fluorapatite[s].liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Fluorite[s], &quot;-1 * (( (1.0 / log(10)) * ((-10.6 * log(10)) - (19623.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, Ca+2, 2.0, F-)" variable="Fluorite[s].liter.con"/>
+   <area colour="-8213866" factor="5.0" formationreaction="@logKreaction(Hydroxyapatite[s], &quot;-1 * (( (1.0 / log(10)) * ((14.35 * log(10)) - (-178487.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 5.0, Ca+2, -7.0, H+, 1.0, H2O, 3.0, H2[PO4]-)" variable="Hydroxyapatite[s].liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="" variable="Ca.liter.con"/>
+</Composer>

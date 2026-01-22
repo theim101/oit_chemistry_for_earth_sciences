@@ -81,19 +81,19 @@
   // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
   // This calculation is defined during stage 1, so before all other calculations and we can thus use
   // the gasvolume as input in the rest of the chemistry
-  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
-  @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
+  //@Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
+  //@Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
 
   // In the second step we define the the equation(s) that should go to zero.
   // It is defined during stage 5, so after all other chemical calculations are ready.
   // Effectively:
   // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
   // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
+  //@Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
   //@Calc: (5, "pressure_res = pressure - ({CO2[g].con} + {Ar[g].con}))"
 
   // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-  @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
+  //@solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
   //@solve: unknown:(name:, pressure_u, delta:, 1e-9, type:, lin, step:, 0.1) equation:(name:, pressure_res)
 
 }
@@ -160,18 +160,19 @@
 @davies()
 
 //********* The primary entities *******
+@balance_charge(pH)
 @gas(Ar[g])
 @primary_entity(Ar[g], 0.0)
 @species(Ca+2, 2)
-@primary_entity(Ca+2, -9.0, tot, 1.0E-9)
+@primary_entity(Ca+2, -3.0, tot, 1.0E-9)
 @species(Cl-, -1)
-@primary_entity(Cl-, -9.0, tot, 1.0E-9)
+@primary_entity(Cl-, -3.0, tot, 1.0E-9)
 @species(F-, -1)
 @primary_entity(F-, -9.0, tot, 1.0E-9)
 @Global: pH
 @Calc:(1, "H.logact = -pH")
 @entity(H, tot, 0)
-@primary_entity(H, pH, 7.0, lin, 0.1, tot, 1.0E-9)
+@primary_entity(H, pH, 7.0)
 @entity(H2O, liter, 55.6)
 @primary_entity(H2O, -0.0)
 @species(HCO3-, -1, 5.4, 0)
@@ -197,14 +198,20 @@
 
 //********* The entities *******
 
-@species(Ar, 0)
-@logKreaction(Ar, -20.0, 1.0, Ar[g])
 @species(H+, 1)
 @logKreaction(H+, 0.0, 1.0, H)
 @species(CO3-2, -2)
-@logKreaction(CO3-2, "-((( (1.0 / log(10)) * ((10.329 * log(10)) - (-14600.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))", -1.0, H+, 1.0, HCO3-)
+@logKreaction(CO3-2, "-(-(-((( (1.0 / log(10)) * ((10.329 * log(10)) - (-14600.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))))", -1.0, H+, 1.0, HCO3-)
+@entity(Alkalinity, tot, 0)
+@logKreaction(Alkalinity, "-(-(0))", 1.0, CO3-2)
+@species(Ar, 0)
+@logKreaction(Ar, -20.0, 1.0, Ar[g])
+@entity(C, tot, 0)
+@logKreaction(C, "-(-(0))", 1.0, CO3-2)
 @gas(CO2[g])
 @logKreaction(CO2[g], "-1 * (( (1.0 / log(10)) * ((-18.147 * log(10)) - (4059.9999999999995 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+, -1.0, H2O)
+@entity(C[+4], tot, 0)
+@logKreaction(C[+4], "-(-(0))", 1.0, CO3-2)
 @entity(Ca, tot, 0)
 @logKreaction(Ca, "-(0)", 1.0, Ca+2)
 @species(CaCO3, 0, 0, 0)
@@ -217,8 +224,6 @@
 @logKreaction(CaOH+, "(( (1.0 / log(10)) * ((-12.697 * log(10)) - (64110.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
 @species(CaSO4, 0, 0, 0)
 @logKreaction(CaSO4, "(( (1.0 / log(10)) * ((2.36 * log(10)) - (7100.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
-@mineral(Calcite[s])
-@logKreaction(Calcite[s], "-1 * (( (1.0 / log(10)) * ((-8.48 * log(10)) - (-8000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
 @entity(Cl, tot, 0)
 @logKreaction(Cl, "-(0)", 1.0, Cl-)
 @entity(F, tot, 0)
@@ -305,6 +310,8 @@
 @logKreaction(Artinite[s], "-1 * (( (1.0 / log(10)) * ((9.6 * log(10)) - (-120257.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, -2.0, H+, 5.0, H2O, 2.0, Mg+2)
 @SI_mineral(Brucite[s])
 @logKreaction(Brucite[s], "-1 * (( (1.0 / log(10)) * ((16.844 * log(10)) - (-113996.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -2.0, H+, 2.0, H2O, 1.0, Mg+2)
+@SI_mineral(Calcite[s])
+@logKreaction(Calcite[s], "-1 * (( (1.0 / log(10)) * ((-8.48 * log(10)) - (-8000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
 @SI_mineral(Dolomite[disordered][s])
 @logKreaction(Dolomite[disordered][s], "-1 * (( (1.0 / log(10)) * ((-16.54 * log(10)) - (-46400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, CO3-2, 1.0, Ca+2, 1.0, Mg+2)
 @SI_mineral(Dolomite[ordered][s])

@@ -1,11 +1,9 @@
 // Composer settings. 
 Font:  13
-HSize: 1920
-VSize: 1080
-HPos:  640
-VPos:  156
-ProxyHost: name
-ProxyPort: port
+HSize: 1930
+VSize: 1090
+HPos:  1915
+VPos:  -5
 Intropage:  none
 Concertfile: concert.xml
 
@@ -14,11 +12,8 @@ Concertfile: concert.xml
 //    <Title>     <Tab>       <Filename>
 
 File: Documentation 	null 	documentation.txt
-File: Input_Travertine 	null 	input_Travertine.dat
-File: Input_fixed_logact 	null 	input_fixed_logact.dat
-CHEMFile: Chemistry_Travertine 	null 	chemistry_Travertine.inp
-CHEMFile: Chemistry_fixed_logact 	null 	chemistry_fixed_logact.inp
-File: MyDatabase 	null 	mydatabase.txt
-File: Output_Travertine 	null 	output_Travertine.dat
-File: Output_fixed_logact 	null 	output_fixed_logact.dat
+CHEMFile: Chemistry1 	null 	chemistry1.inp
+File: Input 	null 	input.dat
+File: Output 	null 	output.dat
+File: Output2 	null 	output2.dat
 File: Concert 	null 	concert.xml
