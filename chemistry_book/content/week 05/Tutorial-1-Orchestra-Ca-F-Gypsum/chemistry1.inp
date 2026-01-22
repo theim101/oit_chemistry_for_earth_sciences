@@ -1,6 +1,7 @@
-//*********  Version: 05 September 2023 08:40  *******
+//*********  Version: 20 January 2026, 20:56  *******
 @NrDigits: 12  // number of decimal places in reaction coefficients. 
  //@rewriteReactions:   //indicates that reactions are rewritten in terms of primary entities. 
+ //@include_molar_volume_parameters:   //include molar volume parameters from phreeqc database in species definitions. 
 
 //********* The database file(s) *******
 // This section lists the database files that are used by the interactive chemistry editor
@@ -19,7 +20,7 @@
 
 @class: extra_text_0(){
  // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
-// @scan: objects2022.txt
+@scan: objects2022.txt
 // @scan: kinetics_db.txt
 @stop:
 }
@@ -140,10 +141,11 @@
 @link_phase(FA_part, DFA_part, "DFA_kgl")
 @link_phase(FA_part, SFA_part_l, "FA_kgkg*SL")
 @phase(gas_l)
-@link_phase(gas_l, liter, "1")
+@link_phase(gas_l, liter, "gasvolume/watervolume")
 @phase(gas)
-@link_phase(gas, gas_l, "(gasvolume*pressure/(R*T))")
+@link_phase(gas, gas_l, "gasvolume/R*T")
 @phase(wastephase)
+@end_of_gui_phases:
 //********* End of the phases *******
 
 //********* Extra text 2 *******
@@ -153,7 +155,6 @@
 @extra_text_2()
 //********* End of extra text 2 *******
 
-@globalvar: I .1
 @davies()
 
 //********* The primary entities *******
@@ -163,7 +164,7 @@
 @species(F-, -1)
 @primary_entity(F-, -9.0, tot, 2.89E-4)
 @mineral(Gypsum[s])
-@primary_entity(Gypsum[s], 0.0, tot, 10.0)
+@primary_entity(Gypsum[s], -9.0, tot, 0.01)
 @Global: pH
 @Calc:(1, "H.logact = -pH")
 @entity(H, tot, 0)
@@ -175,14 +176,7 @@
 
 //********* Extra text 2a **************
 @class: extra_text_2a(){
-//@composition(calcite_cris, 1.0, CO3-2, 1.0, Ca+2)
-//@composition(acetate, 2, CO3-2, 3, H, -4, O)
-//@composition(Acetogens, 1, CO3-2, 0.6, H, -2.6, O, 0.2, NH4+)
-//@composition(Methanogens, 1, CO3-2, 0.6, H, -2.6, O, 0.2, NH4+)
-//@composition(Glucose, 6, CO3-2, 12, H+, -12, O)
-//@composition(SOM-HD, 1, CO3-2, 1.56, H, -2.37, O, 0.06, NH4+)
-//@composition(SOM, 1, CO3-2, 1.56, H, -2.37, O, 0.06, NH4+)
- // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
+
 }
 @extra_text_2a()
 //********* End of extra text 2a *******
@@ -227,10 +221,6 @@
 @logKreaction(O[-2], -0.0, 1.0, H2O)
 @mineral(Portlandite[s])
 @logKreaction(Portlandite[s], "-1 * (( (1.0 / log(10)) * ((22.804 * log(10)) - (-128620.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -2.0, H+, 2.0, H2O)
-@entity(S[+6], tot, 0)
-@logKreaction(S[+6], "-(-(0))", 1.0, SO4-2)
-@entity(S, tot, 0)
-@logKreaction(S, "-(-(0))", 1.0, S[+6])
 //********* Extra text 3 **************
 @class: extra_text_3(){
  // Here you can put some arbitrary extra code.   

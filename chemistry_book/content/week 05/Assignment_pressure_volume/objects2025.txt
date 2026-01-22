@@ -1,41 +1,86 @@
-﻿//********************************************************************************* 
-// Standard ORCHESTRA object class definitions
+
+//----------------------------------------------------------------------------------------------------------------------------------
+// ORCHESTRA standard object class definitions
 //
-// Version 2022 (15 March)
+// Version 2025 (15 May)
 //
 // J.C.L. (Hans) Meeussen
 // Nuclear Research and Consultancy Group, Petten, The Netherlands
 // www.nrg.eu
-// www.meeussen.nl/orchestra/objects2021.txt
+// www.meeussen.nl/orchestra/objects2025.txt
 // e-mail: meeussen@nrg.eu orchestra@meeussen.nl
 // 
-// This file contains the standard ORCHESTRA objects for implementing 
+// This file contains a set of standard ORCHESTRA object classes that are used to implement
 // chemical reaction and mass transport models.
 // 
+// "Including", or "scanning" this file from a chemical or transport calculator input file makes all definitions available 
+// in this file.
 //
-// Orchestra Objects (classes) are defined in terms of: 
-// 1) Variables:                         
+// @Scan: objects2025.txt 
+//
+// ORCHESTRA calculators only understand the follwing very limited set of "native" statements,
+// so without defining any objects or classes.
+//
+// 1) Definition of (numerical) variables:                         
 //	@Var: <name> <initial value>              
 // 	@Var: pH 7
 //
-// 2) Mathematical expressions:        
-//	@Calc:(1, "<variable> = <expression>") 
+// 2) Definition of mathematical expressions with these variables that are carried out during a given stage:        
+//	@Calc:(<stage>, "<variable> = <expression>") 
 // 	@Calc:(1, "pH = -{H+.logact}")
 //
-// 3) Unknown - Equation pairs:              
+// 3) Definition of Unknown - Equation pairs from the set of variables:              
 //	@solve: unknown:(name:, pH, type:, lin) equation:(name:, H+.tot, tol: , 1e-15)
 //
 //
+// All calculator input text files are processed during read in by the ORCHESTRA pre-processor or expander, 
+// which allows to define parameterized classes and handles e.g. "@include:" and "@scan:" statements.
+// 
+// This file contains a predefined set of such classes that can be used to implement chemical equilibrium models in an ORCHESTRA solver.
 //
-// The ENTITY, PHASE, and REACTION classes are the three basic building blocks
+// Effectively this implies that all information on chemical model types is present in this text input file rather than in the (generic) ORCHESTRA solver executable code.
+// This strict and pysical separation of chemical model definitions from the solver executable code (separation of concerns) 
+// makes it possible to: 
+//
+// 1) update chemical model definitions without changing the solver executable code
+// 2) update the solver executable without changing the chemical model definitions
+//
+// which allows users to extend or adapt the set of chemical model definitions, which is very useful for (e.g. adsorption) model development.
+// The other way around the approach also makes it possible to change or update the calculator solver executable independently of the chemical model definitions.
+// This makes it possible to update the solver in the future with more efficient, or standard versions.
+//
+// A demonstration of this possibilty is the development of a C++ version of the solver (that was developed to allow easier coupling with transport models and Python) 
+// that has exactly the same functionality and reads the same inputfile as the original Java version.
+//
+// The source code of the C++ version of the solver can be found on github:  https://github.com/hansmeeussen/orchestra_cpp
+//
+// 
+//
+//
+// The ENTITY, PHASE, and REACTION object classes are the three basic building blocks
 // for all chemical models.
 //
 //
-// The definition of the phase and entity object classes can be found within the orchestra2.jar file.
+//
+// Changes in the 2024 version
+// - updated the surface site classes and included a version that can contribute to three electrostatic planes
+// - added a "concentrations_as_input()" class, that can be called to allow concentrations (<name>.con) variables as input.
+//   So a chemical system can now also be defined in terms of total amounts/ concentrations of individual 
+//   solid phases/minerals/aqueous ions etc.
+// - corrected calculation of activity coefficient Truesdell Jones for b values != 0
+//
+//
+// Changes in the 2023 version
+// - (re)introduced dividing solubility index (si) of minerals by sum of reactant stoichimetries, to obtain a value that is better comparable
+//   between minerals with large and small number of reactants.   
+// - included calculation of water density and dielectric constant: calculate_rho_sat() (copied from PHREEQC) 
+// - increased the maximum salt level in water activity calcutations 
+// - added the SI_mineral class that calculates the saturation index for unselected minerals
+// - split the link class in a mass balance and an log activity link
 //
 // Changes in the 2022 version
 // - Updated the diffuse class
-// - Updated the sitparameters2 class (replaced scan with include)
+// - Updated the sitparameters2 class (replaced "scan" with "include")
 // - todo: update the ddl class after testing 
 //
 // Changes in the 2021 version
@@ -47,7 +92,6 @@
 // - Added extra species class with 4 parameters to calculate activity according to Truesdel Jones method of PHREEQC 
 // - Adapted the logKreaction class to handle logK expressions as well as logK values, to prepare for variable temperature calculations
 // 
-//  
 // Changes in the 2020 version
 // - Increased maximum ionic strenght to 20 moles/l inset_ion_activity_model class.
 // - Adapted the species class to calculate activity for neutral species according to (logf = -0.1*I)
@@ -63,8 +107,6 @@
 // - The (obsolete) electroneutral diffusion objects have been removed, as these are superseded with the new
 //   multicomponent / electrodiffusion classes.
 //   
-//
-//
 // Changes in the 2019 version
 // - changed the settings of the equation in the nica_site object (solves problems with convergence)
 // - introduced the <name>.<phase>.con variable
@@ -72,14 +114,12 @@
 //
 // Changes in the 2018 version
 // - introduced the @solve: keyword as replacment for the @UnEq2: keyword for defining unknown-equation pairs
-// - adsorption model specific code was removed from this file and added to adsmodels2018.txt
-// - the nicamodel class was renamed to (more appropriate) donnanmodel class 
+// - adsorption model specific code was removed from this file and added to adsmodels2019.txt
+// - the nicamodel class was renamed to donnanmodel class 
 // - removed the maximum value constraint for surface site fractions (was 1)
 // - the expander was extended with the possibility to evaluate expressions during the expanding process e.g: @evaluate:("2*3")
 // - the expander does not require % characters in nested class definitions or sweeps anymore {%   {  }   %}
 // 
-//
-//
 // Changes in the 2014 version
 // -  mineral object with variable tolerance that is adapted during iteration
 // -  updated solid solution object
@@ -98,10 +138,9 @@
 //  - A disperse() class was added, that calculates dispersion when combined with the convection object
 //  - a balance_charge(cation,anion) object was added to use electroneutrality as constraint 
 //
-// changes in the 2011 version
+// Changes in the 2011 version
 //  - half life and decay objects added
 //  - minerals are now phases as well as entities (made optional for efficiciency reasons)
-//
 //
 // Changes in the 2008 version
 //  - conversion to log activities
@@ -113,27 +152,75 @@
 //  - added surface reaction with 6  components
 //  - changed primary entity object for 7 parameters, (used for pH pe) so that it uses given default value for unknown
 //  - updated and tested ddl objects (new version can handle charge unbalance in solution)
-//**************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------
+//
+// Definition of the basic PHASE, ENTITY, and REACTION object classes that are used as building blocks for all ORCHESTRA chemical models.
+//
+// A  PHASE: 
+// - is a part of a chemical system in which entities can be present
+// - phases can represent physical phases of a chemical system, such as dissolved, solid gaseous phases
+// - phases can be linked in a hierarchical way to sum masses in a hierarchical way
+// - phases structure is used for hierarchical bookkeeping of mass balances
+// - each parent phase contains mass of all its child phases (* conversion factor)
+// - the phase structure is user definable, but a default structure can be found here:
+//   http://www.meeussen.nl/orchestra/orchestra_standard_phase_structure.txt
+//
+// An ENTITY
+// - is an abstract form of a "chemical species"
+// - it is used to represent a range of different type of chemical species
+// - examples are: aqueous species, gases, minerals, adsorbed species, adsorption sites etc. 
+// - each entity is present in a phase, and has a <name>.logact, <name>.con, and a <name>.<phase> variable for each phase.
+// - new entities can be created by formation reactions that use existing entities as reactants
+//
+// A REACTION connects the activities and mass balances of entities 
+// - so once enties are defined, these can be used as reactants or products in chemical reactions
+// 
+//----------------------------------------------------------------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------------------------------------------------------------
+// Order in which the ini_phases and use phases classes are called.
+//
+//@class: chemistry_file(){chemistry1.inp}	Define the chemistry file name
+//@scan: @chemistry_file()            		Scan the chemistry file, so the ini_phases objects is now defined (from the included objects file)
+//@ini_phases()					Call the ini_phases object, which in turn defines the phases and phase and mb_link class
+//@scan: @chemistry_file()                      Scan the chemistry file to define the phases, phase and link_phase classes
+//@use_phases2()				Call the use phases class to defines the entity and link classes
+//@include: @chemistry_file()			Now include the chemistry file to expand all the phases, entities and reaction links
+//----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------
+// The ini_phase class defines the initial phases, phase and link_phase classes
+// During the first pass of the chemistry file, these classes are completed
+//----------------------------------------------------------------------------------------------------------------------------------
 @class: ini_phases(){
- 
-  // original text from ini_phases.txt
  
   // we define the class phases, all phases are added to this class
    @Class: phases(){}
 
-   // Each phase appends a bit of text to the phase class
+   // Each phase appends variables and expressions to the phase class
    @Class: phase(phase){
       @Append: phases(){
          @Append: entity(name, phase){
-            @Var:  <name>.<phase> 0
-            @Var:  <name>.<phase>.con 0   //** Test
-            @Calc:(1,"<name>.<phase>.con = 0")     //** Each entity gets a .con variable in each phase
+            //** Each entity gets a .phase and a .con variable in each phase
+            @Var:  <name>.<phase> 0       // .phase contains cummulative concentration of all dependent entities in this phase
+            @Var:  <name>.<phase>.con 0   // .con contains concentration of entity itself
+            @Calc:(1,"<name>.<phase>.con = 0")     
             @Calc:(1,"<name>.<phase>     = 0")
          }
-         @Append: link(name1, name2, coef1, coef2){
-           @Calc:(3, "<name2>.<phase> = {<name2>.<phase>} + {<name1>.<phase>} * <coef2>")
+
+         // A mass balance link
+         @Append: mb_link(name1, name2, coef){
+            @Calc:(3, "<name2>.<phase> = {<name2>.<phase>} + {<name1>.<phase>} * <coef>")
          }
+
       }
    }
 
@@ -152,13 +239,18 @@
    }
 }
 
-   // use_phases2.txt
+//----------------------------------------------------------------------------------------------------------------------------------
+// The use_phases2 class is called after the second pass of the chemistry file 
+// and defines the entity and link classes.
+// The call of the phases class, appends the enity and link classes with the extra expressions required
+// to represent the hierarchical mass balances  
+//----------------------------------------------------------------------------------------------------------------------------------
 @class: use_phases2(){
    @Class: entity(name, phase){
       @Var: <name>.logact 0
       @Var: <name>.con 0
       @Var: <name>.<phase> 0
-      @Calc:(3,"<name>.<phase>.con = {<name>.con}")      //** test
+      @Calc:(3,"<name>.<phase>.con = {<name>.con}")     
    }
 
    @Class: entity(name, phase, factor){
@@ -171,9 +263,23 @@
       @entity(<name>, <phase>, <factor>)
       @Calc:(1,"<name>.logact = <ini>")  
    }
-   
+
+   //** a (log) activity link
+   @Class: act_link(name1, name2, coef){
+      @Calc:(1, "<name1>.logact = {<name1>.logact} + {<name2>.logact} * <coef>")
+      @Calc:(1, "<name1>.logk_unit = {<name1>.logk_unit} + abs(<coef>)")
+   }
+
+   // An initially empty mass balance link
+   // Each phase will append some code to this
+   @Class: mb_link(name1, name2, coef){
+   }
+
+   //** a standard link consisits of an activity and a mass balance link
    @Class: link(name1, name2, coef1, coef2){
-      @Calc:(1, "<name1>.logact = {<name1>.logact} + {<name2>.logact} * <coef1>")
+      //@Calc:(1, "<name1>.logact = {<name1>.logact} + {<name2>.logact} * <coef1>")
+      @act_link(<name1>, <name2>, <coef1>)
+      @mb_link(<name1>, <name2>, <coef2>)
    }
 
    @Class: link(name1, name2, coef1){
@@ -182,24 +288,26 @@
    
    @phases()
 }
+//----------------------------------------------------------------------------------------------------------------------------------
 
 
-@GlobalVar: T 298.15      // Temperature with default value
+//----------------------------------------------------------------------------------------------------------------------------------
+// Now we can use the link class defined above to define a set of logKreaction classes.
+// These can use values or expressions as input for a logk.
+// Stoichiometry coefficients can be given as single value for log activity and mass balance, but also as
+// two distinct values as follows "1, 2"
+//----------------------------------------------------------------------------------------------------------------------------------
 
-@class: T(){T}  // T class is used in temperature dependent logK expressions
 
-@Class: calc_conc(entity, factor){
-   @Calc:(2,"<entity>.con = (10^{<entity>.logact}) * <factor>")
-}
-
-// The logk reaction allows to use logK values as input for reaction definitions 
-// these can be mixed with ordinary reactions in input files
+// add calculation of units of logk
 
 @Class: logKreaction(entity, logk){
+   @Var: <entity>.logk_unit 0
+   @Calc:(1, "<entity>.logk_unit = 0")
+
    @Var: <entity>.logk   1
    @Calc:(1,"<entity>.logk = <logk>")
    @Calc:(1,"<entity>.logact = {<entity>.logk}")
-
 }
 
 // The reaction classes with 1 - 8 reactants
@@ -297,14 +405,103 @@
    @link(<entity>, <n9>, <c9>) 
    @link(<entity>, <n10>, <c10>) 
 }
+//----------------------------------------------------------------------------------------------------------------------------------
 
 
 
-//********************************************************************************* 
+@GlobalVar: T 298.15      // Temperature with default value
+
+@class: T(){T}  // T class is used in temperature dependent logK expressions
+
+@Class: calc_conc(entity, factor){
+   @Calc:(2,"<entity>.con = (10^{<entity>.logact}) * <factor>")
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------
 // A set of generic classes for constructing activity correction models
 //
 // Hans Meeussen  22 June 2020. 5 November 2020 
-//********************************************************************************* 
+//----------------------------------------------------------------------------------------------------------------------------------
+
+// We add the calculation of water density and dielectric constant
+// This code is literally copied and translated from the phreeqc source code (utilities.cpp, 2019, line 163)
+@class: calculate_rho_sat(){
+
+@Var: phr_tc 0
+@Var: P 1
+@Var: phr_pa 0
+@Calc:(1, "phr_pa = P")
+
+@Var: phr_Tc  647.096
+@Var: phr_th 0
+
+@Calc:(1, "phr_tc = T - 273.15") 
+@Calc: (1,"phr_th = 1 - T / phr_Tc")
+
+@Var: phr_b1  1.99274064
+@Var: phr_b2  1.09965342
+@Var: phr_b3 -0.510839303
+@Var: phr_b4 -1.75493479
+@Var: phr_b5 -45.5170352 
+@Var: phr_b6 -6.7469445e5
+@Var: rho_0_sat 0
+
+@Calc:(1, "rho_0_sat = 322.0*(1.0 + phr_b1*phr_th^(1/3) + phr_b2*phr_th^(2/3) + phr_b3*phr_th^(5/3) + phr_b4*phr_th^(16/3) + phr_b5*phr_th^(43/3) + phr_b6*phr_th^(110/3))")
+
+//pressure...
+@Var: phr_p0 0
+@Calc:(1, "phr_p0 =  5.1880000E-02 + phr_tc * (-4.1885519E-04 + phr_tc * ( 6.6780748E-06 + phr_tc * (-3.6648699E-08 + phr_tc *  8.3501912E-11)))")
+@Var: phr_p1 0
+@Calc:(1, "phr_p1 = -6.0251348E-06 + phr_tc * ( 3.6696407E-07 + phr_tc * (-9.2056269E-09 + phr_tc * ( 6.7024182E-11 + phr_tc * -1.5947241E-13)))")
+@Var: phr_p2 0
+@Calc:(1, "phr_p2 = -2.2983596E-09 + phr_tc * (-4.0133819E-10 + phr_tc * ( 1.2619821E-11 + phr_tc * (-9.8952363E-14 + phr_tc *  2.3363281E-16)))")
+@Var: phr_p3 0
+@Calc:(1, "phr_p3 =  7.0517647E-11 + phr_tc * ( 6.8566831E-12 + phr_tc * (-2.2829750E-13 + phr_tc * ( 1.8113313E-15 + phr_tc * -4.2475324E-18)))")
+	
+
+@Var: rho_0 0
+@Calc:(1,"rho_0 = rho_0_sat + phr_pa * (phr_p0 + phr_pa * (phr_p1 + phr_pa * (phr_p2 + sqrt(phr_pa) * phr_p3)))")
+@Calc:(1,"rho_0 = rho_0/1e3")
+
+@Var:  phr_u1   3.4279e2
+@Var:  phr_u2  -5.0866e-3
+@Var:  phr_u3   9.469e-7
+@Var:  phr_u4  -2.0525
+@Var:  phr_u5   3.1159e3
+@Var:  phr_u6  -1.8289e2
+@Var:  phr_u7  -8.0325e3
+@Var:  phr_u8   4.2142e6
+@Var:  phr_u9   2.1417
+
+@Var: phr_d1000 0
+@Calc:(1,"phr_d1000 = phr_u1 * exp(T * (phr_u2 + T * phr_u3))") // relative dielectric constant at 1000 bar
+
+@Var: phr_c 0
+@Calc:(1,"phr_c = phr_u4 + phr_u5 / (phr_u6 + T)")
+
+@Var: phr_b 0
+@Calc:(1,"phr_b = phr_u7 + phr_u8 / T + phr_u9 * T")
+
+@Var: phr_pb 1
+@Calc: (1,"phr_pb = phr_pa * 1.01325") // pa in bar
+//@Calc: (1,"phr_pb = phr_pa ") // pa in bar
+
+@Var: eps_r 0
+@Calc:(1, "eps_r = phr_d1000 + phr_c * log((phr_b + phr_pb) / (phr_b + 1e3))") // relative dielectric constant
+
+@Var: e2_DkT 0
+@Calc:(1, "e2_DkT = 1.671008e-3 / (eps_r * T)")
+
+@Var: DH_B 0
+@Calc:(1,"DH_B = sqrt(8 * 3.14159 * 6.02252e23 * e2_DkT * rho_0 / 1e3)") 
+
+
+@Var: DH_A 0
+@Calc:(1,"DH_A  = DH_B * e2_DkT / (2.0 * log(10))") //(mol/kg)^-0.5
+}
+
 
 @Class: set_ion_activity_model(name)
 This object solves the unknown ionic strenght until estimated and calculatd ionic strength are equal.
@@ -312,11 +509,18 @@ It defines the ionic strength I as an unknown, and the difference between
 the calculated and estimated ionic strength I.eq as the equation value which has to
 become zero during the iteration.  
 Hans Meeussen,  June 2002, revised March 2020
+December 2023 Switched from I to logI as input variable
+
 {
-   @Var: I.eq 0                      // the equation that has to become zero
-   @Calc: (3, "I.eq = I - {I.calc}") // the difference between calculated and estimated ionic strenght
+   @globalVar: logI -2
+   @Calc:(1, "I = 10^logI")
+
+   @Var: I.eq 0                         // the equation that has to become zero
+   @Calc: (3, "I.eq = (I /{I.calc})-1") // the difference between calculated and estimated ionic strenght
    @<name>(0.1)
-   @solve: unknown:(name:, I,  delta:, 1e-1, type:, lin, step: , .1, min:, 1e-9, max:, 20, iia:, true) equation:(name:, I.eq, tol:, 1e-4)
+//   @solve: unknown:(name:, I,  delta:, 1e-1, type:, lin, step: , .1, min:, 1e-9, max:, 20, iia:, true) equation:(name:, I.eq, tol:, 1e-4)
+//   @solve: unknown:(name:, I,  delta:, 1e-1, type:, lin, step: , .001,  iia:, true) equation:(name:, I.eq, tol:, 1e-4)
+   @solve: unknown:(name:, logI,  delta:, 1e-2, step: , .5,  iia:, true) equation:(name:, I.eq, tol:, 1e-4)
 }
 
 
@@ -328,7 +532,7 @@ It also calculates the electric conductivity EC.
 The estimated/given ionic strength I is used as input.
 
 Hans Meeussen,  June 2002, revised March 2020
-{
+{//----------------------------------------------------------------------------------------------------------------------------------
    @globalvar:  I  <i>            // estimated ionic strength  
    @Var: I.logf1  0               // the log activity  coefficient for an ion with charge 1 
    @Var: I.calc   0               // I as calculated from actual speciation
@@ -344,12 +548,16 @@ Hans Meeussen,  June 2002, revised March 2020
    @Calc:(1, "I.logf1  = @calculatef1() "  )
 
    // Calculate electric conductivity from calculated I
-   //EC (µS/cm)   =   6.2 10e4 × I (mol/L)   
-   @Calc:(5, "EC      = 6.2e1 * I.calc")  
+   //EC (µS/cm)   =   6.2 10e4 × I (mol/L)    simple empirical linear
+//   @Calc:(5, "EC      = 6.2e1 * I.calc")
+  
+   // Lindsay 1979 uses 1/0.0013 = 7.69e1
+   @Calc:(5, "EC      = 7.69e1 * I.calc")  
 
 
 
-// we also define an allSpecies class to process all species 
+
+// We also define an "allSpecies" class to process all species 
 @Class: allSpecies(){}
 
 
@@ -358,8 +566,12 @@ Hans Meeussen,  June 2002, revised March 2020
 
 @Class: species(name, charge)
 This new (March 2020) of the species class calculates its own activity coefficient, 
-and contributions to charge balance and ionic strenght
+and its contribution to charge balance and ionic strenght
 {
+
+   @Var: <name>.logfsum 0
+   @Calc:(1, "<name>.logfsum = 0")
+
    // we add this species to the list of species
    // so we can use this list to process all species
    @append: allSpecies(){
@@ -367,15 +579,19 @@ and contributions to charge balance and ionic strenght
    }
 
    @entity(<name>, "@aqphase()")
+
+
+
+
    @Var: <name>.logf 0
-   @Calc:(1,"<name>.logf   =  I.logf1 * (<charge>*<charge>) ")
-//   @Calc:(1,"<name>.logf   =  if(<charge> == 0, (-0.1 * I),  I.logf1 * (<charge>*<charge>)) ")
+   @Calc:(1,"<name>.logf   =  I.logf1 * (<charge>^2) ")
+//*********   @Calc:(1,"<name>.logf   =  if(<charge> == 0, (-0.1 * I),  I.logf1 * (<charge>*<charge>)) ")
 
    @Calc:(2,"<name>.con    = 10^({<name>.logact} + {<name>.logf}) ")
    @Calc:(2,"<name>.@aqphase() = {<name>.con}") 
 
    // add contribution of this species to total ionic strenght
-   @Calc:(2,"I.calc  = I.calc + ({<name>.con} * (0.5*<charge>*<charge>))")
+   @Calc:(2,"I.calc  = I.calc + ({<name>.con} * (0.5*<charge>^2))")
 
    // add contribution of this species to charge balance 
    @Calc:(2,"chargebalance = chargebalance + ({<name>.con} * (<charge>))")
@@ -384,36 +600,55 @@ and contributions to charge balance and ionic strenght
    @Calc:(2,"sumAqIons = sumAqIons + {<name>.con}")
 }
 
+@class: TruesdellJones_AB(){
+  @Var: DielectricConstant 80
+  @Calc: (1, "DielectricConstant = -0.3366 * T + 179.15")
+
+
+   @Var: DH_A 0.51 // default value
+   @Var: Truesdell_A 0.51
+//   @Calc: (1, "Truesdell_A = 1.837*1e6*(DielectricConstant * T)^(-3/2)")
+   @Calc: (1, "Truesdell_A = DH_A")
+
+   @Var: DH_B 0.3281e8 // default value
+   @Var: Truesdell_B 0.3281
+  // @Calc: (1, "Truesdell_B = 50.3*(DielectricConstant * T)^(-1/2)")
+  @Calc: (1, "Truesdell_B = DH_B/1e8")   
+}
+
+
+@TruesdellJones_AB()
+
+
+
 @Class: species(name, charge, a, b)
 This new (April 2021) version of the species class calculates its own activity coefficient, 
-according to the Truesdel & Jones method of PHREEQC
+according to the Truesdell & Jones method of PHREEQC
 and its contributions to charge balance and ionic strenght
 {
    // we add this species to the list of species
    // so we can use this list to process all species
    @append: allSpecies(){
-      @forEachSpecies(<name>, <charge>)
+      @forEachSpecies(<name>, <charge>, <a>, <b>)
    }
 
-   @Var: DielectricConstant 80
-   @Calc: (1, "DielectricConstant = -0.3366*T+179.15")
-
-   @Var: Truesdel_A 0.51
-   @Calc: (1, "Truesdel_A = 1.837*1e6*(DielectricConstant * T)^(-3/2)")
-
-   @Var: Truesdel_B 0.3281
-   @Calc: (1, "Truesdel_B = 50.3*(DielectricConstant * T)^(-1/2)")
+   @Var: <name>.logfsum 0
+   @Calc:(1, "<name>.logfsum = 0")
 
    @entity(<name>, "@aqphase()")
    @Var: <name>.logf 0
 
-   @Calc:(1,"<name>.logf   =   ((Truesdel_A * <charge>^2 * sqrt(I)) / (1 + Truesdel_B * <a> * sqrt(I))) - (<b>*I)") 
+
+   // here we max the ionic strenght at 9 to avoid problems at extreme values of I
+   // corrected 13/11/2024
+   @Calc:(1,"<name>.logf   =   (Truesdell_A * <charge>^2 * (min(3,sqrt(I)) / (1 + Truesdell_B * <a> * min(3,sqrt(I))) ) ) - (<b> * min(9,I))") 
+
 
    @Calc:(2,"<name>.con    = 10^({<name>.logact} + {<name>.logf}) ")
    @Calc:(2,"<name>.@aqphase() = {<name>.con}") 
 
    // add contribution of this species to total ionic strenght
-   @Calc:(2,"I.calc  = I.calc + ({<name>.con} * (0.5*<charge>*<charge>))")
+   @Calc:(2,"I.calc  = I.calc + ({<name>.con} * (0.5*<charge>^2))")
 
    // add contribution of this species to charge balance 
    @Calc:(2,"chargebalance = chargebalance + ({<name>.con} * (<charge>))")
@@ -429,46 +664,68 @@ and its contributions to charge balance and ionic strenght
    @Var: H2O_activity_equation 0
    // we max the total mol/l of ions at 20 to prevent problems in predominace diagrams outside the water stability boundaries
    @Calc:(5,"H2O_activity_equation = H2O.logact - log10(1 - 0.017 * min(20, sumAqIons))" )
+
+//   @Calc:(5,"H2O_activity_equation = H2O.logact - log10(1 - 0.017 * min(58, sumAqIons))" )
    @solve: unknown:(name:, H2O.logact,  delta:, 1e-3, type:, lin, step: , .1, reldelta:, 1e-3) equation:(name:, H2O_activity_equation, tol: , 1e-4 )
 }
 
 } 
-//********************************************************************************* 
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-//********************************************************************************* 
+//----------------------------------------------------------------------------------------------------------------------------------
 // DAVIES model implementation
 //
-// Updated 22 June 2020, Hans Meeussen
-//********************************************************************************* 
+// Updated 22 January 2023, Hans Meeussen
+//----------------------------------------------------------------------------------------------------------------------------------
 @Class: davies(){
    @set_ion_activity_model("davies")
 }
 
 @Class: davies(i){
-   @Class: calculatef1(){ (0.51 * ( (sqrt(I)/(sqrt(I)+1))-(0.3*I))) }
+
+//   @Var: A_D 0.51
+//   @Calc: (1, "A_D = 1.837 * 1e6 *  ((-0.3366*T + 179.15) * T)^(-3/2)")
+//   @Class: calculatef1(){ (0.51 * ( (sqrt(I)/(sqrt(I)+1))-(0.3*I))) }
+//   @Class: calculatef1(){ (0.51 * ( (sqrt(I)/(sqrt(I)+1))-(0.23*I))) } // old ECOSAT expression
+//   @Class: calculatef1(){ (A_D * ( (sqrt(I)/(sqrt(I)+1))-(0.3*I))) }
+
+   @Class: calculatef1(){ (DH_A * ( (sqrt(I)/(sqrt(I)+1))-(0.3*I))) }
+
+
+   @calculate_rho_sat() // copied from PHREEQC
+
+   @Var: davies_f1 0
+
+   @Calc:(1, "davies_f1 = @calculatef1() ")
+
    @ion_activity_model(<i>)
+
+// we can force species with more parameters to be calculated according to Davies
+// by overwriting the species class for 4 parameters
+// @Class: species(name, charge, a, b){
+//    @species(<name>,<charge>)
+// }
+
 }
-//********************************************************************************* 
+//----------------------------------------------------------------------------------------------------------------------------------
 
-
-
-//********************************************************************************* 
+//----------------------------------------------------------------------------------------------------------------------------------
 // Complete ORCHESTRA SIT model implementation, plus set of SIT parameters
 //
 // To use the SIT model, include this file after the standard objects file.
 // an select SIT activity correction model in the GUI.
 //
 // Hans Meeussen,   6 October 2020, tested against PHREEQC, 23 Februari 2021 
-//********************************************************************************* 
+//----------------------------------------------------------------------------------------------------------------------------------
 
 @Class: sitmodel(){
    @set_ion_activity_model("sitmodel")
 }
 
-@Class: sitmodel(i){
+@Class: sitmodel(i){//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+@calculate_rho_sat()
 
 @Class: calculatef1(){ (0.51*sqrt(I)) / (1+1.5*sqrt(I))}
 
@@ -497,7 +754,17 @@ and its contributions to charge balance and ionic strenght
 //   @Calc:(1, "<name>.logf = if(<charge> == 0 , (-.01*I) - {<name>.logfsum}, (<charge>^2) * @calculatef1() - {<name>.logfsum})")
 
 // apparently PHREEQC uses zero values for logf of neutral species, so we use the equation below
-//  @Calc:(1, "<name>.logf =  (<charge>^2) * @calculatef1() - {<name>.logfsum}")
+   @Calc:(1, "<name>.logf =  (<charge>^2) * I.logf1 - {<name>.logfsum}")
+   
+   @Calc:(1, "<name>.logfsum = 0")
+}
+
+// called for each species
+@class: SIT_update(name, charge, a, b){
+   @var: <name>.logfsum 0
+
+   // check whether phreeqc uses extended debye hueckel or simple debye huckel in SIT model (top or bottom line)
+   //@Calc:(1,"<name>.logf   =   (Truesdell_A * <charge>^2 * (min(3,sqrt(I)) / (1 + Truesdell_B * <a> * min(3,sqrt(I))) ) + <b> * min(9,I))- {<name>.logfsum}") 
    @Calc:(1, "<name>.logf =  (<charge>^2) * I.logf1 - {<name>.logfsum}")
    
    @Calc:(1, "<name>.logfsum = 0")
@@ -524,6 +791,10 @@ and its contributions to charge balance and ionic strenght
       @SIT_update(<name>, <charge>)
    }
 
+   @class:  forEachSpecies(name, charge, a, b){
+      @SIT_update(<name>, <charge>, <a>, <b>)
+   }
+
    // calculate the SIT sum factors using current activity coefficients
    @sitparameters2()
 
@@ -545,34 +816,34 @@ and its contributions to charge balance and ionic strenght
 
 @Class: sitparameters2(){
   // this is a default empty set of sitparameters
-  // a full set can be found and used by scanning the SIT database file after inlcluding this objects file
+  // a full set can be found and used by scanning the SIT database file after including this objects file
   //@include: sitparameters.txt
   // we define the class sitparameter here, so this is automatically done when we 
   // use the sitmodel class
 
-@SIT(CO3-2,Na+,-0.08)
-@SIT(Ca+2,Cl-,0.14)
-@SIT(Ca+2,NO3-,0.02)
-@SIT(Cl-,Na+,0.03)
-@SIT(H+,Cl-,0.12)
-@SIT(H+,NO3-,0.07)
+//@SIT(CO3-2,Na+,-0.08)
+//@SIT(Ca+2,Cl-,0.14)
+//@SIT(Ca+2,NO3-,0.02)
+//@SIT(Cl-,Na+,0.03)
+//@SIT(H+,Cl-,0.12)
+//@SIT(H+,NO3-,0.07)
 }
 
-}
+
+}//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // The default aqueous phase is "diss", however this can be redefined if necessary. 
 @Class: aqphase(){diss}
 
 
-
-@Class: mineral(name).
+@Class: mineral(name)
  
 This object represents an automatically precipitating/dissolving mineral.
-A mineral is an entity in the "min" phase, which can be combined with a standard (formation)reaction object. 
-The ".logact" variable of a mineral entity is its log IAP + log K value.
+A mineral is an entity in the "min" phase, which can be combined with a standard @logKreaction object. 
+The ".logact" variable of a mineral entity is its log IAP + log K value. (or log si)
 
-Because, in contrast with ordinary entities, the amount of this mineral entity cannot be calculated directly from its activity we 
-introduce an extra unknown and equation that is solved by the standard iteration procedure.
+In contrast most other entities, the amount or concentration of a mineral entity cannot be calculated directly from its activity, 
+so we introduce an extra unknown and equation that is solved by the standard iteration procedure.
 The amount of mineral can now be calculated from the estimated unknown.
 If the unknown is negative, the mineral is not present and the unknown represents its log undersaturation.
 If the unknown is positive it directly represens the amount of mineral present.
@@ -581,7 +852,6 @@ The equation that has to become zero to reach convergence:
 unknown <  0  equation = log (IAP*K) - unknown   // difference between unknown and log undersaturation  (should go to zero)
 unknown >= 0  equation = log (IAP*K)             // log saturation index                                (should go to zero)
 
-In this way we can implement a precipitating mineral object calss with just 10 statements 
 
 May 2014
 Hans Meeussen.
@@ -589,20 +859,36 @@ Hans Meeussen.
 {
      //   @phase(<name>, min, 1)
 	@entity(<name>, min) 
-	@Var: <name>.un   -1e-3
-	@Var: <name>.eq    0
-	@Var: <name>.si    0
+	@Var: <name>.un   -1e-3 // the unknown that is varied until equation becomes 0
+	@Var: <name>.eq    0    // equation that has to become 0 during iteration
+	@Var: <name>.si    0    // log saturation index 
 	@Var: minTol      1e-3  // minTol goes to zero during the iteration
+	@Var: <name>.si2   0    // si divided by sum of stoichimethy of reactants in formation reaction. 
 
-	@Calc:(2,"<name>.si  = {<name>.logact}") 
+	@Calc:(2,"<name>.si   = {<name>.logact}") 
+	@Calc:(2,"<name>.si2  = {<name>.logact} / {<name>.logk_unit}") //  
 	@Calc:(2,"<name>.con = if({<name>.un} >= 0,  ({<name>.un}),   0)  ")
 	@Calc:(2,"<name>.min = {<name>.con}")
+	@Calc:(2,"<name>.eq  = if({<name>.un} < 0,     ({<name>.si2} - {<name>.un}), {<name>.si2}- {<name>.un} * minTol)")
 
-	@Calc:(2,"<name>.eq  = if({<name>.un} < 0,     ({<name>.si} - {<name>.un}), {<name>.si}- {<name>.un} * minTol )")
-	@Solve: unknown:(name:, <name>.un,  delta:, 1e-6, type:, lin, step: , .1, reldelta:, 1e-3) equation:(name:, <name>.eq, tol: , 1e-8, si:, <name>.si )
+	@Solve: unknown:(name:, <name>.un,  delta:, 1e-6, type:, lin, step: , 5, reldelta:, 1e-2) equation:(name:, <name>.eq, tol: , 1e-8, si:, <name>.si2 )
 }
 
 
+@Class: mineral(name, molvolume){
+   @mineral(<name>)
+   @Var: <name>.molvol  <molvolume>
+}
+
+@Class: SI_mineral(name)
+ 
+{
+ 	@entity(<name>, min) 
+	@Var: <name>.si    0
+	@Calc:(2,"<name>.si  = {<name>.logact}") 
+	@Calc:(2,"<name>.con = 0)  ")
+	@Calc:(2,"<name>.min = {<name>.con}")
+}
 
 
 @Class: solid_solution(name, parent_phase)
@@ -637,10 +923,11 @@ The accomponying equation then is the difference between 1 and the sum of fracti
 	// if solid solution is completely dissolved, (unknown<=0) calculated sum should be zero
      // the variable <name>.<name> contains the sum of fractions that should go to 1.
 
+
       @Calc:(5, "<name>.eq  = if(0 >  {<name>.un},   ( log({<name>.<name>})/1000 - {<name>.un}), 1-{<name>.<name>})")
 
 	// iterate for a value of the unknown that results in an equation value of zero.
-      @solve: unknown:(name:, <name>.un, delta:, 1e-3, type:, lin, step: , .1 ) equation:(name:, <name>.eq, tol: , 1e-6)
+      @solve: unknown:(name:, <name>.un, delta:, 1e-3, type:, lin, step: , 1 ) equation:(name:, <name>.eq, tol: , 1e-6)
 
 }
 
@@ -662,7 +949,7 @@ By placing this entity in an e fase, its sum is directly converted to the units 
 }
 
 
-@Class: ddl_notyetcompatible(name, e_layer)   
+@Class: ddl_alternative(name, e_layer)   
 { 
     // Object to calculate diffuse double layer charge from given potential of electrostatic layer
     @Var: <name>.ddl 0.0  
@@ -686,13 +973,29 @@ By placing this entity in an e fase, its sum is directly converted to the units 
     @Calc: (4, "<name>.sum_of_charge  = <name>.sum_of_charge  +  if (chargebalance>0,  chargebalance * (exp(<name>.PF_RT) -1), -chargebalance * (exp(-<name>.PF_RT) -1) )"
 
     // we use the total concentrations of dissolved species for each distinct charge, as calculated by the ionic strength object
-    @Calc:(4,"<name>.sum_of_charge  = {f1.sum} * (exp(-1 * <name>.PF_RT) -1) + {f-1.sum} * (exp(<name>.PF_RT) -1) + {f2.sum} * (exp(-2 * <name>.PF_RT) -1) + {f-2.sum} * (exp(2 * <name>.PF_RT) -1) + {f3.sum} * (exp(-3 * <name>.PF_RT) -1) + {f-3.sum} * (exp(3 * <name>.PF_RT) -1)")
+//    @Calc:(4,"<name>.sum_of_charge  = {f1.sum} * (exp(-1 * <name>.PF_RT) -1) + {f-1.sum} * (exp(<name>.PF_RT) -1) + {f2.sum} * (exp(-2 * <name>.PF_RT) -1) + {f-2.sum} * (exp(2 * <name>.PF_RT) -1) + {f3.sum} * (exp(-3 * <name>.PF_RT) -1) + {f-3.sum} * (exp(3 * <name>.PF_RT) -1)")
+
+
+  // we simply use the concentrations of all aqueous species to calculate the sum of charges
+
+   @class: addCharge(name, charge){
+      @Calc:(2,"<name>.sum_of_charge  = {<name>.con} * (exp(-<charge> * <name>.PF_RT) -1)")
+   }
+
+   @class:  forEachSpecies(name, charge){
+      @addCharge(<name>, <charge>)
+   }
+
+   @class:  forEachSpecies(name, charge, a, b){
+      @addCharge(<name>, <charge>)
+   }
+
 }
 
 
 @Class: ddl (name, e_layer){
     // Object to calculate diffuse double layer charge from given potential of electrostatic layer
-    // This version of ddl object was used in first Orchestra versions and assumes that the ionic strenght is dominated by symmetric electrolyte monovalent ions
+    // This version of the ddl class was used in first ORCHESTRA versions to reproduce ECOSAT calculations and assumes that the ionic strenght is dominated by symmetric electrolyte monovalent ions
     @Var: T    298.15          
     @Var: R    8.31441
     @Var: F    96484.56
@@ -712,9 +1015,10 @@ By placing this entity in an e fase, its sum is directly converted to the units 
 
 
 
-//**********************************************************************************
+
+//----------------------------------------------------------------------------------------------------------------------------------
 // The transport object classes
-// *********************************************************************************
+//----------------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------
 // Transport objects translated to new expressions (9 September 2002)
@@ -856,14 +1160,15 @@ porosity = water filled porosity
    @Calc:(1, "2.<name>.d = {2.<name>.d} + {<name>.J}")
 }
 
-// The user interface objects (used by the graphical chemistry editor)
-
+//----------------------------------------------------------------------------------------------------------------------------------
+// Chemical user interface objects (used by the graphical chemistry editor)
+//----------------------------------------------------------------------------------------------------------------------------------
 @Class: primary_entity(name, unknownvalue, phase, equationvalue){
      @Var: tolerance 1e-13
      @globalvar: <name>.logact <unknownvalue>  
 
      @globalvar: <name>.<phase> <equationvalue>     // define this variable as global (node) variables + default value
-     @solve: unknown:(name:, <name>.logact,  delta:, 1e-6, type:, lin, step: , 1, default:, -15) equation:(name:, <name>.<phase>, tol: , tolerance, default:, <equationvalue>) )
+     @solve: unknown:(name:, <name>.logact,  delta:, 1e-6, type:, lin, step: , 1, default:, <unknownvalue>) equation:(name:, <name>.<phase>, tol: , tolerance, default:, <equationvalue>) )
 }
 
 @Class: primary_entity(name, unknownvalue){
@@ -879,21 +1184,6 @@ porosity = water filled porosity
 @Class: primary_entity(name, unknown, unknownvalue){
      @globalvar: <unknown> <unknownvalue>  
 }
-
-
-@class: primary_entity_synonym:(synonym, name){
-   @GlobalVar: <name>.tot 0
-   @GlobalVar: <name>.diss 0
-   @GlobalVar: <name>.ads 0
-   @GlobalVar: <name>.min 0
-   @GlobalVar: <name>.gas 0
-   @Synonym: <synonym>.tot  <name>.tot
-   @Synonym: <synonym>.diss <name>.diss
-   @Synonym: <synonym>.ads  <name>.ads
-   @Synonym: <synonym>.min  <name>.min
-   @Synonym: <synonym>.gas  <name>.gas
-}
-
 
 // An imineral is just a mineral that is selected as a primary entity
 // this creates a fixed activity 
@@ -966,7 +1256,8 @@ porosity = water filled porosity
 	@entity(<name>, <name>, 0)
 
         // by adding a dummy proton entity to this site we make that the net surface charge of nica site = zero.
-        // otherwise adding nica-donnan surface is negative and consumes protons, or cations upon addition to solution  
+        // otherwise adding nica-donnan surface is negative and consumes protons, or cations upon addition to solution 
+        @Var: <name>dummyproton.logk_unit 0 
 	@entity(<name>dummyproton, <name>, 1)
 	@link(<name>dummyproton, H+, 0, -1 ) 
 
@@ -991,9 +1282,11 @@ porosity = water filled porosity
 }
 
 
-
 @Class: nicaspecies(name, site, ion, n, nH, logK)
 {
+   @Var: <name>.logk_unit 0
+   @Calc:(1, "<name>.logk_unit = 0")
+
    @entity(<name>, <site>, "<n>/<nH>")
    @Calc:(1, "<name>.logact = <logK>*<n>")
 
@@ -1004,6 +1297,9 @@ porosity = water filled porosity
 
 @Class: donnanspecies(name, phase, ion, charge)
 {	
+   @Var: <name>.logk_unit 0
+   @Calc:(1, "<name>.logk_unit = 0")
+
    @entity(<name>, <phase>, 1)
 
    // here we use the ion concentration as input rather than the ion activity
@@ -1017,26 +1313,31 @@ porosity = water filled porosity
    @<type>(<name>, <parent_phase> ,<concentration>)
 }
 
+
 @class: surfsite(model, name, density, coef){
+   @Var: <model>_<name>.logk_unit 0
+   @Calc:(1, "<model>_<name>.logk_unit = 0")
+
    @phase(<model>_<name>, <model>, <density>)
    @entity(<model>_<name>, <model>_<name>, <coef>) 
-   @solve: unknown:(name:, <model>_<name>.logact,  delta:, 1e-6, type:, lin, step: , .1, default:, 1) equation:(name:, <model>_<name>.<model>_<name>, tol: , 1e-4, default:, 1)
+   @solve: unknown:(name:, <model>_<name>.logact,  delta:, 1e-6, type:, lin, step: , .1, default:, -1) equation:(name:, <model>_<name>.<model>_<name>, tol: , 1e-4, default:, 1)
 }
 
-@class: surfsite(model, name, density, coef, charge, plane){
-   @phase(<model>_<name>, <model>, <density>)
-   @entity(<model>_<name>, <model>_<name>, <coef>) 
-   @link(<model>_<name>, <model>_<plane>, 0, <charge>)
-   @solve: unknown:(name:, <model>_<name>.logact,  delta:, 1e-6, type:, lin, step: , .1, default:, -1) equation:(name:, <model>_<name>.<model>_<name>,  tol: , 1e-4, default:, 1)
+@class: surfsite(model, name, density, coef, charge1, plane1){
+   @surfsite(<model>, <name>, <density>, <coef>)
+   @link(<model>_<name>, <model>_<plane1>, 0, <charge1>)
 }
 
-@class: surfsite(model, name, density, coef, charge, plane, charge2, plane2){
-   @phase(<model>_<name>, <model>, <density>)
-   @entity(<model>_<name>, <model>_<name>, <coef>) 
-   @link(<model>_<name>, <model>_<plane>, 0, <charge>)
+@class: surfsite(model, name, density, coef, charge1, plane1, charge2, plane2){
+   @surfsite(<model>, <name>, <density>, <coef>, <charge1>, <plane1>)
    @link(<model>_<name>, <model>_<plane2>, 0, <charge2>)
-   @solve: unknown:(name:, <model>_<name>.logact,  delta:, 1e-6, type:, lin, step: , .1, default:, -1) equation:(name:, <model>_<name>.<model>_<name>,  tol: , 1e-4, default:, 1)
 }
+
+@class: surfsite(model, name, density, coef, charge1, plane1, charge2, plane2, plane3, charge3){
+   @surfsite(<model>, <name>, <density>, <coef>, <charge1>, <plane1>, <plane2>, <charge2>)
+   @link(<model>_<name>, <model>_<plane3>, 0, <charge3>)
+}
+
 
 
 @class: surfspecies(model, site, name, coef){
@@ -1133,7 +1434,7 @@ porosity = water filled porosity
   @globalVar: <component>.<phase>  0
   @Calc: (1, "<isotope>.<phase> = {<component>.<phase>}  * {<isotope>.frac}") 
 }
-//****************************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------------------
 
 
 //****************************************************************************************************************************
@@ -1298,5 +1599,65 @@ porosity = water filled porosity
 @class: halflife(name, value){
    @radionuclide(<name>, <value>)
 }
+
+
+//**
+// This class overwrites several standard classes to allow concentrations of minerals, species to be given as input instead of 
+// total mass balances for primary entities.
+// It should be called after this object file is scanned/included
+
+@class: concentrations_as_input(){
+
+//----------------------------------------------------------------------------------------------------------------------------------
+// Redefine the iteration classes so mineral and ion concentrations (<name>.con) 
+// and ion concentrations (Fe+2.con) can be used as input to calculate total amounts of primary entities
+//----------------------------------------------------------------------------------------------------------------------------------
+@Class: primary_entity(name, unknownvalue, phase, equationvalue){
+}
+
+@Class: primary_entity(name, unknownvalue){
+}
+
+@Class: primary_entity(name, unknown, unknownvalue, type, step, phase, equationvalue){
+}
+
+@Class: mineral(name)
+{
+	@entity(<name>, min) 
+	@Calc:(2,"<name>.min = {<name>.con}")
+}
+
+@Class: SI_mineral(name) 
+{
+ 	@mineral(<name>)
+}
+
+
+@Class: set_ion_activity_model(name)
+{
+   @<name>(0.1)
+}
+
+@Class: ion_activity_model(i)
+{//----------------------------------------------------------------------------------------------------------------------------------
+
+
+@Class: species(name, charge)
+{
+   @entity(<name>, "@aqphase()")
+   @Calc:(2,"<name>.@aqphase() = {<name>.con}") 
+}
+
+
+@Class: species(name, charge, a, b)
+   @entity(<name>, "@aqphase()")
+   @Calc:(2,"<name>.@aqphase() = {<name>.con}") 
+}
+
+
+@Class: calculate_water_activity(){
+}
+
+} 
 
 
