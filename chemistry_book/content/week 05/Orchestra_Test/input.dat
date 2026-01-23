@@ -1,11 +1,10 @@
 // Here we can give any variable of the chemical system a value
 // In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
 
-Var:	F-.tot		Ca+2.tot	SO4-2.tot	
-Default	2e-1		1e-1		1e-20		
-Data:	2.895e-4	2.495e-4	1e-20		
-Data:	2.895e-4	1.0002495	1		
-Data:	2.895e-4	10.0002495	10		
+Var:	F-.tot		Ca+2.tot	Gypsum[s].tot
+Data:	2.895e-4	2.495e-4	1e-20
+Data:	2.895e-4	2.495e-4	2.7835e-4
+Data:	2.895e-4	2.495e-4	10
 
 
 

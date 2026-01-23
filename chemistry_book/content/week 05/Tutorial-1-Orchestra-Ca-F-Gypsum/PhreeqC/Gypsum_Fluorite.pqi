@@ -1,0 +1,32 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.7.3-15968\database\minteq.v4.dat
+SOLUTION 1 Analysis A
+    temp      25
+    pH        7 charge
+    pe        4
+    redox     pe
+    units     ppm
+    density   1
+    Ca        10
+    F         5.5
+    -water    1 # kg
+END
+# end first simulation
+# Calculate point B
+USE solution 1
+EQUILIBRIUM_PHASES 1
+Fluorite 0.00 Gypsum
+SAVE solution 2
+END
+# use already stored solution
+# equilibrate with minerals
+# Mineral name, SI, reactant
+# save solution (Point B)
+# end second simulation
+# Calculate point C
+USE solution 2
+EQUILIBRIUM_PHASES 2
+Fluorite 0 0
+Gypsum   0 10r
+END
+# SI = 0, initially 0 moles
+# default SI = 0, 10 moles
