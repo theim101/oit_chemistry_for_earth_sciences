@@ -2,42 +2,65 @@
 <Concert>
    <!--**** The nodes that are used in the system.-->
    // in this case just a single node
-   <Nodes TypeFile="input.dat" NrNodes="1" />
+   <Nodes TypeFile="input.dat" NrNodes="2" />
 
    <!--**** The list of Tasks that are used in the system.-->
-   <Task Name="Equilibrate node1" Type="NodeGroup" Threads="1">
+   <Task Name="Equilibrate node 1" Type="NodeGroup" Threads="1">
       <Calculator>chemistry1</Calculator>
       <Nodes>(0)</Nodes>
    </Task>
 
-   //<Task Name="Equilibrate node2" Type="NodeGroup" Threads="1">
-   //   <Calculator>chemistry2</Calculator>
-   //   <Nodes>(0)</Nodes>
-   //</Task>
+   <Task Name="Equilibrate node 2" Type="NodeGroup" Threads="1">
+      <Calculator>chemistry2</Calculator>
+      <Nodes>(1)</Nodes>
+   </Task>
 
-   <Task Name="Read node" Type="InstreamGroup">
+   <Task Name="Read node 1" Type="InstreamGroup">
       <File>input.dat</File>
       <Nodes>(0)</Nodes>
    </Task>
 
-   <Task Name="Write output" Type="OutstreamGroup">
-      <File>output.dat</File>
+   <Task Name="Read node 2" Type="InstreamGroup">
+      <File>input.dat</File>
+      <Nodes>(1)</Nodes>
+   </Task>
+
+   <Task Name="Write output 1_1" Type="OutstreamGroup">
+      <File>output1_1.dat</File>
       <Nodes>(0)</Nodes>
    </Task>
-   <Task Name="Write output2" Type="OutstreamGroup">
-      <File>output2.dat</File>
+   <Task Name="Write output 1_2" Type="OutstreamGroup">
+      <File>output1_2.dat</File>
       <Nodes>(0)</Nodes>
    </Task>
 
-   <Task Name="Each Step" Type="RepeatingTaskGroup">
-      <DoTask Name="Read node" />
-      <DoTask Name="Equilibrate node1" />
-      <DoTask Name="Write output" />
-      <DoTask Name="Write output2" />
+   <Task Name="Write output 2_1" Type="OutstreamGroup">
+      <File>output2_1.dat</File>
+      <Nodes>(1)</Nodes>
    </Task>
+   <Task Name="Write output 2_2" Type="OutstreamGroup">
+      <File>output2_2.dat</File>
+      <Nodes>(1)</Nodes>
+   </Task>
+
+   <Task Name="Each Step 1" Type="RepeatingTaskGroup">
+      <DoTask Name="Read node 1" />
+      <DoTask Name="Equilibrate node 1" />
+      <DoTask Name="Write output 1_1" />
+      <DoTask Name="Write output 1_2" />
+   </Task>
+
+   <Task Name="Each Step 2" Type="RepeatingTaskGroup">
+      <DoTask Name="Read node 2" />
+      <DoTask Name="Equilibrate node 2" />
+      <DoTask Name="Write output 2_1" />
+      <DoTask Name="Write output 2_2" />
+   </Task>
+
 
    <Task Name="Run" Type="TaskGroup">
-      <DoTask Name="Each Step" />
+      <DoTask Name="Each Step 1" />
+      <DoTask Name="Each Step 2" />
    </Task>
 </Concert>
 
