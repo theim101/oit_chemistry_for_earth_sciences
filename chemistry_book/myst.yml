@@ -54,32 +54,32 @@ project:
       - file: intro.md
       - title: Content
         children:
-          - file: content/template-chapter.md
-          - file: content/template-subchapter.md
-          - title: Test Space
+          - title: Week 3.1
             children:
-              - file: content/test_space/01-paper.md
-              - file: content/test_space/02-notebook.ipynb
-              - file: content/test_space/Linear_Transformations.md
-              - file: content/test_space/quickstart-myst-markdown.md
-              - file: content/test_space/untitled.md
-          - title: Week 02
+              - file: content/week 3.1/Week_Plan_Chemistry&Sciences.md
+          - title: Week 3.2
             children:
-              - file: content/week 02/Week_Plan_Chemical_Reactions_in_Water.md
-              - file: content/week 02/Chemical_Reactions_in_Water.ipynb
-              - title: Orchestra Simulation
-                children:
-                  - file: content/week 02/Orchestra_simulation/Fluorite-Gypsum-Water.ipynb
-          - title: Week 05
+              - file: content/week 3.2/Week_Plan_Chemical_Reactions_in_Water.md
+              - file: content/week 3.2/Chemical_Reactions_in_Water.ipynb
+          - title: Week 3.3
             children:
-              - file: content/week 05/Week_Plan_Chemistry_with_Computer_models.md
-              - file: content/week 05/Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
-              - file: content/week 05/Tutorial-2-Orchestra-Carbonate-system/
-              - file: content/week 05/Assignment_pressure_volume/Assignment_CO2_in_SODA.ipynb
-          - title: Week 07
+              - file: content/week 3.3/template-chapter.md
+          - title: Week 3.4
             children:
-
-              
+              - file: content/week 3.4/template-chapter.md
+          - title: Week 3.5
+            children:
+              - file: content/week 3.5/Week_Plan_Chemistry_with_Computer_models.md
+              - file: content/week 3.5/Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
+              - file: content/week 3.5/Tutorial-2-Orchestra-Carbonate-system/
+              - file: content/week 3.5/Assignment_pressure_volume/Assignment_CO2_in_SODA.ipynb
+          - title: Week 3.6
+            children:
+              - file: content/week 3.6/template-chapter.md
+          - title: Week 3.7
+            children:
+              - file: content/week 3.7/Week_Plan_Applications_Water_Examples.md
+              - file: content/week 3.7/Assignment_Lorah_and_Herman/Lorah&Herman_Travertine.ipynb
 theme:
   name: "book-theme"
 highlight_style: "default"

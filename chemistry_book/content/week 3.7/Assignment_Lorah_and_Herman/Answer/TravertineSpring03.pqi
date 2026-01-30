@@ -1,0 +1,71 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.7.3-15968\database\wateq4f.dat
+SOLUTION_SPREAD
+    -units    mg/l
+ temp	   pH	    C(4)	  Ca	   Mg	  Na	    K	   F	  Cl	   S(6)
+    	     	 as HCO3	    	     	    	     	    	    	 as SO4
+ 24.3	 7.32	     308	 165	 25.4	 5.1	 14.2	   1	 3.3	    283
+ 24.6	 7.23	     316	 168	   28	 3.9	 14.8	 1.1	 3.5	    291
+ 24.7	  7.2	     315	 169	 26.2	 3.9	 14.3	 1.1	 5.8	    296
+ 24.3	 7.24	     310	 168	   26	 3.4	 14.2	 1.1	 3.2	    283
+ 23.6	 7.43	     314	 168	 26.2	 2.8	 12.9	 1.2	 3.5	    288
+ 21.4	 7.79	     312	 166	 25.6	 3.5	 13.9	 1.2	 3.4	    286
+ 20.5	 8.06	     311	 164	 25.2	 3.7	   14	   1	 3.5	    283
+ 19.7	 8.27	     278	 160	 25.6	 3.6	 14.3	   1	 3.8	    286
+ 19.6	 8.28	     273	 157	 25.5	 3.1	   14	 1.1	 3.4	    283
+ 18.4	 8.37	     264	 151	 25.6	 3.2	 14.3	   1	 3.4	    283
+ 14.4	 8.25	     210	 122	 21.3	 3.3	 11.4	 0.7	   4	    246
+SELECTED_OUTPUT 1
+    -file                 Tavertine01.csv
+    -reset                false
+    -solution             true
+    -pH                   true
+    -temperature          true
+    -alkalinity           true
+    -ionic_strength       true
+    -charge_balance       true
+    -percent_error        true
+    -totals               C(4)  Ca
+    -molalities           Ca+2  HCO3-  CO3-2
+    -equilibrium_phases   CO2(g)  Calcite
+    -saturation_indices   CO2(g)  Calcite
+END
+
+USE solution 1
+pH = 8.25
+EQUILIBRIUM_PHASES 2
+    CO2(g)    -3.0296 10
+    calcite   0.92 10
+REACTION_TEMPERATURE 2
+    14.4
+end
+USE solution 5 # from D3 to F1
+EQUILIBRIUM_PHASES 3
+    CO2(g)    -2.3687	10
+    calcite   0.8375 	0
+end
+
+USE solution 5 #from D3 to F6
+EQUILIBRIUM_PHASES 4
+    CO2(g)    -3.0296	10
+    calcite   0.9286 	0
+REACTION_TEMPERATURE 1
+    14.4
+end
+
+USE solution 1 # Equilibrate S1 with atmosphere and calcite...
+EQUILIBRIUM_PHASES 5
+    CO2(g)    -3.38 10
+    calcite   0 0
+end
+
+USE solution 5 # Equilibrate D3 with atmosphere and calcite...
+EQUILIBRIUM_PHASES 5
+    CO2(g)    -3.38 10
+    calcite   0 0
+end
+
+USE solution 11 # Equilibrate F6 with atmosphere and calcite...
+EQUILIBRIUM_PHASES 5
+    CO2(g)    -3.38 10
+    calcite   0 0
+end
