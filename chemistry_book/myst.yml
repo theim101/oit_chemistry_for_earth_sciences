@@ -56,7 +56,8 @@ project:
         children:
           - title: Week 3.1
             children:
-              - file: content/week 3.1/Week_Plan_Chemistry&Sciences.md
+              - file: content/week 3.1/Week_Plan_Chemistry&Earth_Sciences.md
+              - file: content/week 3.1/InstallPython&Orchestra.md
           - title: Week 3.2
             children:
               - file: content/week 3.2/Week_Plan_Chemical_Reactions_in_Water.md
@@ -80,6 +81,12 @@ project:
             children:
               - file: content/week 3.7/Week_Plan_Applications_Water_Examples.md
               - file: content/week 3.7/Assignment_Lorah_and_Herman/Lorah&Herman_Travertine.ipynb
+          - title: test-space (to be removed)
+            children:
+              - file: content/test_space/01-paper.md
+              - file: content/test_space/02-notebook.ipynb
+              - file: content/test_space/Linear_Transformations.md
+              - file: content/test_space/quickstart-myst-markdown.md
 theme:
   name: "book-theme"
 highlight_style: "default"
