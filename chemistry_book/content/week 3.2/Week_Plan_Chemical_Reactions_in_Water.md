@@ -25,20 +25,22 @@ By the end of the week, students should be able to:
 
 ---
 
-## 🗓 Weekly Overview
+## 📅 Weekly Overview
 
 | Component | Duration | Focus | Method |
 |------------|-----------|--------|--------|
-| **Lecture 1 (Mon)** | 1 hrs | Introduction & chemical equilibria | Presentation + examples |
-| **Tutorial 1** | 3 hrs | Equilibrium calculations | Guided exercises |
-| **Self-study (mid-week)** | 3 hrs | Reading Ch. 4 + practice | Reading & problems |
-| **Lecture 2 (Thu)** | 1 hrs | Speciation & natural water chemistry | Interactive lecture |
-| **Tutorial 2** | 3 hrs | Speciation problems & group work | Exercises + discussion |
-| **Self-study (weekend)** | 3 hrs | Reading Ch. 5 + reflection | Practice + review |
+| **Lecture 1 (Mon)** | 1 hrs | Introduction & chemical equilibria | Presentation + examples | Interactive Lecture |
+| **Tutorial 1** | 2 hrs | Equilibrium & Gibbs free energy | Exercises in groups + discussion |
+| **Self-study (preparation for Thursday)** | 1 hrs | Study chapter 4.1, 4.2 and 4.3 from Appelo and Postma (2012) | Study |
+| **Lecture 2 (Thu)** | 1 hrs | Fluoride and Gypsum | Interactive lecture |
+| **Tutorial 2** | 2 hrs | Practice solving chemical equilibria in Python | Exercises in groups + discussion |
+| **Self-study (preparation for Monday)** | 1 hrs | Multi-phase chemistry | Reading & practice |
+| **Self-study (not scheduled)** | 6 hrs | Preparation, practice & reflection | Practice + review |
 
----
 
-## 🧠 Lecture 1 (Monday): Chemical Equilibria Foundations
+
+
+## 👨‍🏫 Lecture 1 (Monday): Chemical Equilibria Foundations
 
 **Objectives**
 - Introduce geochemical context of reactions in water.  
@@ -54,11 +56,6 @@ By the end of the week, students should be able to:
 6. Balancing and charge/mass balance rules.  
 7. Summary discussion: controls on water composition.
 
-**Self-study Before Lecture 1**
-- Read Appelo and Postma (2012): Ch. 1.  
-- Write equilibrium expressions for 3 given reactions.  
-- Watch short video: *Activities vs Concentrations*.  
-- Prepare one discussion question.
 
 **Self-study After Lecture 1**
 - Read Ch. 4 (4.1–4.5).  
@@ -66,7 +63,7 @@ By the end of the week, students should be able to:
 - Watch short video: *Activities vs Concentrations*.  
 - Prepare one discussion question.
 
----
+
 
 ## ✍️ Tutorial 1: Equilibrium Practice
 
@@ -80,9 +77,8 @@ By the end of the week, students should be able to:
 3. Group balancing exercises.  
 4. 10-minute conceptual quiz.
 
----
 
-## 🌍 Lecture 2 (Thursday): Speciation & Natural Waters
+## 👨‍🏫 Lecture 2 (Thursday): Speciation & Natural Waters
 
 **Objectives**
 - Extend equilibria to multiple reactions and species.  
@@ -98,7 +94,7 @@ By the end of the week, students should be able to:
 5. Applications in natural waters.  
 6. Intro to modeling (PHREEQC, Visual MINTEQ).
 
-**Self-study After Lecture 2**
+## 👨‍💻👩‍💻 Self-study After Lecture 2**
 - Read Ch. 5 completely.  
 - Practice carbonate speciation problems.  
 - Complete online self-test.  
@@ -106,7 +102,7 @@ By the end of the week, students should be able to:
 
 ---
 
-## 🧩 Tutorial 2: Speciation Integration
+## ✍️ Tutorial 2: Speciation Integration
 
 **Goals**
 - Connect Chapters 4 & 5 concepts.  
@@ -132,10 +128,3 @@ By the end of the week, students should be able to:
 
 ---
 
-## 🧭 Instructor Notes
-
-- Keep lectures conceptual and visual.  
-- Use simple examples linking to natural processes (e.g., rainwater pH).  
-- Emphasize “why” behind equilibria, not just calculations.  
-- Use visuals: diagrams, flowcharts, and sketches.  
-- Tutorials should consolidate intuition before quantitative rigor.

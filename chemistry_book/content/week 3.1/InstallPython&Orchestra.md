@@ -1,8 +1,9 @@
-# Prepare your python-environment for this class
+# Tutorial 1: Prepare your python-environment for this class
 
 ## Motivation
 For this course we make use of course notes presented to you with an interactive python book implementd in Jupyter-book. Many of the assignments will be introduced in this book and you need to download some of the Jupyter-notebooks to your own computer to do the assignments. Furthermore we would like you to carry out your calculations using python, in stead of using your hand held calculator. Of course you need develop your strategy to solve the problem using pen and paper!
 
+---
 ## Downloading Python
 For this course we will the Anaconda distribution. This [link](https://www.anaconda.com/download) brings you to the Anaconda website where you can down load the package. Packages are available for Windows, Mac and Linux. 
 When landing on the download page you see the following.
@@ -38,6 +39,7 @@ For this manual I suggest you download the Miniconda pacakge and I will explain 
 
 Start by downloading one of the two packages. Once the download is complete, double click on the package to start the installer. Accept check the agreement and click "I Agree". Accept that you only install for yourself (click Next), accept the default directory (click Next), allow the creation of shortcuts and click "Install". Once the installation is complete, depending on your choices, you will end on the Anaconda website again where you can go through the tutorial to make your self acquainted with this distribution. You can always come back this site later if you want to!
 
+---
 ## Preparing the python environment for this class
 
 The conda package manager is a little slow. Instead we will be using the mamba package manager which we first need to download and install with conda. To do this you open the "Anaconda Prompt" from the Windows menu. In this console type:
@@ -74,11 +76,11 @@ pip install .
 ```
 Do not forget the ., as this implies pip to install using the setup.py file in the current directory.
 
-
+---
 ## Some changes to Windows to make your Anaconda prompt accessible from any directory using right mouse click.
 To make navigating easier with on windows you can tweak windows to start the Anaconda Prompt from you file browser using your right mouse button using the explanation found [here](https://www.codegenes.net/blog/adding-open-anaconda-prompt-here-to-context-menu-windows/#google_vignette).
 
-
+---
 ## Install vscode for coding
 It is possible to carry out all the programming in this course using Jypyter-lab, you just have to type Jupyter-lab in the Anaconda Prompt after having activated ECTB1230-env. However, it is in many cases more convenient to code in a so-called Integrated Development Environment or IDE. VScode is an advanced IDE that allows you to work with plain python and Jupyter notebooks. I can be downloaded [here](https://code.visualstudio.com/Download).
 

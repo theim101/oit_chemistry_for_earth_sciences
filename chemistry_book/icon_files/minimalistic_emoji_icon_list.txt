@@ -1,0 +1,47 @@
+
+Minimalistic Emoji Icon List
+---------------------------
+
+General / Structure
+📅 — Week / Schedule
+📝 — Notes / Instructions
+📌 — Important item / Pin
+➤ — Step / Pointer
+✔️ — Completed
+⏳ — In progress
+⚪ — To do
+🔘 — Selected item
+
+Teaching Activities
+🧑‍🏫 — Lecture
+🧪 — Lab / Experiment
+💻 — Coding / Practical work
+📚 — Reading
+🎤 — Presentation
+🧠 — Concept / Theory
+
+Assignments & Evaluation
+🧾 — Assignment
+📝 — Quiz / Written task
+🗂️ — Portfolio / Submission
+🧮 — Exercise
+🏁 — Deadline / Milestone
+
+Communication & Interaction
+💬 — Discussion
+🤝 — Group work
+🙋 — Q&A / Asking questions
+✉️ — Email / Announcement
+
+Resources
+🔗 — Link
+📄 — Document / PDF
+🎥 — Video
+🖼️ — Illustration / Diagram
+🗃️ — Repository / Folder
+
+Tech & Tools
+💾 — Data / Saving
+🧰 — Tools
+🖥️ — Computer
+⚙️ — Settings / Configuration

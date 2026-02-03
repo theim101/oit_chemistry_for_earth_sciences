@@ -61,7 +61,8 @@ project:
           - title: Week 3.2
             children:
               - file: content/week 3.2/Week_Plan_Chemical_Reactions_in_Water.md
-              - file: content/week 3.2/Chemical_Reactions_in_Water.ipynb
+              - file: content/week 3.2/Week 3_2_Lecture_1_Chemical_Reactions_in_Water.ipynb
+              - file: content/week 3.2/Week 3_2_Lecture_2_Fluorite_Gypsum.ipynb
           - title: Week 3.3
             children:
               - file: content/week 3.3/template-chapter.md
