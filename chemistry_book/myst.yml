@@ -57,7 +57,8 @@ project:
           - title: Week 3.1
             children:
               - file: content/week 3.1/Week_Plan_Chemistry&Earth_Sciences.md
-              - file: content/week 3.1/InstallPython&Orchestra.md
+              - file: content/week 3.1/Week 3_1_Tutorial_1_InstallPython&Orchestra.md
+              - file: content/week 3.1/Week 3_1_Tutorial_2_molecular_structure.md
           - title: Week 3.2
             children:
               - file: content/week 3.2/Week_Plan_Chemical_Reactions_in_Water.md

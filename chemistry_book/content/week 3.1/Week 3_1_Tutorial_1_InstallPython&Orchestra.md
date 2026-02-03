@@ -1,4 +1,4 @@
-# Tutorial 1: Prepare your python-environment for this class
+# Week 3.1, Tutorial 1: Prepare your python-environment for this class
 
 ## Motivation
 For this course we make use of course notes presented to you with an interactive python book implementd in Jupyter-book. Many of the assignments will be introduced in this book and you need to download some of the Jupyter-notebooks to your own computer to do the assignments. Furthermore we would like you to carry out your calculations using python, in stead of using your hand held calculator. Of course you need develop your strategy to solve the problem using pen and paper!
