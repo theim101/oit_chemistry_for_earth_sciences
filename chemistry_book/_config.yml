@@ -1,5 +1,17 @@
 execute:
   execute_notebooks: "auto"
+
+jupyter:
+  notebooks:
+    execute: auto
+  
+  preprocessors:
+    - remove_tagged_cells
+
+tagged_cells:
+  remove_cell_tags:
+  - answer
+
 # Enable Theebe
 launch_buttons:
   thebe: true
@@ -20,45 +32,4 @@ thebe_config:
   kernelOptions:
     name: "python3"
 
-substitutions:
-    week: "📅"
-    note: "📝"
-    pin: "📌"
-    step: "➤"
-    done: "✔️"
-    progress: "⏳"
-    todo: "⚪"
-    selected: "🔘"
-    learning_goal: "🎯"
-    tutorial: "✍️"
-    self_study: "👨‍💻👩‍💻"
-
-    lecture: "👨‍🏫"
-    lab: "🧪"
-    coding: "💻"
-    reading: "📚"
-    presentation: "🎤"
-    concept: "🧠"
-
-    assignment: "🧾"
-    quiz: "📝"
-    portfolio: "🗂️"
-    exercise: "🧮"
-    deadline: "🏁"
-
-    discussion: "💬"
-    group: "🤝"
-    question: "🙋"
-    email: "✉️"
-
-    link: "🔗"
-    pdf: "📄"
-    video: "🎥"
-    image: "🖼️"
-    repo: "🗃️"
-
-    data: "💾"
-    tools: "🧰"
-    computer: "🖥️"
-    settings: "⚙️"
 

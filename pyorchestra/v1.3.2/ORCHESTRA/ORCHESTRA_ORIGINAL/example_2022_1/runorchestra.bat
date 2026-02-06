@@ -1,1 +1,0 @@
-java -cp orchestra2022.jar orchestra2.composer 

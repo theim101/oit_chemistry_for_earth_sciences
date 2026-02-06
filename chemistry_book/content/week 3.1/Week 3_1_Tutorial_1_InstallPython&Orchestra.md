@@ -1,3 +1,10 @@
+---
+title: "Week 3.1, Tutorial 1: Prepare your python-environment for this class"
+authors:
+  - name: Timo Heimovaara
+---
+
+
 # Week 3.1, Tutorial 1: Prepare your python-environment for this class
 
 ## Motivation

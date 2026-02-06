@@ -1,4 +1,10 @@
-# Week 3.1, Tutorial 2: Molecule structures
+---
+title: "Week 3.1, Tutorial 2: Molecule Structures"
+authors:
+  - name: Timo Heimovaara
+---
+
+# Week 3.1, Tutorial 2: Molecule Structures
 
 ## Objective
 The objective of this tutorial you revisit the structure of an atom, the periodic system, molecules and chemical equations. The content is well described in “Principles of Chemistry: A molecular approach. 3rd Edition by Nivaldo J. Tro” chapters 2 and 3, 7, 8 and 9. 
@@ -12,7 +18,7 @@ You need to give the electron configuration for all the elements in the followin
 
 $\text{H}_2$, $\text{H}_2\text{O}$, $\text{H}_2\text{CO}_3$, $\text{CO}_2$, $\text{Fe}_2\text{O}_3$, $\text{FeOOH}$, $\text{CCl}_4$, $\text{CH}_3\text{COOH}$, $\text{S}_2$, $\text{H}_2$, $\text{S}$, $\text{SO}_2$, $\text{H}_2\text{SO}_3$, $\text{H}_2\text{SO}_4$, $\text{Al[OH]}_3$, $\text{H}_2\text{SiO}_3$ and $\text{NO}$. 
 
-You need to write the structure of these compounds as Lewis structures (stick models). Please mark on outer electrons in the structure. 
+You need to write the structure of these compounds as Lewis structures (stick models). Please mark all outer electrons in the structure. 
 
 ---
 ## Assignment 2: Structure of a mineral

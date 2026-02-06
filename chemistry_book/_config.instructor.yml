@@ -1,0 +1,64 @@
+execute:
+  execute_notebooks: "auto"
+# Enable Theebe
+launch_buttons:
+  thebe: true
+  notebook_interface: "jupyterlab"
+
+thebe_config:
+  use_thebe: true
+  useBinder: false
+  useJupyterLite: false
+  codeMirrorConfig:
+    theme: "default"
+  mountActivateWidget: true
+  mountStatusWidget: true
+  serverSettings:
+    baseUrl: "http://localhost:8890"
+    token: "abcd1234"
+    appendToken: true
+  kernelOptions:
+    name: "python3"
+
+substitutions:
+    week: "📅"
+    note: "📝"
+    pin: "📌"
+    step: "➤"
+    done: "✔️"
+    progress: "⏳"
+    todo: "⚪"
+    selected: "🔘"
+    learning_goal: "🎯"
+    tutorial: "✍️"
+    self_study: "👨‍💻👩‍💻"
+
+    lecture: "👨‍🏫"
+    lab: "🧪"
+    coding: "💻"
+    reading: "📚"
+    presentation: "🎤"
+    concept: "🧠"
+
+    assignment: "🧾"
+    quiz: "📝"
+    portfolio: "🗂️"
+    exercise: "🧮"
+    deadline: "🏁"
+
+    discussion: "💬"
+    group: "🤝"
+    question: "🙋"
+    email: "✉️"
+
+    link: "🔗"
+    pdf: "📄"
+    video: "🎥"
+    image: "🖼️"
+    repo: "🗃️"
+
+    data: "💾"
+    tools: "🧰"
+    computer: "🖥️"
+    settings: "⚙️"
+
