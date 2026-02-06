@@ -27,7 +27,7 @@ authors:
 
 ---
 
-## 🎯 Learning Goals
+## Learning Goals
 
 By the end of the week, students should be able to:
 
@@ -38,7 +38,7 @@ By the end of the week, students should be able to:
 
 ---
 
-## 📅 Weekly Overview
+## Weekly Overview
 
 | Component | Duration | Focus | Method |
 |------------|-----------|--------|--------|
@@ -52,7 +52,7 @@ By the end of the week, students should be able to:
 
 
 
-## 👨‍🏫 Lecture 1 (Monday): Chemical Equilibria Foundations
+## Lecture 1 (Monday): Chemical Equilibria Foundations
 
 **Objectives**
 - Introduce geochemical context of reactions in water.  
@@ -69,7 +69,7 @@ By the end of the week, students should be able to:
 7. Summary discussion: controls on water composition.
 
 
-## ✍️ Tutorial 1: Equilibrium Practice
+### Tutorial 1: Equilibrium Practice
 
 **Goals**
 - Understand how the Mass Action Law works;
@@ -83,12 +83,12 @@ By the end of the week, students should be able to:
 3. Group balancing exercises.  
 4. 10-minute conceptual quiz.
 
-## 👨‍💻👩‍💻 Self-study After Lecture 1, prepare for Thursday
+### Self-study After Lecture 1, prepare for Thursday
 - Read Ch. 4 (4.1–4.5) from [Appelo and Postma (2004)](https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544).
 - Prepare one discussion question.
 
 
-## 👨‍🏫 Lecture 2 (Thursday): Speciation & Natural Waters
+## Lecture 2 (Thursday): Speciation & Natural Waters
 
 **Objectives**
 - Solving equilibrium problems. Understanding massbalance and electron balance.  
@@ -104,7 +104,7 @@ By the end of the week, students should be able to:
 5. Applications in natural waters.  
 6. Intro to modeling (PHREEQC, Visual MINTEQ).
 
-## 👨‍💻👩‍💻 Self-study After Lecture 2
+### Self-study After Lecture 2
 - Read Ch. 5 completely.  
 - Practice carbonate speciation problems.  
 - Complete online self-test.  
@@ -112,7 +112,7 @@ By the end of the week, students should be able to:
 
 ---
 
-## ✍️ Tutorial 2: Speciation Integration
+### Tutorial 2: Speciation Integration
 
 **Goals**
 - Connect Chapters 4 & 5 concepts.  
@@ -127,14 +127,18 @@ By the end of the week, students should be able to:
 
 ---
 
-## 📚 Student Workload Summary
+## Self study: home work
+- Read topics which you find difficult. Reflect on your understanding, prepare questions for teaching staff;
+- Create a summary for the week so that you can quickly revise the information when preparing for the exam.
+
+
+---
+## Student Workload Summary
 
 | Task | Timing | Hours |
 |------|---------|-------|
-| Lecture review | Mon–Thu | 1 |
-| Reading (Ch. 4 & 5) | Throughout week | 2–3 |
-| Homework problems | Between tutorials | 2 |
-| Online quiz/reflection | Weekend | 1 |
+| Lecture + Tutorials | Mon & Thu | 6 |
+| Self-Study: Preparation | Mon & Thu | 2 |
+| Homework| Throughout the week | 6 |
 
 ---
-

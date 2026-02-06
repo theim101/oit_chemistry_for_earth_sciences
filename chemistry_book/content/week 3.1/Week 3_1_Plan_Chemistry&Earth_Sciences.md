@@ -5,7 +5,7 @@ authors:
 ---
 
 
-## 🎯 Learning Goals
+## Learning Goals
 
 By the end of the week, students should be able to:
 
@@ -16,7 +16,7 @@ By the end of the week, students should be able to:
 
 ---
 
-## 📅 Weekly Overview
+## Weekly Overview
 
 | Component | Duration | Focus | Method |
 |------------|-----------|--------|--------|
@@ -31,7 +31,7 @@ By the end of the week, students should be able to:
 
 ---
 
-## 👨‍🏫 Lecture 1 (Monday): Introduction and get to know the teachers
+## Lecture 1 (Monday): Introduction and get to know the teachers
 
 **Outline**
 - Who will teach this class.  
@@ -45,7 +45,7 @@ By the end of the week, students should be able to:
 - The periodic table of Elements
 
     
-## ✍️ Tutorial 1: Getting Started
+### Tutorial 1: Getting Started
 
 **Activities**
 - Install the python environment for this class on your computer;
@@ -53,12 +53,12 @@ By the end of the week, students should be able to:
 - Install the VSCode IDE on your computer
 - Download and run the notebook for the lecture in week 3.2.
 
-## 👨‍💻👩‍💻 Self study 1: after tutorial
+### Self study 1: after tutorial
 **Self-study**
 - Browse the information from Tro: Chapters 2, 3, 7, 8 and 9. Read the assignment for Thursday.
 
 
-## 👨‍🏫 Lecture 2 (Thursday): the Periodic System: structure of the atom, molecules and chemical formulas
+## Lecture 2 (Thursday): the Periodic System: structure of the atom, molecules and chemical formulas
 
 **Objectives**
 - Refresh knowledge from High School.  
@@ -66,7 +66,7 @@ By the end of the week, students should be able to:
 
 
 
-## ✍️ Tutorial 2: Structure of Molecules
+### Tutorial 2: Structure of Molecules
 
 **Outline**
 1. Use information from Tro to analyze how electrons are shared among elements in different types of molecules.
@@ -75,20 +75,21 @@ By the end of the week, students should be able to:
 4. 20 minute test, exam level question
 
 
-## 👨‍💻👩‍💻  Self study 2: after tutorial
+### Self study 2: after tutorial
 - Read Chapter 1 from [Appelo and Postma (2004)](https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544).
 - Scan Chapter 4.1 to 4.5 from [Appelo and Postma (2004)](https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544).  
 - Browse Tro chapters 14, 15, 16 and 17
 
 
-## 👨‍💻👩‍💻  Self study: home work
+## Self study: home work
+
 
 - Read topics which you find difficult. Reflect on your understanding, prepare questions for teaching staff;
 - Create a summary for the week so that you can quickly revise the information when preparing for the exam.
 
 
 ---
-## 📚 Student Workload Summary
+## Student Workload Summary
 
 | Task | Timing | Hours |
 |------|---------|-------|
