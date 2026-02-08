@@ -8,6 +8,10 @@ jupyter:
   preprocessors:
     - remove_tagged_cells
 
+html:
+  baseurl: /${REPO_NAME}
+
+
 tagged_cells:
   remove_cell_tags:
   - answer
