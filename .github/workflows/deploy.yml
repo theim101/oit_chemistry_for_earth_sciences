@@ -40,7 +40,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install Jupyter Book
         run: |
@@ -50,9 +50,6 @@ jobs:
       - name: Build Jupyter Book (from subfolder)
         working-directory: chemistry_book
         run: jupyter-book build --all .
-
-      - name: Build HTML Assets
-        run: jupyter-book build --html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
