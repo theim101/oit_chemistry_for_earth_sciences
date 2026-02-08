@@ -8,13 +8,12 @@ jupyter:
   preprocessors:
     - remove_tagged_cells
 
-
 # html:
 #   baseurl: "https://theim101.github.io/oit_chemistry_for_earth_sciences"  # or the org URL
 
-repository:
-  url: https://github.com/theim101/oit_chemistry_for_earth_sciences
-  branch: main
+# repository:
+#   url: https://github.com/theim101/oit_chemistry_for_earth_sciences
+#   branch: main
 
 
 tagged_cells:
