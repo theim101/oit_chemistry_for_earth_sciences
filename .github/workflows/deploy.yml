@@ -56,7 +56,7 @@ jobs:
 
       - name: Build Jupyter Book (from subfolder)
         working-directory: chemistry_book
-        run: jupyter-book build
+        run: jupyter-book build --html
 
       # --- Diagnostics (optional while debugging) ---
       - name: Show build tree after build
