@@ -53,15 +53,15 @@ jobs:
       # ---------------------------------------------
 
 
+      - name: Build Jupyter Book (from subfolder)
+        working-directory: chemistry_book
+        run: jupyter-book build --all .
+
       # --- Diagnostics (optional while debugging) ---
       - name: Show build tree after build
         run: ls -lah chemistry_book && echo "---" && ls -lah chemistry_book/_build || true
       # ---------------------------------------------
 
-
-      - name: Build Jupyter Book (from subfolder)
-        working-directory: chemistry_book
-        run: jupyter-book build --all .
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
