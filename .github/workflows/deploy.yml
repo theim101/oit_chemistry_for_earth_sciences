@@ -56,7 +56,7 @@ jobs:
 
 
       - name: Build Jupyter Book (from subfolder)
-        #working-directory: chemistry_book
+        working-directory: chemistry_book
         run: jupyter-book build chemistry_book
 
 
