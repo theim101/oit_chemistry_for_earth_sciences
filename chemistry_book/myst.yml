@@ -19,7 +19,7 @@ project:
         codeMirrorConfig:
           theme: "yeti" # or "default"
     exclude:
-        - _build
+        #- _build
         - pyorchestra
         - Thumbs.db
         - .DS_Store
