@@ -9,7 +9,7 @@ jupyter:
     - remove_tagged_cells
 
 html:
-  baseurl: /${REPO_NAME}
+  baseurl: /oit_chemistry_for_earth_sciences
 
 
 tagged_cells:
