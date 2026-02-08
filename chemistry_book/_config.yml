@@ -8,59 +8,8 @@ jupyter:
   preprocessors:
     - remove_tagged_cells
 
-# html:
-#   baseurl: "https://theim101.github.io/oit_chemistry_for_earth_sciences"  # or the org URL
-
-# repository:
-#   url: https://github.com/theim101/oit_chemistry_for_earth_sciences
-#   branch: main
-
 
 tagged_cells:
   remove_cell_tags:
   - answer
-
-# Enable Theebe
-launch_buttons:
-  thebe: true
-  binderhub_url: "https://mybinder.org"
-  notebook_interface: "jupyterlab"
-
-thebe_config:
-  use_thebe: true
-  useBinder: true
-  useJupyterLite: false
-
-
-  # Tell Thebe which Binder image to use
-  binderOptions:
-    repo: "them101/oit_chemistry_for_earth_sciences"
-    ref: "main"                 # branch / tag / commit
-    binderUrl: "https://mybinder.org"   # same hub as above
-    # repoProvider defaults to GitHub
-
-  kernelOptions:
-    name: "python3"
-
-
-  # Optional editor behaviour and default widgets
-  codeMirrorConfig:
-    theme: "default"
-  mountActivateWidget: true
-  mountStatusWidget: true
-
-# thebe_config:
-#   use_thebe: true
-#   useBinder: false
-#   useJupyterLite: false
-#   codeMirrorConfig:
-#     theme: "default"
-#   mountActivateWidget: true
-#   mountStatusWidget: true
-#   serverSettings:
-#     baseUrl: "http://localhost:8890"
-#     token: "abcd1234"
-#     appendToken: true
-#   kernelOptions:
-#     name: "python3"
 

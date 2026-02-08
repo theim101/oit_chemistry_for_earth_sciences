@@ -11,13 +11,33 @@ project:
     license: CC-BY-4.0
     open_access: true
     github: theim101/oit_chemistry_for_earth_sciences
+
+    launch_buttons:
+      thebe: true
+      binderhub_url: "https://mybinder.org"
+      notebook_interface: "jupyterlab"
+
     thebe:
-      server:
-        url: http://localhost:8890/
-        token: abcd1234
-      thebe:
-        codeMirrorConfig:
+      binderOptions:
+        repo: "theim101/oit_chemistry_for_earth_sciences"
+        ref: "main"                 # branch / tag / commit
+        binderUrl: https://mybinder.org   # same hub as above
+        # repoProvider defaults to GitHub
+        kernelOptions:
+          name: "python3"
+        path: chemistry_book
+
+      codeMirrorConfig:
           theme: "yeti" # or "default"
+
+      mountActivateWidget: true
+      mountStatusWidget: true
+
+      # server:
+      #   url: http://localhost:8890/
+      #   token: abcd1234
+      # thebe:
+
     exclude:
         - _build
         - pyorchestra
@@ -108,3 +128,21 @@ site:
   #   favicon: favicon.ico
   #   logo: site_logo.png
 
+
+# ---- Optional: local development variant (keep commented) ----
+# During local dev, if you want to connect Thebe to a local Jupyter server
+# instead of Binder, you can temporarily override thebe like this:
+#
+# project:
+#   thebe:
+#     binderOptions: null
+#     kernelOptions:
+#       name: python3
+#     serverSettings:
+#       baseUrl: "http://localhost:8890"
+#       token: "abcd1234"
+#       appendToken: true
+#     codeMirrorConfig:
+#       theme: default
+#     mountActivateWidget: true
+#     mountStatusWidget: true
