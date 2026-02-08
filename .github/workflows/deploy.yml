@@ -54,7 +54,6 @@ jobs:
         run: ls -lah && echo "---" && ls -lah chemistry_book || true
       # ---------------------------------------------
 
-
       - name: Build Jupyter Book (from subfolder)
         working-directory: chemistry_book
         run: jupyter-book build
