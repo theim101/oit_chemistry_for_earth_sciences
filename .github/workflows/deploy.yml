@@ -47,6 +47,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install jupyter-book
 
+      # --- Diagnostics (optional while debugging) ---
+      - name: Show repo tree before build
+        run: ls -lah && echo "---" && ls -lah chemistry_book || true
+      # ---------------------------------------------
+
+
+      # --- Diagnostics (optional while debugging) ---
+      - name: Show build tree after build
+        run: ls -lah chemistry_book && echo "---" && ls -lah chemistry_book/_build || true
+      # ---------------------------------------------
+
+
       - name: Build Jupyter Book (from subfolder)
         working-directory: chemistry_book
         run: jupyter-book build --all .
@@ -54,7 +66,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './chemistry_book/_build/html'
+          path: 'chemistry_book/_build/html'
 
       - name: Deploy to GitHub Pages
         id: deployment
