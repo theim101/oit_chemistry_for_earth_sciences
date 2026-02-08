@@ -46,8 +46,8 @@ project:
         - '**.ipynb_checkpoints'
         - .git
         - .virtual_documents
-    bibliography:
-        - references.bib
+    # bibliography:
+    #     - references.bib
     exports:
         - format: pdf
           template: book-theme #plain_latex_book
@@ -98,7 +98,7 @@ project:
             children:
               - file: content/week 3.5/Week_Plan_Chemistry_with_Computer_models.md
               - file: content/week 3.5/Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
-              - file: content/week 3.5/Tutorial-2-Orchestra-Carbonate-system/
+              - file: content/week 3.5/Tutorial-2-Orchestra-Carbonate-system/Tutorial_2_Carbonate_Water_Calcite_fixed_volume.ipynb
               - file: content/week 3.5/Assignment_pressure_volume/Assignment_CO2_in_SODA.ipynb
           - title: Week 3.6
             children:
