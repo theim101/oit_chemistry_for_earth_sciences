@@ -43,10 +43,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install MyST
+      - name: Install Jupyter Book
         run: |
           python -m pip install --upgrade pip
-          pip install mystmd
+          pip install jupyter-book
 
 
       # --- Diagnostics (optional while debugging) ---
@@ -56,14 +56,17 @@ jobs:
 
 
       - name: Build Jupyter Book (from subfolder)
-        working-directory: chemistry_book
-        run: myst build --html .
+        #working-directory: chemistry_book
+        run: jupyter-book build chemistry_book
+
 
       # --- Diagnostics (optional while debugging) ---
       - name: Show build tree after build
         run: ls -lah chemistry_book && echo "---" && ls -lah chemistry_book/_build || true
       # ---------------------------------------------
 
+      - name: Archive artifact
+        run: tar -czvf chemistry_book_html.tar.gz chemistry_book/_build/html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
