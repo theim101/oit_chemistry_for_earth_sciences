@@ -42,10 +42,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Jupyter Book
+
+    - name: Install MyST
         run: |
-          python -m pip install --upgrade pip
-          pip install jupyter-book
+            python -m pip install --upgrade pip
+            pip install mystmd
+
 
       # --- Diagnostics (optional while debugging) ---
       - name: Show repo tree before build
@@ -55,7 +57,7 @@ jobs:
 
       - name: Build Jupyter Book (from subfolder)
         working-directory: chemistry_book
-        run: jupyter-book build --all .
+        run: myst build --html .
 
       # --- Diagnostics (optional while debugging) ---
       - name: Show build tree after build
