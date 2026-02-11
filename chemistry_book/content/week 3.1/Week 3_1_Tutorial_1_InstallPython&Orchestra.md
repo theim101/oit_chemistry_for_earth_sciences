@@ -58,11 +58,63 @@ This command pulls the mamba package from the "conda-forge" repository and insta
 mamba update --all
 ```
 
+### If updating conda takes too long
+This is a very common issue for conda environments that have not been managed well. A quick search led to the following advice:
+
+**Common Issues with Conda Update**
+
+*Slow Performance*
+
+Conda updates can be slow due to several factors:
++ Dependency Resolution: Conda's solver may take a long time to resolve package dependencies, especially in environments with many packages.
++ Network Issues: Slow internet connections or unreachable servers can delay the process.
++ Inconsistent Environments: Conflicting package versions can cause the solver to struggle.
+
+*Solutions to Improve Speed*
+
+|Solution|	Description|
+| -- | -- | 
+|Create a New Environment	| Use conda create -n new_env python=3 to start fresh and avoid conflicts.| 
+|Use Mamba	Mamba is a faster alternative to Conda for package management. Install it via conda |install mamba -n base -c conda-forge.|
+|Clean Up Conda Cache	|Run conda clean --all to remove unused packages and caches.|
+|Update Conda Version	|Ensure you are using the latest version of Conda, as updates may improve performance.|
+
+
+*Troubleshooting Steps*
+
++ Check Configuration: Use conda config --show-sources to verify your channels and settings.
++ Disable Antivirus: Sometimes, antivirus software can slow down Conda operations. Temporarily disabling it may help.
++ Use Verbose Mode: Run commands with -v for more detailed output, which can help identify where the process is slowing down.
++ Try to uninstall anaconda or miniconda and reïnstall from scratch.
+
+By following these tips, you can often resolve issues with slow or failing updates in Conda.
+
+---
+
 ### Install the ECTB1230 python environment
 For the next step you need to download the ECTB1230-env.yaml file from the Brightspace course website to a folder on your computer. You install this file in the "Anaconda Prompt" from the folder with file with:
+
 ```{code}
-mamba create -f ECTB1230-env.yaml
+mamba env create -f ECTB1230-env.yaml
 ```
+
+#### In class we found that this often fails on Windows
+We found that installing the environment form the "yaml" file failed on Windows. I do not understand why this happens. The alternative approach is to install the environment from scratch:
+
+| Step | Command |
+| ---| ---|
+|Create a new environment with specific python version.| *mamba create --name ECTB1230-env -c conda-forge python==3.14* |
+|Change to new environment with activate | *conda activate ECTB1230-env*|
+|Install required packages | *mamba install -c conda-forge jupyterlab ipympl ipywidgets numpy pybind11*|
+|More packages with the same command | *seaborn matplotlib pandas etc.*|
+
+With the above list of packages you have a good starting point. When starting to use the environment, it may happen that your code crashes with a *module not found* error. This then cause by the fact that a python package is missing, you can easily install this with mamba. You can always check the availability of a package on the conda website. Sometimes packages are not present on conda, then you can use *pip install ...* to install the package.
+
+```{note} Conda above pip
+When maintaining your environment, always prefer to use conda above pip! This because commands like *mamba update --all* ensure consistency of packages with the conda eco-system. The packages installed with pip are not included!.
+```
+
+### Activate ECTB1230-env
 
 In order to be able to start working in this python environment you need to first **activate** it using"
 ```{code}
@@ -83,6 +135,11 @@ pip install .
 ```
 Do not forget the ., as this implies pip to install using the setup.py file in the current directory.
 
+#### You need to have C++ development tools available on your computer
+Often this pip install fails with an error message that it requires some development tools. In the error message on Windows, you can download and install these packages from the link provided. On a Mac a pop up shows which allows you to quickly install. On Linux you are pointed to a package which you can install with your package manager. 
+
+Please carefully read the messages and ensure you click the correct packages!
+
 ---
 ## Some changes to Windows to make your Anaconda prompt accessible from any directory using right mouse click.
 To make navigating easier with on windows you can tweak windows to start the Anaconda Prompt from you file browser using your right mouse button using the explanation found [here](https://www.codegenes.net/blog/adding-open-anaconda-prompt-here-to-context-menu-windows/#google_vignette).
@@ -91,3 +148,4 @@ To make navigating easier with on windows you can tweak windows to start the Ana
 ## Install vscode for coding
 It is possible to carry out all the programming in this course using Jypyter-lab, you just have to type Jupyter-lab in the Anaconda Prompt after having activated ECTB1230-env. However, it is in many cases more convenient to code in a so-called Integrated Development Environment or IDE. VScode is an advanced IDE that allows you to work with plain python and Jupyter notebooks. I can be downloaded [here](https://code.visualstudio.com/Download).
 
+---

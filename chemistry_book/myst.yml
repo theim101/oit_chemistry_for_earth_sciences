@@ -96,23 +96,24 @@ project:
               - file: content/week 3.4/template-chapter.md
           - title: Week 3.5
             children:
-              - file: content/week 3.5/Week_Plan_Chemistry_with_Computer_models.md
-              - file: content/week 3.5/Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
-              - file: content/week 3.5/Tutorial-2-Orchestra-Carbonate-system/Tutorial_2_Carbonate_Water_Calcite_fixed_volume.ipynb
-              - file: content/week 3.5/Assignment_pressure_volume/Assignment_CO2_in_SODA.ipynb
+              - file: content/week 3.5/Week 3.5_Plan_Chemistry_with_Computer_models.md
+              - file: content/week 3.5/Week 3.5_Tutorial-1-Orchestra-Ca-F-Gypsum/Fluorite-Gypsum-Water.ipynb
+              - file: content/week 3.5/Week 3.5_Tutorial-2-Orchestra-Carbonate-system/Tutorial_2_Carbonate_Water_Calcite_fixed_volume.ipynb
+              - file: content/week 3.5/Week 3.5_Assignment_pressure_volume/Assignment_CO2_in_SODA.ipynb
+          - title: Week 3.6
+            children:
+              #- file: content/week 3.6/Week_Plan_Applications_Water_Examples.md
+              #- file: content/week 3.6/Assignment_Lorah_and_Herman/Lorah&Herman_Travertine.ipynb
           - title: Week 3.6
             children:
               - file: content/week 3.6/template-chapter.md
-          - title: Week 3.7
-            children:
-              - file: content/week 3.7/Week_Plan_Applications_Water_Examples.md
-              - file: content/week 3.7/Assignment_Lorah_and_Herman/Lorah&Herman_Travertine.ipynb
           - title: test-space (to be removed)
             children:
               - file: content/test_space/01-paper.md
               - file: content/test_space/02-notebook.ipynb
               - file: content/test_space/Linear_Transformations.md
               - file: content/test_space/quickstart-myst-markdown.md
+
 theme:
   name: "book-theme"
 highlight_style: "default"
