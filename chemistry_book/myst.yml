@@ -93,7 +93,7 @@ project:
               - file: content/week 3.3/template-chapter.md
           - title: Week 3.4
             children:
-              - file: content/week 3.4/template-chapter.md
+              - file: content/week 3.4/Week 3_4_Electrochemistry.md
           - title: Week 3.5
             children:
               - file: content/week 3.5/Week 3.5_Plan_Chemistry_with_Computer_models.md
