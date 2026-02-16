@@ -1,5 +1,5 @@
 ---
-title: "Week plan 3.2: Working withChemical Reactions in Water"
+title: "Week plan 3.2: Working with te command prompt"
 authors:
   - name: Timo Heimovaara
 ---
