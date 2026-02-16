@@ -78,10 +78,9 @@ By the end of the week, students should be able to:
 - Practice with these concepts;
 
 **Activities**
-1. Dissolution/precipitation examples (calcite, gypsum).  
-2. Determine direction of reaction from Q vs K.  
-3. Group balancing exercises.  
-4. 10-minute conceptual quiz.
+1. Test your understanding by solving problems from Chapter 14, Tro.  
+2. Determine direction of reaction from Q vs K, know how to create the plot.  
+3. Calcualte the activities for different solutions (you may determine your own, following example notebook)
 
 ### Self-study After Lecture 1, prepare for Thursday
 - Read Ch. 4 (4.1–4.5) from [Appelo and Postma (2004)](https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544).
@@ -99,16 +98,9 @@ By the end of the week, students should be able to:
 **Outline**
 1. Review key equilibrium concepts.  
 2. Overview of reaction types.  
-3. Carbonate system (CO₂–H₂CO₃–HCO₃⁻–CO₃²⁻).  
+3. Fluorite and Gypsum.  
 4. Speciation and pH dependence.  
 5. Applications in natural waters.  
-6. Intro to modeling (PHREEQC, Visual MINTEQ).
-
-### Self-study After Lecture 2
-- Read Ch. 5 completely.  
-- Practice carbonate speciation problems.  
-- Complete online self-test.  
-- Reflection: *How do chemical reactions control groundwater chemistry?*
 
 ---
 
@@ -120,12 +112,12 @@ By the end of the week, students should be able to:
 - Foster conceptual understanding through teamwork.
 
 **Activities**
-1. Carbonate equilibrium exercises (log K, pH, species fractions).  
-2. Group discussion: effects of CO₂ and temperature.  
-3. Optional PHREEQC demo.  
-4. Recap quiz + feedback.
+1. Solving the Gypsum and Fluorite problem in detail. 
+2. Understanding how chemical buffers work.
+3. Exam level question
 
----
+### Self-study After Lecture 2
+- Will be added this week.---
 
 ## Self study: home work
 - Read topics which you find difficult. Reflect on your understanding, prepare questions for teaching staff;

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Composer>
+   <!--**** The predominance settings! ******-->
+   <title>CO2[g]</title>
+   <synonym/>
+   <fontsize>1.0</fontsize>
+   <X-Axis>
+      <variable>pH</variable>
+      <min>3.0</min>
+      <max>10.0</max>
+      <scientificformat>false</scientificformat>
+      <nrdecimals>3</nrdecimals>
+      <logarithmic>false</logarithmic>
+      <steps>200</steps>
+      <minortics>10</minortics>
+      <majortics>5</majortics>
+   </X-Axis>
+   <Y-Axis>
+      <variable>pH</variable>
+      <min>3.0</min>
+      <max>10.0</max>
+      <scientificformat>false</scientificformat>
+      <nrdecimals>3</nrdecimals>
+      <logarithmic>false</logarithmic>
+      <steps>200</steps>
+      <minortics>10</minortics>
+      <majortics>5</majortics>
+   </Y-Axis>
+   <datafile>userdata.dat</datafile>
+   <area colour="-1" factor="1" formationreaction="" variable="H2.liter.con"/>
+   <area colour="-1" factor="1" formationreaction="" variable="O2.liter.con"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="CO2[g].CLAY_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="CO2[g].SHA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="CO2[g].DHA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="CO2[g].DFA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="CO2[g].SFA_part_l"/>
+   <area colour="-4286826" factor="1.0" formationreaction="" variable="CO2[g].Zeolite_part_l"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Alkalinity, &quot;-(0)&quot;, 1.0, CO3-2)" variable="Alkalinity.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(C, &quot;-(0)&quot;, 1.0, C[+4])" variable="C.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CH4, 0, 1.0, C[-4])" variable="CH4.liter.con"/>
+   <area colour="-91320" factor="1.0" formationreaction="@logKreaction(CH4[g], &quot;-1 * ((10.44 + -0.00765 * @T() + -6669.0 / @T() + 1014000.0 / (@T() * @T())))&quot;, 1.0, CH4)" variable="CH4[g].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CO2, &quot;-(-1 * (( (1.0 / log(10)) * ((-1.468 * log(10)) - (-19982.784 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))&quot;, 1.0, CO2[g])" variable="CO2.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CO3-2, &quot;-((( (1.0 / log(10)) * ((16.681 * log(10)) - (-24007.792 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))&quot;, 1.0, CO2, -2.0, H+, 1.0, H2O)" variable="CO3-2.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(C[+4], &quot;-(0)&quot;, 1.0, CO3-2)" variable="C[+4].liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(C[-4], &quot;(( (1.0 / log(10)) * ((41.071 * log(10)) - (-255387.176 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, C, 10.0, H+, -3.0, H2O, 8.0, e-)" variable="C[-4].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CaCO3, &quot;(( (1.0 / log(10)) * ((3.224 * log(10)) - (14832.28 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CO3-2, 1.0, Ca+2)" variable="CaCO3.liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(CaHCO3+, &quot;(( (1.0 / log(10)) * ((11.435 * log(10)) - (-3644.264 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CO3-2, 1.0, Ca+2, 1.0, H+)" variable="CaHCO3+.liter.con"/>
+   <area colour="-8213866" factor="1.0" formationreaction="@logKreaction(Calcite[s], &quot;-1 * (( (1.0 / log(10)) * ((-8.48 * log(10)) - (-9610.648000000001 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CO3-2, 1.0, Ca+2)" variable="Calcite[s].liter.con"/>
+   <area colour="-2302776" factor="1.0" formationreaction="@logKreaction(HCO3-, &quot;(( (1.0 / log(10)) * ((10.329 * log(10)) - (-14899.224 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))&quot;, 1.0, CO3-2, 1.0, H+)" variable="HCO3-.liter.con"/>
+   <area colour="-2302776" factor="2.0" formationreaction="@logKreaction([CO2]2, &quot;((8.68 + -0.0103 * @T() + -2190.0 / @T()))&quot;, 2.0, CO2)" variable="[CO2]2.liter.con"/>
+   <area colour="-91320" factor="1.0" formationreaction="" variable="CO2[g].liter.con"/>
+</Composer>
