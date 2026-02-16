@@ -88,6 +88,7 @@ project:
               - file: content/week 3.2/Week 3_2_Plan_Chemical_Reactions_in_Water.md
               - file: content/week 3.2/Week 3_2_Tutorial_1_Chemical_Reactions_in_Water.ipynb
               - file: content/week 3.2/Week 3_2_Tutorial_2_Fluorite_Gypsum.ipynb
+              - file: content/week 3.2/Week 3_2_Working_with_the_command_prompt.md
           - title: Week 3.3
             children:
               - file: content/week 3.3/template-chapter.md
