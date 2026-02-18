@@ -117,7 +117,9 @@ By the end of the week, students should be able to:
 3. Exam level question
 
 ### Self-study After Lecture 2
-- Will be added this week.---
+- in Week 3.3, we will cover several fundamental chemical concepts that form the basis for understanding atmospheric processes. Topics will include partial pressures and gas mixtures, Henry’s law, Raoult’s law, fugacity, activity coefficients, equilibrium constants and solubility products. These topics will be taught from a basic chemistry perspective and explained in terms of the different phases (gases, liquids and solids). Although these are general chemistry principles, we will demonstrate their continuous relevance to atmospheric systems.
+
+Throughout the week, we will link these foundational ideas to multiphase atmospheric chemistry, in which gases interact with cloud droplets and aerosol particles. Henry’s law, for example, helps to explain how gases and pollutants dissolve in atmospheric water, while equilibrium constants describe reversible reactions in particles.  A clear understanding of these core chemistry principles will prepare us well for more detailed discussions of atmospheric chemistry and air pollution processes during practical sessions involving case studies from the Netherlands and Delhi, India.
 
 ## Self study: home work
 - Read topics which you find difficult. Reflect on your understanding, prepare questions for teaching staff;

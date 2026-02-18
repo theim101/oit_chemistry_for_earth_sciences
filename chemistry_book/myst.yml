@@ -91,7 +91,7 @@ project:
               - file: content/week 3.2/Week 3_2_Working_with_the_command_prompt.md
           - title: Week 3.3
             children:
-              - file: content/week 3.3/template-chapter.md
+              - file: content/week 3.3/Week 3_3_Lecture_Notes_and Tutorials_multiphase chemistry_students.ipynb
           - title: Week 3.4
             children:
               - file: content/week 3.4/Week 3_4_Electrochemistry.md
