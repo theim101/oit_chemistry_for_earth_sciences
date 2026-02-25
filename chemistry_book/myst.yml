@@ -110,13 +110,13 @@ project:
               - file: content/week 3.6/template-chapter.md
           - title: Week 3.8
             children:
-              - file: content/week 3.8/Week 3_8_Stability diagrams.md
-          - title: test-space (to be removed)
-            children:
-              - file: content/test_space/01-paper.md
-              - file: content/test_space/02-notebook.ipynb
-              - file: content/test_space/Linear_Transformations.md
-              - file: content/test_space/quickstart-myst-markdown.md
+              - file: content/week 3.8/Week 3_8_Stability diagramscd chem.md
+          # - title: test-space (to be removed)
+          #   children:
+          #     - file: content/test_space/01-paper.md
+          #     - file: content/test_space/02-notebook.ipynb
+          #     - file: content/test_space/Linear_Transformations.md
+          #     - file: content/test_space/quickstart-myst-markdown.md
 
 theme:
   name: "book-theme"
