@@ -110,7 +110,7 @@ project:
               - file: content/week 3.6/template-chapter.md
           - title: Week 3.8
             children:
-              - file: content/week 3.8/Week 3_8_Stability diagramscd chem.md
+              - file: content/week 3.8/Week 3_8_Stability diagrams.md
           # - title: test-space (to be removed)
           #   children:
           #     - file: content/test_space/01-paper.md
