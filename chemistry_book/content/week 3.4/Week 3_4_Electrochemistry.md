@@ -3,14 +3,14 @@
 Reading material:
 -   Chemistry: A Molecular Approach, Tro - Chapter 20, par 5.9
 -   Microbiology for Earth Scientists, Kirk - Chapter 4 and Chapter 8
--   Optional extra: Geochemistry, Groundwater and Pollution, Appelo & Postma: Paragraph 9.1
+-   Optional: Geochemistry, Groundwater and Pollution, Appelo & Postma: Paragraph 9.1
 
 Week structure:
--   Monday March 2 13.45 - 17.45: 1h leture, followed by guided excercise and self-study
+-   Monday March 2 13.45 - 17.45: 1h lecture, followed by guided exercise and self-study
 -   Wednesday March 4 13.45 - 15.45: self-study, room for questions at start and end
 -   Thursday March 5 
-        08.45 - 11.45: 1h lecture, followed by guided excercise and self-study
-        13.45 - 15.45: guided excercise, self-study for next week
+        08.45 - 11.45: 1h lecture, followed by guided exercise and self-study
+        13.45 - 15.45: guided exercise, self-study for next week
 
 ## Introduction
 
