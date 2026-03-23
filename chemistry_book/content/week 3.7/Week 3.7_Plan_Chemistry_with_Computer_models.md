@@ -1,10 +1,9 @@
-# Week 05: Chemistry with Computer Models
+# Week 3.7: Chemistry with Computer Models
 
 **Reference:** Appelo & Postma (2012) – *Geochemistry, Groundwater and Pollution*  
 <https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544>  
 
-**Chapters:** 4, and 5  
-
+**Chapters:** 4.1 - 4.4, and 5.1 - 5.2   
 ---
 
 ## Learning Goals
@@ -88,7 +87,7 @@ Orchestra;
 4. Recap quiz + feedback.
 
 ---
-## Self-study 
+## Self-study prepare for week 4.2
 - Read [Lorah and Herman, 1988](doi:10.1029/WR024i009p01541)2.  
 - Read through the Tutorial notes in the Jupyter book
 
