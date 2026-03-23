@@ -8,3 +8,4 @@ jupyterquiz
 sphinx-exercise
 sphinx-proof
 pydata-sphinx-theme
+ipywidgets
