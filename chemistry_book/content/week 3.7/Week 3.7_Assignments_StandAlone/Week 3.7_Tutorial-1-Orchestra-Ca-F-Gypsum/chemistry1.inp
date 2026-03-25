@@ -1,0 +1,457 @@
+//*********  Version: 20 January 2026, 20:56  *******
+@NrDigits: 12  // number of decimal places in reaction coefficients. 
+ //@rewriteReactions:   //indicates that reactions are rewritten in terms of primary entities. 
+@include_molar_volume_parameters:   //include molar volume parameters from phreeqc database in species definitions. 
+
+//********* The database file(s) *******
+// This section lists the database files that are used by the interactive chemistry editor
+// The database file is not used during the calculations!
+// Syntax for local files:                   @database: minteq.txt
+// Syntax for files on the internet:         @database: www.meeussen.nl/orchestra/minteqv4.txt
+
+@database: minteq.v4_2021.txt
+//********* End of the database file(s) *******
+
+
+//********* Extra text 0 *******
+
+@class: extra_text_0(){
+//@skipiterations:
+
+
+@class: volumeCalc(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10){
+}
+
+// deal with default parameters
+@class: volumeCalc(p1, p2, p3, p4, p5, p6){
+@volumeCalc(<p1>, <p2>, <p3>, <p4>, <p5>, <p6>, 0,0,0,0)
+}
+
+
+
+@Class: species(name, charge, volume){
+@species(<name>, <charge>)
+}
+
+
+@Class: species(name, charge, g1, g2, volume){
+@species(<name>, <charge>, <g1>, <g2>)
+}
+}
+@extra_text_0()
+//********* End of extra text 0 *******
+
+
+//********* The variables *******
+@Var: CLAY_kgkg 0.0 // 
+@Var: DFA_kgl 0.0 // 
+@Var: DHA_kgl 0.0 // 
+@Var: E.logact 1 // **
+@Var: Goethite_kgkg 0.0 // 
+@Var: H+.logact 1.0 // 
+@Var: H.logact 1 // **
+@GlobalVar: H2O.logact 0.0 // 
+@Var: HFO_kgkg 0.0 // 
+@GlobalVar: I 0 // 
+@Var: O.logact 1 // **
+@Var: SFA_kgkg 0.0 // 
+@Var: SHA_kgkg 0.0 // 
+@Var: SL 1.0 // 
+@GlobalVar: T 298.15 // 
+@Var: density 1.0 // 
+@Var: e-.act 1.0 // 
+@Var: e-.logact 1.0 // 
+@Var: gasvolume 0 // 
+@Var: hfo 0.0 // 
+@Var: kglhfo 1.0E-4 // 
+@Var: log_p[O2] 0.0 // 
+@Var: minTol 1.0E-4 // 
+@Var: pH 9.0 // 
+@Var: pe 7.0 // 
+@Var: porosity 1.0 // 
+@Var: saturation 1 // 
+@Var: totvolume 1 // 
+@Var: watervolume 1.0 // 
+//********* End of the variables *******
+
+
+//********* Extra text 1 *******
+@class: extra_text_1(){
+   @scan: objects2025.txt
+   //@concentrations_as_input()
+   @Var: deltaSIcalcite 0	
+}
+@extra_text_1()
+//********* End of extra text 1 *******
+
+//********* The phases *******
+@phase(tot)
+@phase(kg)
+@phase(liter)
+@link_phase(liter, tot, "watervolume")
+@link_phase(liter, kg, "1/SL")
+@phase(solution)
+@link_phase(solution, liter, "1")
+@phase(diss)
+@link_phase(diss, solution, "1")
+@phase(colloid)
+@link_phase(colloid, solution, "1")
+@phase(DHA_part)
+@link_phase(DHA_part, colloid, "1")
+@phase(DFA_part)
+@link_phase(DFA_part, colloid, "1")
+@phase(solid)
+@link_phase(solid, liter, "1")
+@phase(min)
+@link_phase(min, solid, "1")
+@phase(ads)
+@link_phase(ads, solid, "1")
+@phase(CLAY_part_l)
+@link_phase(CLAY_part_l, ads, "1")
+@phase(CLAY_part)
+@link_phase(CLAY_part, CLAY_part_l, "CLAY_kgkg*SL")
+@phase(HFO_part_l)
+@link_phase(HFO_part_l, ads, "1")
+@phase(HFO_part)
+@link_phase(HFO_part, HFO_part_l, "HFO_kgkg*SL")
+@phase(Goethite_part_l)
+@link_phase(Goethite_part_l, ads, "1")
+@phase(Goethite_part)
+@link_phase(Goethite_part, Goethite_part_l, "Goethite_kgkg*SL")
+@phase(SHA_part_l)
+@link_phase(SHA_part_l, ads, "1")
+@phase(HA_part)
+@link_phase(HA_part, DHA_part, "DHA_kgl")
+@link_phase(HA_part, SHA_part_l, "SHA_kgkg*SL")
+@phase(SFA_part_l)
+@link_phase(SFA_part_l, ads, "1")
+@phase(FA_part)
+@link_phase(FA_part, DFA_part, "DFA_kgl")
+@link_phase(FA_part, SFA_part_l, "SFA_kgkg*SL")
+@phase(gas_l)
+@link_phase(gas_l, liter, "1")
+@phase(gas)
+@link_phase(gas, gas_l, "gasvolume/22.4")
+@end_of_gui_phases:
+//********* End of the phases *******
+
+//********* Extra text 2 *******
+@class: extra_text_2(){
+  
+}
+@extra_text_2()
+//********* End of extra text 2 *******
+
+@davies()
+
+//********* The primary entities *******
+@balance_charge(pH)
+@species(Ca+2, 2)
+@primary_entity(Ca+2, -9.0, tot, 1.0E-9)
+@species(F-, -1)
+@primary_entity(F-, -9.0, tot, 1.0E-9)
+@Global: pH
+@Calc:(1, "H+.logact = -pH")
+@species(H+, 1)
+@primary_entity(H+, pH, 7.0)
+@Global: H2O.logact
+@Calc:(1, "O.logact = H2O.logact")
+@entity(O, tot, 0)
+@primary_entity(O, H2O.logact, -0.0)
+@species(SO4-2, -2)
+@primary_entity(SO4-2, -9.0, tot, 1.0E-9)
+//****************************************
+//******************************
+
+//********* Extra text 2a **************
+@class: extra_text_2a(){
+ // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
+}
+@extra_text_2a()
+//********* End of extra text 2a *******
+
+//********* The entities *******
+
+@entity(Ca, tot, 0)
+@logKreaction(Ca, "-(0)", 1.0, Ca+2)
+@species(CaF+, 1, 5, 0)
+@logKreaction(CaF+, "(( (1.0 / log(10)) * ((1.038 * log(10)) - (14000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, F-)
+@entity(O[-2], tot, 0)
+@logKreaction(O[-2], 0, 1.0, O)
+@entity(H2O, liter, 55.6)
+@logKreaction(H2O, 0, 1.0, O[-2])
+@species(CaOH+, 1, 6, 0)
+@logKreaction(CaOH+, "(( (1.0 / log(10)) * ((-12.697 * log(10)) - (64110.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
+@species(CaSO4, 0, 0, 0)
+@logKreaction(CaSO4, "(( (1.0 / log(10)) * ((2.36 * log(10)) - (7100.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
+@entity(F, tot, 0)
+@logKreaction(F, "-(0)", 1.0, F-)
+@mineral(Fluorite[s])
+@logKreaction(Fluorite[s], "-1 * (( (1.0 / log(10)) * ((-10.5 * log(10)) - (8000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 2.0, F-)
+@mineral(Gypsum[s])
+@logKreaction(Gypsum[s], "-1 * (( (1.0 / log(10)) * ((-4.61 * log(10)) - (1000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 2.0, H2O, 1.0, SO4-2)
+@entity(H[+1], tot, 0)
+@logKreaction(H[+1], "-(0)", 1.0, H+)
+@entity(H, tot, 0)
+@logKreaction(H, "-(0)", 1.0, H[+1])
+@species(H2F2, 0, 0, 0)
+@logKreaction(H2F2, "(( (1.0 / log(10)) * ((6.768 * log(10)) - (0.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, F-, 2.0, H+)
+@species(HF, 0, 0, 0)
+@logKreaction(HF, "(( (1.0 / log(10)) * ((3.17 * log(10)) - (13300.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, F-, 1.0, H+)
+@species(HF2-, -1, 3.5, 0)
+@logKreaction(HF2-, "(( (1.0 / log(10)) * ((3.75 * log(10)) - (17400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, F-, 1.0, H+)
+@species(HSO4-, -1, 4.5, 0)
+@logKreaction(HSO4-, "(( (1.0 / log(10)) * ((1.99 * log(10)) - (22000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H+, 1.0, SO4-2)
+@species(OH-, -1)
+@logKreaction(OH-, "(( (1.0 / log(10)) * ((-14.0 * log(10)) - (55815.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2O)
+@entity(S[+6], tot, 0)
+@logKreaction(S[+6], "-(0)", 1.0, SO4-2)
+@entity(S, tot, 0)
+@logKreaction(S, "-(0)", 1.0, S[+6])
+//********* Extra text 3 **************
+@class: extra_text_3(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_3()
+//********* End of extra text 3 *******
+
+//********* Extra text 4 **************
+@class: extra_text_4(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_4()
+//********* End of extra text 4 *******
+
+//********* End of Adsorption Models *******
+//********* Extra text 5 **************
+@class: extra_text_5(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_5()
+//********* End of extra text 5 *******
+
+//********* Write SI_minerals ************************* 
+@Write_SI_minerals:
+@SI_mineral(Anhydrite[s])
+@logKreaction(Anhydrite[s], "-1 * (( (1.0 / log(10)) * ((-4.36 * log(10)) - (-7200.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
+@SI_mineral(Lime[s])
+@logKreaction(Lime[s], "-1 * (( (1.0 / log(10)) * ((32.6993 * log(10)) - (-193910.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -2.0, H+, 1.0, H2O)
+@SI_mineral(Portlandite[s])
+@logKreaction(Portlandite[s], "-1 * (( (1.0 / log(10)) * ((22.804 * log(10)) - (-128620.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -2.0, H+, 2.0, H2O)
+//*************************************************** 
+@PHREEQC_Output:
+@class: PHREEQCOutput(){
+----------------------------Description of solution--------------------------------------------------
+                            Cellnumber = @Node_ID()
+                                    pH = @pH()
+                                    pe = @pe()
+                    Activity of water  = @evaluate:("10^@H2O.logact()")
+                       Ionic strength  = @I()
+           Total number of iterations  = @tot_nr_iter()
+
+----------------------------Distribution of aqueous species---------------------------------------------
+
+     Species            concentration (Mol/l)        Log Activity              Activity             log gamma   
+Ca+2                @Ca+2.diss()        
+    Ca+2                  @Ca+2.con()  @Ca+2.logact()@evaluate:("10^@Ca+2.logact()")    @evaluate:("-@Ca+2.logf()")
+    CaF+                  @CaF+.con()  @CaF+.logact()@evaluate:("10^@CaF+.logact()")    @evaluate:("-@CaF+.logf()") 
+    CaOH+                 @CaOH+.con()  @CaOH+.logact()@evaluate:("10^@CaOH+.logact()")    @evaluate:("-@CaOH+.logf()") 
+    CaSO4                 @CaSO4.con()  @CaSO4.logact()@evaluate:("10^@CaSO4.logact()")    @evaluate:("-@CaSO4.logf()") 
+F-                  @F-.diss()          
+    F-                    @F-.con()  @F-.logact()@evaluate:("10^@F-.logact()")    @evaluate:("-@F-.logf()")
+    CaF+                  @CaF+.con()  @CaF+.logact()@evaluate:("10^@CaF+.logact()")    @evaluate:("-@CaF+.logf()") 
+    H2F2                  @H2F2.con()  @H2F2.logact()@evaluate:("10^@H2F2.logact()")    @evaluate:("-@H2F2.logf()") 
+    HF                    @HF.con()  @HF.logact()@evaluate:("10^@HF.logact()")    @evaluate:("-@HF.logf()") 
+    HF2-                  @HF2-.con()  @HF2-.logact()@evaluate:("10^@HF2-.logact()")    @evaluate:("-@HF2-.logf()") 
+H+                  @H+.diss()          
+    H+                    @H+.con()  @H+.logact()@evaluate:("10^@H+.logact()")    @evaluate:("-@H+.logf()")
+    CaOH+                 @CaOH+.con()  @CaOH+.logact()@evaluate:("10^@CaOH+.logact()")    @evaluate:("-@CaOH+.logf()") 
+    H2F2                  @H2F2.con()  @H2F2.logact()@evaluate:("10^@H2F2.logact()")    @evaluate:("-@H2F2.logf()") 
+    HF                    @HF.con()  @HF.logact()@evaluate:("10^@HF.logact()")    @evaluate:("-@HF.logf()") 
+    HF2-                  @HF2-.con()  @HF2-.logact()@evaluate:("10^@HF2-.logact()")    @evaluate:("-@HF2-.logf()") 
+    HSO4-                 @HSO4-.con()  @HSO4-.logact()@evaluate:("10^@HSO4-.logact()")    @evaluate:("-@HSO4-.logf()") 
+    OH-                   @OH-.con()  @OH-.logact()@evaluate:("10^@OH-.logact()")    @evaluate:("-@OH-.logf()") 
+O                   @O.diss()           
+    CaOH+                 @CaOH+.con()  @CaOH+.logact()@evaluate:("10^@CaOH+.logact()")    @evaluate:("-@CaOH+.logf()") 
+    OH-                   @OH-.con()  @OH-.logact()@evaluate:("10^@OH-.logact()")    @evaluate:("-@OH-.logf()") 
+SO4-2               @SO4-2.diss()       
+    SO4-2                 @SO4-2.con()  @SO4-2.logact()@evaluate:("10^@SO4-2.logact()")    @evaluate:("-@SO4-2.logf()")
+    CaSO4                 @CaSO4.con()  @CaSO4.logact()@evaluate:("10^@CaSO4.logact()")    @evaluate:("-@CaSO4.logf()") 
+    HSO4-                 @HSO4-.con()  @HSO4-.logact()@evaluate:("10^@HSO4-.logact()")    @evaluate:("-@HSO4-.logf()") 
+
+----------------------------Description  of mineral phases --------------------------------------------------
+     Mineral           concentration (Mol/l)           SI  
+Ca+2                @Ca+2.min()              
+    Fluorite[s]           @Fluorite[s].con()  @evaluate:("if(@Fluorite[s].logact()^2>1e-20,@Fluorite[s].logact(),0) ") 
+    Gypsum[s]             @Gypsum[s].con()  @evaluate:("if(@Gypsum[s].logact()^2>1e-20,@Gypsum[s].logact(),0) ") 
+F-                  @F-.min()                
+    Fluorite[s]           @Fluorite[s].con()  @evaluate:("if(@Fluorite[s].logact()^2>1e-20,@Fluorite[s].logact(),0) ") 
+H+                  @H+.min()                
+O                   @O.min()                 
+    Gypsum[s]             @Gypsum[s].con()  @evaluate:("if(@Gypsum[s].logact()^2>1e-20,@Gypsum[s].logact(),0) ") 
+SO4-2               @SO4-2.min()             
+    Gypsum[s]             @Gypsum[s].con()  @evaluate:("if(@Gypsum[s].logact()^2>1e-20,@Gypsum[s].logact(),0) ") 
+
+---------------------------- Description of CLAY_part phase --------------------------------------------------
+Ca+2                     @Ca+2.CLAY_part()        
+F-                       @F-.CLAY_part()          
+H+                       @H+.CLAY_part()          
+O                        @O.CLAY_part()           
+SO4-2                    @SO4-2.CLAY_part()       
+
+---------------------------- Description of CLAY_part_l phase --------------------------------------------------
+Ca+2                     @Ca+2.CLAY_part_l()      
+F-                       @F-.CLAY_part_l()        
+H+                       @H+.CLAY_part_l()        
+O                        @O.CLAY_part_l()         
+SO4-2                    @SO4-2.CLAY_part_l()     
+
+---------------------------- Description of DFA_part phase --------------------------------------------------
+Ca+2                     @Ca+2.DFA_part()         
+F-                       @F-.DFA_part()           
+H+                       @H+.DFA_part()           
+O                        @O.DFA_part()            
+SO4-2                    @SO4-2.DFA_part()        
+
+---------------------------- Description of DHA_part phase --------------------------------------------------
+Ca+2                     @Ca+2.DHA_part()         
+F-                       @F-.DHA_part()           
+H+                       @H+.DHA_part()           
+O                        @O.DHA_part()            
+SO4-2                    @SO4-2.DHA_part()        
+
+---------------------------- Description of FA_part phase --------------------------------------------------
+Ca+2                     @Ca+2.FA_part()          
+F-                       @F-.FA_part()            
+H+                       @H+.FA_part()            
+O                        @O.FA_part()             
+SO4-2                    @SO4-2.FA_part()         
+
+---------------------------- Description of Goethite_part phase --------------------------------------------------
+Ca+2                     @Ca+2.Goethite_part()    
+F-                       @F-.Goethite_part()      
+H+                       @H+.Goethite_part()      
+O                        @O.Goethite_part()       
+SO4-2                    @SO4-2.Goethite_part()   
+
+---------------------------- Description of Goethite_part_l phase --------------------------------------------------
+Ca+2                     @Ca+2.Goethite_part_l()  
+F-                       @F-.Goethite_part_l()    
+H+                       @H+.Goethite_part_l()    
+O                        @O.Goethite_part_l()     
+SO4-2                    @SO4-2.Goethite_part_l() 
+
+---------------------------- Description of HA_part phase --------------------------------------------------
+Ca+2                     @Ca+2.HA_part()          
+F-                       @F-.HA_part()            
+H+                       @H+.HA_part()            
+O                        @O.HA_part()             
+SO4-2                    @SO4-2.HA_part()         
+
+---------------------------- Description of HFO_part phase --------------------------------------------------
+Ca+2                     @Ca+2.HFO_part()         
+F-                       @F-.HFO_part()           
+H+                       @H+.HFO_part()           
+O                        @O.HFO_part()            
+SO4-2                    @SO4-2.HFO_part()        
+
+---------------------------- Description of HFO_part_l phase --------------------------------------------------
+Ca+2                     @Ca+2.HFO_part_l()       
+F-                       @F-.HFO_part_l()         
+H+                       @H+.HFO_part_l()         
+O                        @O.HFO_part_l()          
+SO4-2                    @SO4-2.HFO_part_l()      
+
+---------------------------- Description of SFA_part_l phase --------------------------------------------------
+Ca+2                     @Ca+2.SFA_part_l()       
+F-                       @F-.SFA_part_l()         
+H+                       @H+.SFA_part_l()         
+O                        @O.SFA_part_l()          
+SO4-2                    @SO4-2.SFA_part_l()      
+
+---------------------------- Description of SHA_part_l phase --------------------------------------------------
+Ca+2                     @Ca+2.SHA_part_l()       
+F-                       @F-.SHA_part_l()         
+H+                       @H+.SHA_part_l()         
+O                        @O.SHA_part_l()          
+SO4-2                    @SO4-2.SHA_part_l()      
+
+---------------------------- Description of ads phase --------------------------------------------------
+Ca+2                     @Ca+2.ads()              
+F-                       @F-.ads()                
+H+                       @H+.ads()                
+O                        @O.ads()                 
+SO4-2                    @SO4-2.ads()             
+
+---------------------------- Description of colloid phase --------------------------------------------------
+Ca+2                     @Ca+2.colloid()          
+F-                       @F-.colloid()            
+H+                       @H+.colloid()            
+O                        @O.colloid()             
+SO4-2                    @SO4-2.colloid()         
+
+---------------------------- Description of gas phase --------------------------------------------------
+Ca+2                     @Ca+2.gas()              
+F-                       @F-.gas()                
+H+                       @H+.gas()                
+O                        @O.gas()                 
+SO4-2                    @SO4-2.gas()             
+
+---------------------------- Description of gas_l phase --------------------------------------------------
+Ca+2                     @Ca+2.gas_l()            
+F-                       @F-.gas_l()              
+H+                       @H+.gas_l()              
+O                        @O.gas_l()               
+SO4-2                    @SO4-2.gas_l()           
+
+---------------------------- Description of kg phase --------------------------------------------------
+Ca+2                     @Ca+2.kg()               
+F-                       @F-.kg()                 
+H+                       @H+.kg()                 
+O                        @O.kg()                  
+SO4-2                    @SO4-2.kg()              
+
+---------------------------- Description of liter phase --------------------------------------------------
+Ca+2                     @Ca+2.liter()            
+F-                       @F-.liter()              
+H+                       @H+.liter()              
+O                        @O.liter()               
+    H2O                        @H2O.con()  @H2O.logact()@evaluate:("10^@H2O.logact()") 
+SO4-2                    @SO4-2.liter()           
+
+---------------------------- Description of solid phase --------------------------------------------------
+Ca+2                     @Ca+2.solid()            
+F-                       @F-.solid()              
+H+                       @H+.solid()              
+O                        @O.solid()               
+SO4-2                    @SO4-2.solid()           
+
+---------------------------- Description of solution phase --------------------------------------------------
+Ca+2                     @Ca+2.solution()         
+F-                       @F-.solution()           
+H+                       @H+.solution()           
+O                        @O.solution()            
+SO4-2                    @SO4-2.solution()        
+
+---------------------------- Description of temporary phase --------------------------------------------------
+Ca+2                     @Ca+2.temporary()        
+F-                       @F-.temporary()          
+H+                       @H+.temporary()          
+O                        @O.temporary()           
+SO4-2                    @SO4-2.temporary()       
+
+---------------------------- Description of tot phase --------------------------------------------------
+Ca+2                     @Ca+2.tot()              
+    Ca                         @Ca.con()  @Ca.logact()@evaluate:("10^@Ca.logact()") 
+F-                       @F-.tot()                
+    F                          @F.con()  @F.logact()@evaluate:("10^@F.logact()") 
+H+                       @H+.tot()                
+    H                          @H.con()  @H.logact()@evaluate:("10^@H.logact()") 
+    H[+1]                      @H[+1].con()  @H[+1].logact()@evaluate:("10^@H[+1].logact()") 
+O                        @O.tot()                 
+    O[-2]                      @O[-2].con()  @O[-2].logact()@evaluate:("10^@O[-2].logact()") 
+SO4-2                    @SO4-2.tot()             
+    S                          @S.con()  @S.logact()@evaluate:("10^@S.logact()") 
+    S[+6]                      @S[+6].con()  @S[+6].logact()@evaluate:("10^@S[+6].logact()") 
+}
+@class: outputline(){Var: Node_ID T pH pe I H2O.logact tot_nr_iter Ca+2.diss Ca+2.con Ca+2.logact Ca+2.logf CaF+.con CaF+.logact CaF+.logf CaOH+.con CaOH+.logact CaOH+.logf CaSO4.con CaSO4.logact CaSO4.logf F-.diss F-.con F-.logact F-.logf CaF+.con CaF+.logact CaF+.logf H2F2.con H2F2.logact H2F2.logf HF.con HF.logact HF.logf HF2-.con HF2-.logact HF2-.logf H+.diss H+.con H+.logact H+.logf CaOH+.con CaOH+.logact CaOH+.logf H2F2.con H2F2.logact H2F2.logf HF.con HF.logact HF.logf HF2-.con HF2-.logact HF2-.logf HSO4-.con HSO4-.logact HSO4-.logf OH-.con OH-.logact OH-.logf O.diss CaOH+.con CaOH+.logact CaOH+.logf OH-.con OH-.logact OH-.logf SO4-2.diss SO4-2.con SO4-2.logact SO4-2.logf CaSO4.con CaSO4.logact CaSO4.logf HSO4-.con HSO4-.logact HSO4-.logf Ca+2.min Fluorite[s].con Fluorite[s].si Fluorite[s].logact Gypsum[s].con Gypsum[s].si Gypsum[s].logact F-.min Fluorite[s].con Fluorite[s].si Fluorite[s].logact H+.min O.min Gypsum[s].con Gypsum[s].si Gypsum[s].logact SO4-2.min Gypsum[s].con Gypsum[s].si Gypsum[s].logact Ca+2.CLAY_part F-.CLAY_part H+.CLAY_part O.CLAY_part SO4-2.CLAY_part Ca+2.CLAY_part_l F-.CLAY_part_l H+.CLAY_part_l O.CLAY_part_l SO4-2.CLAY_part_l Ca+2.DFA_part F-.DFA_part H+.DFA_part O.DFA_part SO4-2.DFA_part Ca+2.DHA_part F-.DHA_part H+.DHA_part O.DHA_part SO4-2.DHA_part Ca+2.FA_part F-.FA_part H+.FA_part O.FA_part SO4-2.FA_part Ca+2.Goethite_part F-.Goethite_part H+.Goethite_part O.Goethite_part SO4-2.Goethite_part Ca+2.Goethite_part_l F-.Goethite_part_l H+.Goethite_part_l O.Goethite_part_l SO4-2.Goethite_part_l Ca+2.HA_part F-.HA_part H+.HA_part O.HA_part SO4-2.HA_part Ca+2.HFO_part F-.HFO_part H+.HFO_part O.HFO_part SO4-2.HFO_part Ca+2.HFO_part_l F-.HFO_part_l H+.HFO_part_l O.HFO_part_l SO4-2.HFO_part_l Ca+2.SFA_part_l F-.SFA_part_l H+.SFA_part_l O.SFA_part_l SO4-2.SFA_part_l Ca+2.SHA_part_l F-.SHA_part_l H+.SHA_part_l O.SHA_part_l SO4-2.SHA_part_l Ca+2.ads F-.ads H+.ads O.ads SO4-2.ads Ca+2.colloid F-.colloid H+.colloid O.colloid SO4-2.colloid Ca+2.gas F-.gas H+.gas O.gas SO4-2.gas Ca+2.gas_l F-.gas_l H+.gas_l O.gas_l SO4-2.gas_l Ca+2.kg F-.kg H+.kg O.kg SO4-2.kg Ca+2.liter F-.liter H+.liter O.liter H2O.con H2O.logact SO4-2.liter Ca+2.solid F-.solid H+.solid O.solid SO4-2.solid Ca+2.solution F-.solution H+.solution O.solution SO4-2.solution Ca+2.temporary F-.temporary H+.temporary O.temporary SO4-2.temporary Ca+2.tot Ca.con Ca.logact F-.tot F.con F.logact H+.tot H.con H.logact H[+1].con H[+1].logact O.tot O[-2].con O[-2].logact SO4-2.tot S.con S.logact S[+6].con S[+6].logact }

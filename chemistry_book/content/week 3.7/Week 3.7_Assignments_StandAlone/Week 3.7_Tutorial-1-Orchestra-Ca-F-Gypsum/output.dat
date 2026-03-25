@@ -1,0 +1,12 @@
+@class: format(){
+    //Output_at: (time, from:, 0, to:, 10, steps:, 100 )
+  // @PHREEQCOutput: chemistry1.inp
+}
+
+@format()
+
+// The column headers in this file can be edited and determine the output for the next run.
+Var: 	pH                       	chargebalance            	Ca+2.tot                 	F-.tot                   	SO4-2.tot                	Ca+2.con                 	F-.con                   	SO4-2.con                	SO4-2.diss               	Ca+2.logact              	F-.logact                	SO4-2.logact             	Fluorite[s].logact       	Fluorite[s].si           	
+Data:	 10.3058387              	 0.0                     	 2.49500000e-4           	 2.89500000e-4           	 1.00000000e-20          	 2.47892361e-4           	 2.88809735e-4           	 1.79151774e-16          	 1.87094465e-16          	-3.65949520              	-3.55282776              	-15.8005372              	-2.65150713e-1           	-2.65150713e-1           	
+Data:	 10.2002376              	 0.0                     	 1.00024950              	 2.89500000e-4           	 1.00000000              	 1.04185461e-2           	 9.57498379e-5           	 1.02873575e-2           	 1.59107708e-2           	-2.30224836              	-4.09887582              	-2.30775164              	-1.77635684e-15          	-1.77635684e-15          	
+Data:	 10.2002376              	 0.0                     	 10.0002495              	 2.89500000e-4           	 10.0000000              	 1.04185461e-2           	 9.57498379e-5           	 1.02873575e-2           	 1.59107708e-2           	-2.30224836              	-4.09887582              	-2.30775164              	 1.77635684e-15          	 1.77635684e-15          	

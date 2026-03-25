@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Concert>
+   <!--**** The nodes that are used in the system.-->
+   // in this case just a single node
+   <Nodes TypeFile="input.dat" NrNodes="1" />
+
+   <!--**** The list of Tasks that are used in the system.-->
+   <Task Name="Equilibrate node1" Type="NodeGroup" Threads="1">
+      <Calculator>chemistry1</Calculator>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+   <Task Name="Read node" Type="InstreamGroup">
+      <File>input.dat</File>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+   <Task Name="Write output" Type="OutstreamGroup">
+      <File>output.dat</File>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+   <Task Name="Write output2" Type="OutstreamGroup">
+      <File>output2.dat</File>
+      <Nodes>(0)</Nodes>
+   </Task>
+
+   <Task Name="Each Step" Type="RepeatingTaskGroup">
+      <DoTask Name="Read node" />
+      <DoTask Name="Equilibrate node1" />
+      <DoTask Name="Write output" />
+      <DoTask Name="Write output2" />
+   </Task>
+
+   <Task Name="Run" Type="TaskGroup">
+      <DoTask Name="Each Step" />
+   </Task>
+</Concert>
+

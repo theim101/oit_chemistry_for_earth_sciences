@@ -1,0 +1,2 @@
+Factor:	1	1	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0
+Var:	H2.liter.con	O2.liter.con	Ca+2.CLAY_part_l	Ca+2.SHA_part_l	Ca+2.DHA_part_l	Ca+2.DFA_part_l	Ca+2.SFA_part_l	Ca+2.Zeolite_part_l	Ca.liter.con	CaF+.liter.con	CaOH+.liter.con	CaSO4.liter.con	Fluorite[s].liter.con	Gypsum[s].liter.con	Ca+2.liter.con
