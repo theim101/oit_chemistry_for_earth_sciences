@@ -44,7 +44,7 @@ As you can see, both pH and ORP sensors have a similar set-up, and both have a s
 
 Another, even more urgent issue with interpreting the E<sub>H</sub> value is that the theoretical E<sub>H</sub> calculated based on the measured chemical composition and the measured E<sub>H</sub> can be quite different. This is explained in paragraph 9.1.1 in Appelo & Postma, with the following figure 9.3: 
 
-![Figure 9_3](~/chemistry_book/content/images/Fig9_3_AppeloPostma_Eh_ORP.jpg)
+![Figure 9_3](../images/Fig9_3_AppeloPostma_Eh_ORP.jpg)
 
 You can see here, that while you would expect a calculated and measured E<sub>H</sub> to be similar, this is clearly not the case. As explained in the accompanying paragraph (9.1.1), this can be due to different factors, such as the (dis)equilibrium in the solution and the insensitivity of the electrode to certain species important for the ORP (O<sub>2</sub>). Some authors even go so far as to say that because of these limitations, measuring the ORP is generally not recommended ([Nordstrom et al., 2005](https://pubs.usgs.gov/twri/twri9a6/twri9a65/twri9a_6.5_v_1.2.pdf)). In certain cases, such as acid mine drainage (AMD), theoretical and measured ORP are very similar due to the extremely high concentrations of dissolved iron. The Fe<sup>2+</sup>/Fe<sup>3+</sup> redox couple then controls the ORP directly, and is a useful parameter to measure. 
 
