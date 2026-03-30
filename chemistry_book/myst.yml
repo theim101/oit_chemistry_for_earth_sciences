@@ -104,7 +104,7 @@ project:
               - file: content/week 3.7/Week 3.7_Assignment_pressure_volume/Assignment_CO2_in_SODA.ipynb
           - title: Week 3.8
             children:
-              # - file: content/week 3.8/Week 3_8_Stability diagrams.md
+              - file: content/week 3.8/Week 3_8_Stability diagrams.md
           # - title: test-space (to be removed)
           #   children:
           #     - file: content/test_space/01-paper.md
