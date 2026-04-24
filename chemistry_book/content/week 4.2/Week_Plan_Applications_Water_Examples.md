@@ -1,11 +1,11 @@
 # Week 4.2: Aqueous Chemistry Applications, Buffers and Real Data
 
 **Reference:** Appelo & Postma (2012) – *Geochemistry, Groundwater and Pollution*  
-<https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544>  
+<https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544>  (#appelo&postma)
 *Chapters:* 4 and 5  
 
 **Reference:** Lorah, M.M. & Herman J.S. (1988) – *The chemical evolution of a tervertine-depositing stream: Geochemical processes and mass transfer reactions*  
-<https://doi-org.tudelft.idm.oclc.org/10.1029/WR024i009p01541>  
+<https://doi-org.tudelft.idm.oclc.org/10.1029/WR024i009p01541> (#lorah&herman)
 
 **Format:**  
 - 2 lectures (Wed & Thu) – 1 hrs each  
@@ -38,7 +38,7 @@ By the end of the week, students should:
 
 ---
 
-## 🧠 Lecture 4.2.1 Chemical Buffer Systems
+## 🧠 Practical 4.2.1 Chemical Buffer Systems
 
 **Introduction**
 A chemical buffer is a solution in which more or less equal amounts of a weak acid and its conjugate base are present. Buffers are essential systems for the living nature as buffers resist pH change. We will work on three examples, two related to carbonate which for example control the pH in the oceans and in our blood. A third which is used in industrial processes (such as food and beverage preservation), the sulfurous acid buffer.
@@ -89,91 +89,40 @@ In order to create the scenarios you need to consider the following:
 1. how should you change the initial conditions so that you implement the buffer. I suggest you explicitly write down on a piece of paper what the chemical composition is of your buffer system. Use this information to calculate the total amounts of the master species present in your scenario.
 2. think through how you would like to present the results of your scenario and then find a way how you can program this.
 3. the provided script, has one plot for the results. Many different plots are possible, try to implement three additional plots that give more insight in to your results;
-4. Add text to the jupyter notebook where you explain what you have done and how you interpret the results. Please note, you can later use your notebook as reference material during the exam
+4. Add text to the jupyter notebook where you explain what you have done and how you interpret the results. Please note, you can later use your notebook as reference material during the exam.
+
+The final analysis you need to carry out is very similar to the carbonate scenarios you have implemented. You need to assess a buffer system based on sulfurous acid. You need to carry out the same steps as above.
+
+**Checking input parameters for ORCHESTRA**
+The input files controlling the Orchestra calculations have been predefined for these assignments. Once you are able to carry out the assignments with pyOrchestra, we suggest that you also have a closer look at the ORCHESTRA GUI which you can start by clicking on the *orchestra2026.jar*. In the GUI you will be able to ajust settings which are then written to the input files.
+
+For the adventurous of heart, we suggest to copy the contents from one of the tutorial folders to a new folder. See if you can modify the system to work for another buffer system. One of the most used buffer systems in microbiology is the so-called phosphate buffer. Lots of information can be found using an online search.
 
 
-**Self-study Before Lecture 1**
-- Read Appelo and Postma (2012): Ch. 1.  
-- Write equilibrium expressions for 3 given reactions.  
-- Watch short video: *Activities vs Concentrations*.  
-- Prepare one discussion question.
+## ✍️ Practical 4.2.2: Deposition of travertine from a stream
+**Discussion results practical 4.2.1**
+At the start of this practical, we will briefly revisit the outcomes for practical 4.2.1.
 
-**Self-study After Lecture 1**
-- Read Ch. 4 (4.1–4.5).  
-- Write equilibrium expressions for 3 given reactions.  
-- Watch short video: *Activities vs Concentrations*.  
-- Prepare one discussion question.
+**Introduction to practical**
+This practical is aims to show how you can redo the analysis presented in an acdemic paper. The application is a realworld example of how geochemistry is used to get a better understanding of natural processes.
 
----
+In the paper by Lorah and Herman (1988), samples have been taken from a stream and analysed in the laboratory. The chemical results have been analysed with one of the first geochemical solvers. The analysis shown in the paper gives a good insight of carbonate chemistry and how we can use equilibrium solvers to interpret systems which are not necessarily in equilibrium. In this case, the degassing of $\text{CO}_2\text{[g]}$ from the water in the stream is a relatively slow process. Most of the degassing takes place in the turbulence of a water fall in the stream.
 
-## ✍️ Tutorial 1: Equilibrium Practice
+**Implementing the chemical system in Orchestra**
+Again we have provided you with a template with the model set-up and an example scenario. In the template two of the samples are passed to pyOrchestra. You need to figure out a way to pass all samples in an efficient manner so that you can create a table of the amounts of master-species for the different calculations. For this you need to translate the values from mg/l to mol/l. To to this you need to use some basic Python coding.
 
-**Goals**
-- Reinforce equilibrium expressions and constants.  
-- Practice calculating Q and K.  
+In the initial calculations of our scenario, we will not allow the minerals to precipitate. The output of pyOrchestra will provide us inforamation about the saturation state in the sample (*.si) values. Supersaturation is indicated by SI values > 0.
 
-**Activities**
-1. Dissolution/precipitation examples (calcite, gypsum).  
-2. Determine direction of reaction from Q vs K.  
-3. Group balancing exercises.  
-4. 10-minute conceptual quiz.
+In our scenario we will allow minerals to precipitate, either completely or partially using a parameter called *deltaSICalcite*, with which we can force pyOrchestra to allow Calcite to precipitate to a fixed SI-value not necessarily equal to 0.
 
----
+The sequence of steps you need to peform are :
+1. Initial calculation: Calculate the equilibrium conditions and corresponding SI-values for the minerals for all water samples. This is done using the measurements from the laboratory which you translate to the initial mass of all master species in each sample;
+2. Run the simulations you want to carry out. An example of a simulation is to use pyOrchestra to calculate how much Calcite needs to precipitate in order to achieve a specific downstream SI-value. At the same time we can evaluate to what extent the concentration of dissolved in the stream are changing due to the precipitation of calcite and if other processes need to be taken in to account;
+3. Process the output so that you can convey your results in the best way.
 
-## 🌍 Lecture 2 (Thursday): Speciation & Natural Waters
-
-**Objectives**
-- Extend equilibria to multiple reactions and species.  
-- Introduce acid-base, complexation, and redox reactions.  
-- Interpret carbonate speciation diagrams.  
-- Discuss environmental implications (buffering, pH control).
-
-**Outline**
-1. Review key equilibrium concepts.  
-2. Overview of reaction types.  
-3. Carbonate system (CO₂–H₂CO₃–HCO₃⁻–CO₃²⁻).  
-4. Speciation and pH dependence.  
-5. Applications in natural waters.  
-6. Intro to modeling (PHREEQC, Visual MINTEQ).
-
-**Self-study After Lecture 2**
-- Read Ch. 5 completely.  
-- Practice carbonate speciation problems.  
-- Complete online self-test.  
-- Reflection: *How do chemical reactions control groundwater chemistry?*
+**Exam level question**
+At the end of the practical we will provide you with an exam-level question which is similar to the ones used in the final exam.
 
 ---
 
-## 🧩 Tutorial 2: Speciation Integration
 
-**Goals**
-- Connect Chapters 4 & 5 concepts.  
-- Apply equilibrium and speciation ideas.  
-- Foster conceptual understanding through teamwork.
-
-**Activities**
-1. Carbonate equilibrium exercises (log K, pH, species fractions).  
-2. Group discussion: effects of CO₂ and temperature.  
-3. Optional PHREEQC demo.  
-4. Recap quiz + feedback.
-
----
-
-## 📚 Student Workload Summary
-
-| Task | Timing | Hours |
-|------|---------|-------|
-| Lecture review | Mon–Thu | 1 |
-| Reading (Ch. 4 & 5) | Throughout week | 2–3 |
-| Homework problems | Between tutorials | 2 |
-| Online quiz/reflection | Weekend | 1 |
-
----
-
-## 🧭 Instructor Notes
-
-- Keep lectures conceptual and visual.  
-- Use simple examples linking to natural processes (e.g., rainwater pH).  
-- Emphasize “why” behind equilibria, not just calculations.  
-- Use visuals: diagrams, flowcharts, and sketches.  
-- Tutorials should consolidate intuition before quantitative rigor.
