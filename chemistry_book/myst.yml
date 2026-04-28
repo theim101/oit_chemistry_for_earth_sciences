@@ -113,7 +113,7 @@ project:
           #     - file: content/test_space/quickstart-myst-markdown.md
           - title: Week 4.2
             children:
-              - file: content/week 4.2/Week 4.2_Plan_Applications_Water_Examples.md
+              - file: content/week 4.2/Week_Plan_Applications_Water_Examples.md
               - file: content/week 4.2/Week 4.2_Tutorial-1-ChemicalBuffersSystems/Tutorial 1_Carbonate_Buffer_System_no_answer.ipynb
               - file: content/week 4.2/Week 4.2_Tutorial-2-ChemicalBuffersSystems_sulfurous_acid/Tutorial 2_Sulfurous_Acid_Buffer_System_no_answers.ipynb
               - file: content/week 4.2/Week 4.2_Assignment_Lorah_and_Herman/Lorah&Herman_Travertine_no_answers.ipynb
