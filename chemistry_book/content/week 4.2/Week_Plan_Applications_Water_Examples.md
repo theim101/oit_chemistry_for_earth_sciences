@@ -4,7 +4,7 @@
 <https://doi-org.tudelft.idm.oclc.org/10.1201/9781439833544>  (#appelo&postma)
 *Chapters:* 4 and 5  
 
-**Reference:** Lorah, M.M. & Herman J.S. (1988) – *The chemical evolution of a tervertine-depositing stream: Geochemical processes and mass transfer reactions*  
+**Reference:** Lorah, M.M. & Herman J.S. (1988) – *The chemical evolution of a travertine-depositing stream: Geochemical processes and mass transfer reactions*  
 <https://doi-org.tudelft.idm.oclc.org/10.1029/WR024i009p01541> (#lorah&herman)
 
 **Format:**  
@@ -57,7 +57,7 @@ A buffer system is created by dissolving more or less equal amounts of the weak 
 *Selfstudy question* What is the pH if the amount of weak acid is exactly equal to the conjugate base?
 
 **Using Orchestra to analyse chemical buffer systems**
-In natural waters, chemical buffers are very important. A constant pH is essential for live and many processes buffer the pH. Geochemical modelling using large databases with thermodynamic equilibrium data provide us a tool with whcih we can analyse these complex systems.
+In natural waters, chemical buffers are very important. A constant pH is essential for live and many processes buffer the pH. Geochemical modelling using large databases with thermodynamic equilibrium data provide us a tool with which we can analyse these complex systems.
 
 In order to be able to run an geochemical solver you need to apply the following concepts and steps:
 1. The solver needs to know the total amounts of all Master Species in the system;
@@ -94,7 +94,7 @@ In order to create the scenarios you need to consider the following:
 The final analysis you need to carry out is very similar to the carbonate scenarios you have implemented. You need to assess a buffer system based on sulfurous acid. You need to carry out the same steps as above.
 
 **Checking input parameters for ORCHESTRA**
-The input files controlling the Orchestra calculations have been predefined for these assignments. Once you are able to carry out the assignments with pyOrchestra, we suggest that you also have a closer look at the ORCHESTRA GUI which you can start by clicking on the *orchestra2026.jar*. In the GUI you will be able to ajust settings which are then written to the input files.
+The input files controlling the Orchestra calculations have been predefined for these assignments. Once you are able to carry out the assignments with pyOrchestra, we suggest that you also have a closer look at the ORCHESTRA GUI which you can start by clicking on the *orchestra2026.jar*. In the GUI you will be able to adjust settings which are then written to the input files.
 
 For the adventurous of heart, we suggest to copy the contents from one of the tutorial folders to a new folder. See if you can modify the system to work for another buffer system. One of the most used buffer systems in microbiology is the so-called phosphate buffer. Lots of information can be found using an online search.
 
@@ -104,18 +104,18 @@ For the adventurous of heart, we suggest to copy the contents from one of the tu
 At the start of this practical, we will briefly revisit the outcomes for practical 4.2.1.
 
 **Introduction to practical**
-This practical is aims to show how you can redo the analysis presented in an acdemic paper. The application is a realworld example of how geochemistry is used to get a better understanding of natural processes.
+This practical is aims to show how you can redo the analysis presented in an academic paper. The application is a realworld example of how geochemistry is used to get a better understanding of natural processes.
 
 In the paper by Lorah and Herman (1988), samples have been taken from a stream and analysed in the laboratory. The chemical results have been analysed with one of the first geochemical solvers. The analysis shown in the paper gives a good insight of carbonate chemistry and how we can use equilibrium solvers to interpret systems which are not necessarily in equilibrium. In this case, the degassing of $\text{CO}_2\text{[g]}$ from the water in the stream is a relatively slow process. Most of the degassing takes place in the turbulence of a water fall in the stream.
 
 **Implementing the chemical system in Orchestra**
-Again we have provided you with a template with the model set-up and an example scenario. In the template two of the samples are passed to pyOrchestra. You need to figure out a way to pass all samples in an efficient manner so that you can create a table of the amounts of master-species for the different calculations. For this you need to translate the values from mg/l to mol/l. To to this you need to use some basic Python coding.
+Again we have provided you with a template with the model set-up and an example scenario. In the template two of the samples are passed to pyOrchestra. You need to figure out a way to pass all samples in an efficient manner so that you can create a table of the amounts of master-species for the different calculations. For this you need to translate the values from mg/l to mol/l. To do this you need to use some basic Python coding.
 
-In the initial calculations of our scenario, we will not allow the minerals to precipitate. The output of pyOrchestra will provide us inforamation about the saturation state in the sample (*.si) values. Supersaturation is indicated by SI values > 0.
+In the initial calculations of our scenario, we will not allow the minerals to precipitate. The output of pyOrchestra will provide us information about the saturation state in the sample (*.si) values. Supersaturation is indicated by SI values > 0.
 
 In our scenario we will allow minerals to precipitate, either completely or partially using a parameter called *deltaSICalcite*, with which we can force pyOrchestra to allow Calcite to precipitate to a fixed SI-value not necessarily equal to 0.
 
-The sequence of steps you need to peform are :
+The sequence of steps you need to perform are :
 1. Initial calculation: Calculate the equilibrium conditions and corresponding SI-values for the minerals for all water samples. This is done using the measurements from the laboratory which you translate to the initial mass of all master species in each sample;
 2. Run the simulations you want to carry out. An example of a simulation is to use pyOrchestra to calculate how much Calcite needs to precipitate in order to achieve a specific downstream SI-value. At the same time we can evaluate to what extent the concentration of dissolved in the stream are changing due to the precipitation of calcite and if other processes need to be taken in to account;
 3. Process the output so that you can convey your results in the best way.
