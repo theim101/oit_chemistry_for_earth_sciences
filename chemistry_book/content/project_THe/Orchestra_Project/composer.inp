@@ -1,0 +1,19 @@
+// Composer settings. 
+Font:  13
+HSize: 1920
+VSize: 1080
+HPos:  0
+VPos:  0
+Intropage:  none
+Concertfile: concert.xml
+
+// The Composer will allow to edit the files listed here.
+// Changes in this file are effective after refreshing or restarting the composer.
+//    <Title>     <Tab>       <Filename>
+
+CHEMFile: chemistry_leachate 	null 	chemistry_leachate.inp
+File: Documentation 	null 	documentation.txt
+File: Input 	null 	input.dat
+File: Output1_1 	null 	output1_1.dat
+File: Output1_2 	null 	output1_2.dat
+File: Concert 	null 	concert.xml
