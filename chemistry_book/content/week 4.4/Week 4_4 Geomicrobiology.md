@@ -6,7 +6,7 @@
 -   18 May 2026 0945 - 1245: lecture (1h) followed by guided exercise
 
 **Reading material:**
--   Microbiology for Earth Scientists chapter 4 and 8 
+-   Microbiology for Earth Scientists chapter 4 and 8.1-8.3 
     -   Extra: chapter 2, par 5.1, par 9.1, par. 12.1
 -   Tro: sections on redox chemistry (see week 3.4 and 3.8)
 
@@ -42,25 +42,7 @@ Where do we then find this biomass? With plants, you will probably think of the 
 Bar-On et al. 2018 figure 2
 :::
 
-Biomass is composed of a range of elements, of which carbon, hydrogen, oxygen, nitrogen, sulfur and phosphorus are the main ones. Biomass therefore is one of the pools in which these elements are stored. Let's take carbon as an example, consider the global carbon pools summarised in table 1:  
-
-:::{figure} images/Table_2_1_Geomicrobiology.png
-:name: Table 2.1 Falkowski, 2012
-:align: center
-:width: 50%
-Table 2.1 Falkowski, 2012
-:::
-
-We can make a distinction between inorganic (no C-H bonds) and organic (C-H bonds) carbon. Organic carbon pools originate from biomass. Next to the biosphere this includes kerogens and fossil fuels, together accounting for up to 20 % of global carbon (note that while the carbonate reservoir is inorganic, microbes can contribute to carbonate mineralization, see 12.1.1 in Microbiology for Earth Scientists). If we then consider the mean carbon fluxes between these different reservoirs (table 2) as they were before the industrial age, given in Tmol C yr<sup>-1</sup>, we see that the burial of organic carbon (biomass!) accounts for ~57 % of the annual flux to carbon sinks. 
-
-:::{figure} images/Table_3_4_top_Geobiology.png
-:name: Table 3_4 Walmann, 2012
-:align: center
-:width: 50%
-Table 3.4 Walmann, 2012
-:::
-
-Note that this data from [The Global Carbon Cycle: Geological Processes](https://onlinelibrary.wiley.com/doi/10.1002/9781118280874.ch3) by Walmann et al. (2012) reflects their mean over the past million years. For more detail on the impact of industrial activity on the carbon cycle, revisit the lectures from the Earth & Climate Systems course. 
+Biomass is composed of a range of elements, of which carbon, hydrogen, oxygen, nitrogen, sulfur and phosphorus are the main ones. Biomass therefore is one of the pools in which these elements are stored. 
 
 ### Microbial biomass
 We will focus on microorganisms, single-celled organisms too small to see with the naked eye. We distinguish between two groups: bacteria and archaea. While they can look similar under the microscope, there are important differences, for example how their cells are structured. We will not go into that in detail, but if you are interested, read chapter 2 (p. 11 - 16) in Microbiology for Earth Scientists. 
