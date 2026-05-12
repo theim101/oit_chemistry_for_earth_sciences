@@ -72,6 +72,8 @@ df_work.to_excel('tmp/df_work_PP-11N.xlsx', index=False)
 # Conversion table contaings molar masses for the parameters 
 # in the df_work dataframe and the corresponding parameter names
 # in the Orchestra input file.
+
+# componentname, molar mass (g/mol), Orchestra parameter name
 conversion_table = {
     'Sulfaat (als SO4)': [96.06, 'SO4-2.tot'],
     'Sulfide': [32.07, 'S-2.tot'],
@@ -108,5 +110,6 @@ df_work['orchestra_param'] = df_work.apply(
 
 # %%
 # Rewrite df_work to excel so we can copy the contents to the Orchestra input file.
-df_work.to_excel('tmp/df_work_PP-11N_converted.xlsx', index=False)
+# df_work.to_excel('tmp/df_work_PP-11N_converted.xlsx', index=False)
 # %%
+

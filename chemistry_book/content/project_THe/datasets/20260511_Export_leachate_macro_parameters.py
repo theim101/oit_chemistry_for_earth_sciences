@@ -213,7 +213,8 @@ macro_list = [
     'Bicarbonaat', 'Chloride', 'Sulfide', 
     'Sulfaat (als SO4)', 
     'Aluminium [Al]', 'Zink [Zn]', 'Koper [Cu]', 'Nikkel [Ni]', 
-    'Cadmium [Cd]', 'Arseen [As]', 'Tin [Sn]', 'Silicium [Si]'
+    'Cadmium [Cd]', 'Arseen [As]', 'Tin [Sn]', 'Silicium [Si]',
+    'Temperatuur',
 ]
 
 others_list = [
