@@ -232,54 +232,7 @@ others_list = [
  .sort(['measpointname','cname'], descending=False) 
  .write_excel('df_lab_macros.xlsx')
 )    
-# %% 6
 
-# plot the time series for the different parameters and sampling points
-plt.close('all')
-
-run_plot = False
-if run_plot:
-    for param in macro_list:
-        df_param = df_lab_all.filter(pl.col('cname') == param)
-        if df_param.height > 0:
-            plt.figure(figsize=(10,6))
-            sns.lineplot(
-                data=df_param.to_pandas(), 
-                x='date', 
-                y='val_mgl', 
-                hue='measpointname',
-                marker='o'
-            )
-            plt.title(f'Time series of {param}')
-            plt.xlabel('Date')
-            plt.ylabel('Concentration (mg/L)')
-            plt.legend(title='Sampling Point')
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            plt.show()
-
-
-# %% 8
-if run_plot:
-    plt.close('all')
-    for param in EC_list:
-        df_param = df_lab_all.filter(pl.col('cname') == param)
-        if df_param.height > 0:
-            plt.figure(figsize=(10,6))
-            sns.lineplot(
-                data=df_param.to_pandas(), 
-                x='date', 
-                y='val_mgl', 
-                hue='measpointname',
-                marker='o'
-            )
-            plt.title(f'Time series of {param}')
-            plt.xlabel('Date')
-            plt.ylabel('Conductivity (mS/cm)')
-            plt.legend(title='Sampling Point')
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            plt.show()
 # %% 9
 def remove_outliers_detrend(
     df: pl.DataFrame,
@@ -339,7 +292,54 @@ df_macros_filtered = (
 )
 
 # There are some samples which have duplicate measurements
+# %% 6
 
+# plot the time series for the different parameters and sampling points
+plt.close('all')
+
+run_plot = False
+if run_plot:
+    for param in macro_list:
+        df_param = df_macros_filtered.filter(pl.col('cname') == param)
+        if df_param.height > 0:
+            plt.figure(figsize=(10,6))
+            sns.lineplot(
+                data=df_param.to_pandas(), 
+                x='date', 
+                y='val_mgl', 
+                hue='measpointname',
+                marker='o'
+            )
+            plt.title(f'Time series of {param}')
+            plt.xlabel('Date')
+            plt.ylabel('Concentration (mg/L)')
+            plt.legend(title='Sampling Point')
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.show()
+
+
+# %% 8
+if run_plot:
+    plt.close('all')
+    for param in EC_list:
+        df_param = df_lab_all.filter(pl.col('cname') == param)
+        if df_param.height > 0:
+            plt.figure(figsize=(10,6))
+            sns.lineplot(
+                data=df_param.to_pandas(), 
+                x='date', 
+                y='val_mgl', 
+                hue='measpointname',
+                marker='o'
+            )
+            plt.title(f'Time series of {param}')
+            plt.xlabel('Date')
+            plt.ylabel('Conductivity (mS/cm)')
+            plt.legend(title='Sampling Point')
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.show()
 # %% 11
 # Export the cleaned data to an Excel file for use in assignments
 # We will export the data for each the following sampling points to a 
