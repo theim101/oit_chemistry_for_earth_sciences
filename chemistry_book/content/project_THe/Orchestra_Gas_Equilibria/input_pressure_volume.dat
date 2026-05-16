@@ -2,7 +2,7 @@
 // Here we can give any variable of the chemical system a value
 // In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
 
-Var:	      watervolume	CO2[g].tot	Ca+2.tot   	fixed_logact_CO2	Ar[g].tot	gas_type	gasvolume_fixed	pressure_fixed  
+Var:	      watervolume	CO3-2.tot	Ca+2.tot   	fixed_logact_CO2	Ar[g].tot	gas_type	gasvolume_fixed	pressure_fixed  
 Default:      1   		1e-3		1e-3		-3.35			1		0		1		1
 Data: 	      1   		1e-3		1e-3		-3.35			1		0		1		1
 Data: 	      1e-3   		1e-10		1e-10		-3.35			4.1e-2		0		1		1

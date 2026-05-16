@@ -12,7 +12,6 @@
 @database: kinetics_db.txt
 @database: adsmodels2022.txt
 @database: minteq.v4_2021.txt
-@database: mydatabase.txt
 //********* End of the database file(s) *******
 
 
@@ -229,7 +228,5 @@
 
 //********* Write SI_minerals ************************* 
 @Write_SI_minerals:
-@SI_mineral(CO2g[s])
-@logKreaction(CO2g[s], "-1 * (fixed_logact_CO2)", 1.0, CO2[g])
 //*************************************************** 
 //@PHREEQC_Output:

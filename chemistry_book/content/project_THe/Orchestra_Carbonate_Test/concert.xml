@@ -18,7 +18,7 @@
 
    <!--  The we define a task that equilibrates cell 0, using the chemical calculator/solver as defined in chemistry.inp -->
    <Task Name="Equilibrate node" Type="NodeGroup" >
-      <Calculator>chemistry_fixedVolume</Calculator>
+      <Calculator>chemistry_new</Calculator>
       <Nodes>(0)</Nodes>
    </Task>
 
@@ -31,12 +31,18 @@
       <Nodes>(0)</Nodes>
    </Task>
 
+   <Task Name="Write output_SI" Type="OutstreamGroup">
+     <File>output_SI.dat</File>
+     <Nodes>(0)</Nodes>
+   </Task>
+
 
    <!-- Now we create a loop that repeatedly performs the three tasks, and stops when all data records from the input files are read. -->
    <Task Name="loop" Type="RepeatingTaskGroup">
      <DoTask Name="Read node composition" />
      <DoTask Name="Equilibrate node" />
      <DoTask Name="Write output" />
+     <DoTask Name="Write output_SI" />
    </Task>
 
 

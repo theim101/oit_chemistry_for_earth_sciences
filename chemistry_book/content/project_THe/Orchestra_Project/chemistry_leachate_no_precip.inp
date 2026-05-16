@@ -9,7 +9,6 @@
 // Syntax for local files:                   @database: minteq.txt
 // Syntax for files on the internet:         @database: www.meeussen.nl/orchestra/minteqv4.txt
 
-@database: mydatabase.txt
 @database: phreeqc.dat
 //********* End of the database file(s) *******
 
@@ -493,8 +492,6 @@
 @logKreaction(Anhydrite[s], "-1 * (( (1.0 / log(10)) * ((-4.36 * log(10)) - (-7200.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
 @SI_mineral(Aragonite[s])
 @logKreaction(Aragonite[s], "-1 * (( (1.0 / log(10)) * ((-8.3 * log(10)) - (-12000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
-@SI_mineral(CO2g[s])
-@logKreaction(CO2g[s], "-1 * (fixed_logact_CO2)", 1.0, CO2[g])
 @SI_mineral(Calcite[s])
 @logKreaction(Calcite[s], "-1 * ((deltaSIcalcite + (1.0 / log(10)) * ((-8.48 * log(10)) - (-8000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
 @SI_mineral(Dolomite[s])

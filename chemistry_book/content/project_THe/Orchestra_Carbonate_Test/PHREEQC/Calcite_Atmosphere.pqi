@@ -6,9 +6,12 @@ SOLUTION 1
     redox     pe
     units     mmol/kgw
     density   1
+    Na        1e-18
+    Cl        1e-18
     -water    1 # kg
 
 EQUILIBRIUM_PHASES 1
     Calcite   0 10
     CO2(g)    -3.37 10
     
+END
