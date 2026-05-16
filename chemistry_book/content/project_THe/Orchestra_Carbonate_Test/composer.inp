@@ -1,0 +1,22 @@
+// Composer settings. 
+Font:  13
+HSize: 2437
+VSize: 1080
+HPos:  0
+VPos:  65
+ProxyHost: name
+ProxyPort: port
+Intropage:  none
+Concertfile: concert.xml
+
+// The Composer will allow to edit the files listed here.
+// Changes in this file are effective after refreshing or restarting the composer.
+//    <Title>     <Tab>       <Filename>
+
+File: Documentation 	null 	documentation.txt
+CHEMFile: Chemistry 	null 	chemistry_new.inp
+File: Input 	null 	input.dat
+File: Output 	null 	output.dat
+File: MyDatabase 	null 	mydatabase.txt
+File: Objects2025_THe 	null 	objects2025_THe.txt
+File: Concert 	null 	concert.xml

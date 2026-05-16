@@ -87,7 +87,7 @@
   // Effectively:
   // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
   // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
+  @Calc: (5, "gas_res =  pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
   
   // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
   @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
@@ -229,6 +229,7 @@
 
 //********* Write SI_minerals ************************* 
 @Write_SI_minerals:
-
+@SI_mineral(CO2g[s])
+@logKreaction(CO2g[s], "-1 * (fixed_logact_CO2)", 1.0, CO2[g])
 //*************************************************** 
 //@PHREEQC_Output:

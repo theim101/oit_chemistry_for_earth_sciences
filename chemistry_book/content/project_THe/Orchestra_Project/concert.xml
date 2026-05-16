@@ -2,19 +2,24 @@
 <Concert>
    <!--**** The nodes that are used in the system.-->
    // in this case two nodes
-   <Nodes TypeFile="input.dat" NrNodes="2" />
+   <Nodes TypeFile="input_no_precip.dat" NrNodes="3" />
 
    <!--**** The list of Tasks that are used in the system.-->
    <Task Name="Read node 0" Type="InstreamGroup">
-      <File>input.dat</File>
+      <File>input_no_precip.dat</File>
       <Nodes>(0)</Nodes>
    </Task>
 
    <Task Name="Read node 1" Type="InstreamGroup">
-      <File>input.dat</File>
+      <File>input_precip.dat</File>
       <Nodes>(1)</Nodes>
    </Task>
-   
+
+   <Task Name="Read node 2" Type="InstreamGroup">
+      <File>input_carbonate.dat</File>
+      <Nodes>(2)</Nodes>
+   </Task>
+
    <Task Name="Equilibrate node 0" Type="NodeGroup" Threads="1">
       <Calculator>chemistry_leachate_no_precip</Calculator>
       <Nodes>(0)</Nodes>
@@ -23,6 +28,11 @@
    <Task Name="Equilibrate node 1" Type="NodeGroup" Threads="1">
       <Calculator>chemistry_leachate_precip</Calculator>
       <Nodes>(1)</Nodes>
+   </Task>
+
+   <Task Name="Equilibrate node 2" Type="NodeGroup" Threads="1">
+      <Calculator>chemistry_carbonate</Calculator>
+      <Nodes>(2)</Nodes>
    </Task>
 
    <Task Name="Write output no precip" Type="OutstreamGroup">
@@ -35,14 +45,21 @@
       <Nodes>(1)</Nodes>
    </Task>
 
+   <Task Name="Write output carbonate" Type="OutstreamGroup">
+      <File>output_carbonate.dat</File>
+      <Nodes>(2)</Nodes>
+   </Task>
 
    <Task Name="Each Step 1" Type="RepeatingTaskGroup">
       <DoTask Name="Read node 0" />
       <DoTask Name="Read node 1" />
+      <DoTask Name="Read node 2" />
       <DoTask Name="Equilibrate node 0" />
       <DoTask Name="Equilibrate node 1" />
+      <DoTask Name="Equilibrate node 2" />
       <DoTask Name="Write output no precip" />
       <DoTask Name="Write output precip" />
+      <DoTask Name="Write output carbonate" />
    </Task>
 
    <Task Name="Run" Type="TaskGroup">

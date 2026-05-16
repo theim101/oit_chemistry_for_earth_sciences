@@ -2,8 +2,8 @@
 Font:  13
 HSize: 1920
 VSize: 1080
-HPos:  0
-VPos:  0
+HPos:  403
+VPos:  174
 ProxyHost: name
 ProxyPort: port
 Intropage:  none

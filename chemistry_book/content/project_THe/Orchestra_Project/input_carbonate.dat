@@ -1,0 +1,14 @@
+// Here we can give any variable of the chemical system a value																	
+																	
+Var:	  fixed_logact_CO2	gas_type	gasvolume_fixed	Ar[g].logact	Ca+2.tot	Cl-.tot		CO3-2.tot	Na+.tot		T	pH	watervolume	gasvolume
+Default:  0			0		1		1e-20		1		1e-9		20		1e-9		298.15	7.16	1		1e-20
+Data:	  -3.37			0		1e-20		-20		10		1e-9		20		1e-9		298.15	7.16	1		1e-20
+																	
+																	
+// Now we can define a "sweep", which is a kind of loop.																	
+																	
+//Sweep: 21																	
+//	Swept:	CO2[g].tot	1.00E-20	1	lin												
+
+
+

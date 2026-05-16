@@ -56,7 +56,6 @@
      <DoTask Name="Write output 2" />
    </Task>
 
-
    <!-- The run task is the main task that is called when the run button is clicked in the GUI, so this is where the calculations start -->
    <Task Name="Run" Type="TaskGroup">
      <DoTask Name="loop1" />

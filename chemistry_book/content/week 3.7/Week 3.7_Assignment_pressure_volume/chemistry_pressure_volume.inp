@@ -67,7 +67,9 @@
   @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
 
   // We want to be able to work with either a fixed_volume or a fixed_pressure
-  @Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
+  @Var: gas_type 0 // gastype: fixed_volume = 0 | fixed_pressure = 1 | fixed_logact_CO2 = 2
+  @Var: fixed_logact_CO2 -3.37 // define fixed logactivity
+  @Var: logact_CO2 0 // define fixed logactivity
 
   // We introduce two variables:
 
@@ -79,15 +81,17 @@
   // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
   // This calculation is defined during stage 1, so before all other calculations and we can thus use
   // the gasvolume as input in the rest of the chemistry
-  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
+  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0))")
   @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
+  @Calc: (1, "logact_CO2 = if(gas_type==2, gas_val_u, {CO2[g].logact})"
 
   // In the second step we define the the equation(s) that should go to zero.
   // It is defined during stage 5, so after all other chemical calculations are ready.
   // Effectively:
   // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
   // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
+  @Calc: (5, "gas_res = if(gas_type==2, logact_CO2 - fixed_logact_CO2, pressure - ({CO2[g].con} + {Ar[g].con})))"
+
 
   // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
   @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
