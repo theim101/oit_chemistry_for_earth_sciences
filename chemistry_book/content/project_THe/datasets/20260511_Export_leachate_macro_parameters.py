@@ -212,8 +212,7 @@ macro_list = [
     'Ammonium (als NH4)', 'Fosfaat (als PO4)',
     'Bicarbonaat', 'Chloride', 'Sulfide', 
     'Sulfaat (als SO4)', 
-    'Aluminium [Al]', 'Zink [Zn]', 'Koper [Cu]', 'Nikkel [Ni]', 
-    'Cadmium [Cd]', 'Arseen [As]', 'Tin [Sn]', 'Silicium [Si]',
+    'Silicium [Si]',
     'Temperatuur',
 ]
 

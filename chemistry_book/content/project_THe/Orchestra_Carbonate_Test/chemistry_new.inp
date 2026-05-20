@@ -62,36 +62,7 @@
 
 //********* Extra text 1 *******
 @class: extra_text_1(){
-  // Here you can write ORCHESTRA extra expressions new style.
-  //@Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
-
-  // We want to be able to work with either a fixed_volume or a fixed_pressure
-  //@Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
-
-  // We introduce two variables:
-
-  //@Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
-  //@Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
-
-  // We introduce extra expressions in three steps:
-
-  // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
-  // This calculation is defined during stage 1, so before all other calculations and we can thus use
-  // the gasvolume as input in the rest of the chemistry
-  //@Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
-  //@Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
-
-  // In the second step we define the the equation(s) that should go to zero.
-  // It is defined during stage 5, so after all other chemical calculations are ready.
-  // Effectively:
-  // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
-  // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  //@Calc: (5, "gas_res = pressure - ({CO2[g].con} + {Ar[g].con}))"
-
-  // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-  //@solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
-
-}
+ }
 @extra_text_1()
 //********* End of extra text 1 *******
 
@@ -168,6 +139,8 @@
    //* the gas entity with a stoichiometry of 1
    @def: gas(name){
      @entity(<name>, gas, 1)
+     @Var: <name>.logk_unit 0
+     @Calc:(1, "<name>.logk_unit = 0")
      @link(<name>, gas, 1)
    }
 
@@ -235,10 +208,7 @@
 //******************************
 
 //********* Extra text 2a **************
-@class: extra_text_2a(){
-
- //@include: objects2025_THe.txt
-}
+@class: extra_text_2a(){}
 @extra_text_2a()
 //********* End of extra text 2a *******
 
