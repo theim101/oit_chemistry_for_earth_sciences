@@ -193,7 +193,7 @@
 @species(Ca+2, 2)
 @primary_entity(Ca+2, -3.0, tot, 1.0E-9)
 @species(Cl-, -1)
-@primary_entity(Cl-, -3.0)
+@primary_entity(Cl-, -3.0, tot, 0.01)
 @species(Fe+2, 2)
 @primary_entity(Fe+2, -9.0, tot, 0.01)
 @Global: pH
@@ -213,7 +213,7 @@
 @species(NH4+, 1)
 @primary_entity(NH4+, -9.0, tot, 0.01)
 @species(Na+, 1)
-@primary_entity(Na+, -9.0)
+@primary_entity(Na+, -9.0, tot, 0.01)
 @species(PO4-3, -3)
 @primary_entity(PO4-3, -9.0, tot, 0.01)
 @species(S-2, -2)
