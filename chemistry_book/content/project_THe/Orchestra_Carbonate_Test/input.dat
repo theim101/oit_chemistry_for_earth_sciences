@@ -4,11 +4,12 @@
 
 // gas_type: fixed_volume: 0, fixed_pressure 1.
 
-Var:	      fixed_logact_CO2	gas_type	gasvolume_fixed	pressure_fixed	Ar[g].logact 	CO3-2.tot 	Ca+2.tot 	Na+.tot	Cl-.tot	gasvolume	watervolume 	
-Default:      0			0		0		1		-20		1e-20		1e-20		0.1	0.1	1		1
-Data: 	      0.3		0		1		2		-20		2		1	      	1e-20	1e-20	1		1
-Data: 	      -3.37		0  		0		1		-20		2		1       	1e-20	1e-20	1		1
-Data: 	      -3.37		0  		0		1		-20		2		1       	1e-20	1e-20	1		1
+Var:	      fixed_logact_CO2	gas_type	gasvolume_fixed	Ar[g].logact 	HCO3-.tot 	Ca+2.tot 	Na+.tot	Cl-.tot	watervolume	pH
+Default:      0			0		0		-20		1e-20		1e-20		0.1	0.1	1		7
+Data: 	      0			0		1		0		0.01		0.01	      	0.01	0.01	1		7
+Data: 	      -3.38		0  		1		-20		2		1       	1e-20	1e-20	1		7
+Data: 	      -3.38		0  		1		-20		2		1       	1e-20	1e-20	1		7
+Data: 	      -3.38		1 		1		-20		1e-20		1e-20       	1e-20	1e-20	1		7
 
 
 // Now we can define a "sweep", which is a kind of loop.

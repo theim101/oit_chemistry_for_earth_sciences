@@ -165,7 +165,7 @@
    @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
 
    //* and we calculate the actual pressure from the unknown or the given pressure
-   @Calc: (1, "pressure  = if(gas_type==0, gas_val_u, pressure_fixed)"
+   @Calc: (1, "pressure  = if(gas_type==0, gas_val_u, pressure_fixed)")
 
    //* and from the pressure we calculate the molar gasvolume for this PT, so we can use it to link the gas phase to total phase
    // @link_phase(gas, tot, "gasvolume/molargasvolume")
@@ -190,8 +190,6 @@
 @balance_charge(pH)
 @gas(Ar[g])
 @primary_entity(Ar[g], 0.0)
-@species(CO3-2, -2)
-@primary_entity(CO3-2, -9.0, tot, 0.01)
 @species(Ca+2, 2)
 @primary_entity(Ca+2, -3.0, tot, 0.01)
 @species(Cl-, -1)
@@ -202,6 +200,8 @@
 @primary_entity(H, pH, 7.0)
 @entity(H2O, liter, 55.6)
 @primary_entity(H2O, -0.0)
+@species(HCO3-, -1, 5.4, 0)
+@primary_entity(HCO3-, -9.0, tot, 0.01)
 @species(Na+, 1)
 @primary_entity(Na+, -9.0, tot, 0.01)
 //****************************************
@@ -214,6 +214,10 @@
 
 //********* The entities *******
 
+@species(H+, 1)
+@logKreaction(H+, 0.0, 1.0, H)
+@species(CO3-2, -2)
+@logKreaction(CO3-2, "-(-(-((( (1.0 / log(10)) * ((10.329 * log(10)) - (-14899.224 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))))", -1.0, H+, 1.0, HCO3-)
 @entity(Alkalinity, tot, 0)
 @logKreaction(Alkalinity, "-(-(0))", 1.0, CO3-2)
 @species(Ar, 0)
@@ -222,8 +226,6 @@
 @logKreaction(C[+4], "-(-(0))", 1.0, CO3-2)
 @entity(C, tot, 0)
 @logKreaction(C, "-(0)", 1.0, C[+4])
-@species(H+, 1)
-@logKreaction(H+, 0.0, 1.0, H)
 @species(CO2, 0)
 @logKreaction(CO2, "-(-((( (1.0 / log(10)) * ((16.681 * log(10)) - (-24007.792 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))))", 1.0, CO3-2, 2.0, H+, -1.0, H2O)
 @gas(CO2[g])
@@ -232,6 +234,10 @@
 @logKreaction(CO2g[s], "-1 * (fixed_logact_CO2)", 1.0, CO2[g])
 @entity(Ca, tot, 0)
 @logKreaction(Ca, "-(0)", 1.0, Ca+2)
+@species(CaCO3, 0)
+@logKreaction(CaCO3, "(( (1.0 / log(10)) * ((3.224 * log(10)) - (14832.28 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@species(CaHCO3+, 1, 6.0, 0)
+@logKreaction(CaHCO3+, "(( (1.0 / log(10)) * ((11.435 * log(10)) - (-3644.264 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2, 1.0, H+)
 @species(CaOH+, 1, 6, 0)
 @logKreaction(CaOH+, "(( (1.0 / log(10)) * ((-12.697 * log(10)) - (64110.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
 @species(Ca[OH]+, 1)
@@ -244,12 +250,14 @@
 @logKreaction(H2CO3, "-((( (1.0 / log(10)) * ((16.681 * log(10)) - (-23760.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))", 1.0, CO3-2, 2.0, H+)
 @gas(H2O[g])
 @logKreaction(H2O[g], "-1 * (( (1.0 / log(10)) * ((1.506 * log(10)) - (-44004.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H2O)
-@species(HCO3-, -1, 5.4, 0)
-@logKreaction(HCO3-, "-(-((( (1.0 / log(10)) * ((10.329 * log(10)) - (-14899.224 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))))", 1.0, CO3-2, 1.0, H+)
 @entity(H[+1], tot, 0)
 @logKreaction(H[+1], 0.0, 1.0, H)
 @entity(Na, tot, 0)
 @logKreaction(Na, "-(0)", 1.0, Na+)
+@species(NaCO3-, -1)
+@logKreaction(NaCO3-, "(( (1.0 / log(10)) * ((1.27 * log(10)) - (37279.44 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Na+)
+@species(NaHCO3, 0)
+@logKreaction(NaHCO3, "(( (1.0 / log(10)) * ((-0.25 * log(10)) - (-4184.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, HCO3-, 1.0, Na+)
 @entity(O, tot, 0)
 @logKreaction(O, -0.0, 1.0, H2O)
 @species(OH-, -1, 3.5, 0)

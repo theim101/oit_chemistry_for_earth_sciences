@@ -1,9 +1,9 @@
 // Composer settings. 
 Font:  13
-HSize: 2234
-VSize: 1436
-HPos:  2834
-VPos:  105
+HSize: 1920
+VSize: 1080
+HPos:  0
+VPos:  0
 Intropage:  none
 Concertfile: concert.xml
 
