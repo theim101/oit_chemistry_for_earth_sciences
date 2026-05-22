@@ -1,0 +1,503 @@
+//*********  Version: 20 January 2026, 20:56  *******
+@NrDigits: 12  // number of decimal places in reaction coefficients. 
+ //@rewriteReactions:   //indicates that reactions are rewritten in terms of primary entities. 
+ //@include_molar_volume_parameters:   //include molar volume parameters from phreeqc database in species definitions. 
+
+//********* The database file(s) *******
+// This section lists the database files that are used by the interactive chemistry editor
+// The database file is not used during the calculations!
+// Syntax for local files:                   @database: minteq.txt
+// Syntax for files on the internet:         @database: www.meeussen.nl/orchestra/minteqv4.txt
+
+@database: phreeqc.dat
+@database: mydatabase.txt
+//********* End of the database file(s) *******
+
+
+//********* Extra text 0 *******
+
+@class: extra_text_0(){
+  // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI.
+  @scan: objects2025_THe.txt
+  @stop:
+}
+@extra_text_0()
+//********* End of extra text 0 *******
+
+
+//********* The variables *******
+@Var: CLAY_kgkg .0003 // Clay kg per kg solid fraction
+@Var: DFA_kgl 0.0 // Dissolved fulvic acid kg/l
+@Var: DHA_kgl 0.0 // Dissoved humic acid kg/l
+@Var: E.logact 1 // 
+@Var: FA_kgkg 0 // 
+@Var: Goethite_kgkg 0.0 // 
+@Var: H+.logact 1.0 // 
+@Var: H.logact 1 // 
+@GlobalVar: H2O.logact 0.0 // 
+@Var: HA_kgkg 1.0E-4 // 
+@Var: HFO_kgkg 1e-3 // 
+@GlobalVar: I .1 // 
+@Var: O.logact 1 // 
+@Var: R 0.082057366080960 // gas constant L atm / (mol K)
+@Var: SL 1.0 // 
+@Var: T 298.15 // Temperature in degrees Kelvin
+@Var: Waste_kgkg .04 // 
+@Var: deltaSIcalcite 0 // 
+@Var: density 1.5 // 
+@Var: e-.logact 1.0 // 
+@Var: fixed_logact_CO2 -3.35 // 
+@Var: gasvolume 1 // 
+@Var: gasvolume_fixed 1 // 
+@Var: pH 7 // 
+@Var: pe 3.0 // 
+@Var: porosity .7 // 
+@Var: pressure 1 // 
+@Var: pressure_fixed 1 // 
+@Var: saturation .711 // 
+@Var: totvolume 2 // 
+@Var: watervolume 1 // 
+//********* End of the variables *******
+
+
+//********* Extra text 1 *******
+@class: extra_text_1(){
+  }
+@extra_text_1()
+//********* End of extra text 1 *******
+
+//********* The phases *******
+@phase(tot)
+@phase(liter)
+@link_phase(liter, tot, "watervolume")
+@phase(solution)
+@link_phase(solution, liter, "1")
+@phase(diss)
+@link_phase(diss, solution, "1")
+@phase(colloid)
+@link_phase(colloid, solution, "1")
+@phase(DHA_part)
+@link_phase(DHA_part, colloid, "1")
+@phase(DFA_part)
+@link_phase(DFA_part, colloid, "1")
+@phase(solid)
+@link_phase(solid, liter, "1")
+@phase(min)
+@link_phase(min, solid, "1")
+@phase(ads)
+@link_phase(ads, solid, "1")
+@phase(CLAY_part_l)
+@link_phase(CLAY_part_l, ads, "1")
+@phase(CLAY_part)
+@link_phase(CLAY_part, CLAY_part_l, "CLAY_kgkg*SL")
+@phase(HFO_part_l)
+@link_phase(HFO_part_l, ads, "1")
+@phase(HFO_part)
+@link_phase(HFO_part, HFO_part_l, "HFO_kgkg*SL")
+@phase(Goethite_part_l)
+@link_phase(Goethite_part_l, ads, "1")
+@phase(Goethite_part)
+@link_phase(Goethite_part, Goethite_part_l, "Goethite_kgkg*SL")
+@phase(SHA_part_l)
+@link_phase(SHA_part_l, ads, "1")
+@phase(HA_part)
+@link_phase(HA_part, DHA_part, "DHA_kgl")
+@link_phase(HA_part, SHA_part_l, "HA_kgkg*SL")
+@phase(SFA_part_l)
+@link_phase(SFA_part_l, ads, "1")
+@phase(FA_part)
+@link_phase(FA_part, DFA_part, "DFA_kgl")
+@link_phase(FA_part, SFA_part_l, "FA_kgkg*SL")
+@phase(gas_l)
+@link_phase(gas_l, liter, "1/watervolume")
+@phase(gas)
+@link_phase(gas, tot, "gasvolume/molargasvolume")
+@link_phase(gas, gas_l, "gasvolume")
+@end_of_gui_phases:
+//********* End of the phases *******
+
+//********* Extra text 2 *******
+@class: extra_text_2(){   //******************************************************************************************************  
+   //* ORCHESTRA code to work with variable/given gas volume and variable/given gas pressure.
+   //* This code needs to be included in the chemistry file after the standard objects file, as it redefines the gas entity.
+   //* After testing we will move this code to the standard objects file
+   //* This code calculates a PT dependend molar gasvolume, that can (should) be used in linking the gas phase to the 
+   //* total phase:
+   //*    @link_phase(gas, tot, "gasvolume/molargasvolume")
+   //* This link converts the fractions (partial pressures) in the gas phase to moles in the total phase.
+   //****************************************************************************************************** 
+
+   //* To automate the summation of individual gas partial pressures in the gas phase to a total pressure, 
+   //* we define "gas" also as an ORCHESTRA "entity" in the gas phase (which is already defined in standard systems)
+   //* This means that "gas" can be used in reactions, and that we get a cumulative mass balance of total "gas" present in al entities
+   //* in which it is used as reactant. The standard concentration unit of the gases in the gas phase (<name>.con) is partial pressure.
+   //* So the sum of all gas partial pressures will be available in the variable: gas.gas
+   //* (The 0 indicates that the gas entity itself has no mass, and does not count in the cumulative sum)
+   @entity(gas, gas, 0)
+
+   //* To automatically link each selecte gas to the gas entity, we redefine the standard gas class to include a link to 
+   //* the gas entity with a stoichiometry of 1
+   @def: gas(name){
+     @entity(<name>, gas, 1)
+     @Var: <name>.logk_unit 0
+     @Calc:(1, "<name>.logk_unit = 0")
+     @link(<name>, gas, 1)
+   }
+
+
+   //* We want to be able to work with either a fixed_volume or a fixed_pressure 
+   @Var: gas_type         0  // fixed volume == 0 or fixed pressure == 1
+   @Var: gasvolume_fixed .1  // this volume is used when gas_type == 0  (liter) 
+   @Var: pressure_fixed  .1  // this pressure is used when gas_type == 1 (atmosphere) 
+   @Var: pressure        .1  // The actual pressure in the calculations(atmosphere) 
+
+   //* To solve the required extra equation we introduce two variables:
+   @globalVar: gas_val_u  .1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+   @globalVar: gas_res     0  // the "equation" or residual that is calculated from the chemical equilibrium condition, and should go to zero.
+
+   //* Now we define that the unknown/equation has to be solved as part of the iteration procedure.
+   //* The unknown value can become negative, so the type needs to be lin(ear) 
+   @solve: unknown:(name:, gas_val_u, delta:, 1e-3, type:, lin, step:, 100) equation:(name:, gas_res)
+
+   //* Now we calculate the gasvolume from the unknown (0 if unknown is negative) or the given volume 
+   //*  The calculations happen during stage 1, so before after all other calculations
+   @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0))")
+   @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
+
+   //* and we calculate the actual pressure from the unknown or the given pressure
+   @Calc: (1, "pressure  = if(gas_type==0, gas_val_u, pressure_fixed)"
+
+   //* and from the pressure we calculate the molar gasvolume for this PT, so we can use it to link the gas phase to total phase
+   // @link_phase(gas, tot, "gasvolume/molargasvolume")
+   @Var: molargasvolume 1
+   @Calc: (1,"molargasvolume = (8.3143 * 0.01 * T)/pressure")  // RT/p
+
+
+   //* After all calculations are done (stage 5) we calculate the residual (which needs to go to zero during iteration) 
+   //* Generally this is the difference between calculated pressure and given pressure
+   //* However, in case of a fixed pressure (gas_type == 1) the calculated pressure can be less than the given pressure.
+   //* In that case the gasvolume is 0,
+   //* and the (negative) value of the unknown represents the difference between calculated and given pressure.
+   @Calc: (5, "gas_res = if(gas_type==0,  pressure - gas.gas, if(gas_val_u > 0, (pressure - gas.gas), (gas_val_u + pressure - gas.gas) ) )") 
+   //******************************************************************************************************  
+}
+@extra_text_2()
+//********* End of extra text 2 *******
+
+@davies()
+
+//********* The primary entities *******
+@balance_charge(pH)
+@gas(Ar[g])
+@primary_entity(Ar[g], -11.0)
+@species(Ca+2, 2)
+@primary_entity(Ca+2, -3.0, tot, 1.0E-9)
+@species(Cl-, -1)
+@primary_entity(Cl-, -3.0, tot, 0.01)
+@species(Fe+2, 2)
+@primary_entity(Fe+2, -9.0, tot, 0.01)
+@Global: pH
+@Calc:(1, "H.logact = -pH")
+@entity(H, tot, 0)
+@primary_entity(H, pH, 7.0)
+@entity(H2O, liter, 55.6)
+@primary_entity(H2O, -0.0)
+@species(HCO3-, -1, 5.4, 0)
+@primary_entity(HCO3-, -9.0, tot, 1.0E-9)
+@species(K+, 1)
+@primary_entity(K+, -9.0, tot, 1.0E-9)
+@species(Mg+2, 2)
+@primary_entity(Mg+2, -9.0, tot, 1.0E-9)
+@species(Mn+2, 2)
+@primary_entity(Mn+2, -9.0, tot, 0.01)
+@species(NH4+, 1)
+@primary_entity(NH4+, -9.0, tot, 0.01)
+@species(Na+, 1)
+@primary_entity(Na+, -9.0, tot, 0.01)
+@species(PO4-3, -3)
+@primary_entity(PO4-3, -9.0, tot, 0.01)
+@species(S-2, -2)
+@primary_entity(S-2, -9.0, tot, 0.01)
+@species(SO4-2, -2)
+@primary_entity(SO4-2, -9.0, tot, 1.0E-9)
+@entity(Si, tot, 0)
+@primary_entity(Si, -9.0, tot, 0.01)
+//****************************************
+//******************************
+
+//********* Extra text 2a **************
+@class: extra_text_2a(){
+
+ // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
+}
+@extra_text_2a()
+//********* End of extra text 2a *******
+
+//********* The entities *******
+
+@species(H+, 1)
+@logKreaction(H+, 0.0, 1.0, H)
+@species(CO3-2, -2)
+@logKreaction(CO3-2, "-(-(-((( (1.0 / log(10)) * ((10.329 * log(10)) - (-14600.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))))", -1.0, H+, 1.0, HCO3-)
+@entity(Alkalinity, tot, 0)
+@logKreaction(Alkalinity, "-(-(0))", 1.0, CO3-2)
+@species(Ar, 0)
+@logKreaction(Ar, -20.0, 1.0, Ar[g])
+@mineral(Aragonite[s])
+@logKreaction(Aragonite[s], "-1 * (( (1.0 / log(10)) * ((-8.3 * log(10)) - (-12000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@entity(C, tot, 0)
+@logKreaction(C, "-(-(0))", 1.0, CO3-2)
+@species(CO2, 0)
+@logKreaction(CO2, "(( (1.0 / log(10)) * ((16.68 * log(10)) - (-23860.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+, -1.0, H2O)
+@gas(CO2[g])
+@logKreaction(CO2[g], "-1 * (( (1.0 / log(10)) * ((-18.147 * log(10)) - (4059.9999999999995 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+, -1.0, H2O)
+@mineral(CO2g[s])
+@logKreaction(CO2g[s], "-1 * (fixed_logact_CO2)", 1.0, CO2[g])
+@entity(C[+4], tot, 0)
+@logKreaction(C[+4], "-(-(0))", 1.0, CO3-2)
+@entity(Ca, tot, 0)
+@logKreaction(Ca, "-(0)", 1.0, Ca+2)
+@species(CaCO3, 0, 0, 0)
+@logKreaction(CaCO3, "(( (1.0 / log(10)) * ((3.2 * log(10)) - (16000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@species(CaHCO3+, 1, 6, 0)
+@logKreaction(CaHCO3+, "(( (1.0 / log(10)) * ((11.599 * log(10)) - (5400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2, 1.0, H+)
+@species(CaOH+, 1, 6, 0)
+@logKreaction(CaOH+, "(( (1.0 / log(10)) * ((-12.697 * log(10)) - (64110.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
+@species(CaSO4, 0, 0, 0)
+@logKreaction(CaSO4, "(( (1.0 / log(10)) * ((2.36 * log(10)) - (7100.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
+@species(H2[PO4]-, -1)
+@logKreaction(H2[PO4]-, "-((( (1.0 / log(10)) * ((-19.56 * log(10)) - (18200.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))", 2.0, H+, 1.0, PO4-3)
+@species(Ca[HPO4], 0)
+@logKreaction(Ca[HPO4], "(( (1.0 / log(10)) * ((-4.47 * log(10)) - (17407.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2[PO4]-)
+@species(Ca[OH]+, 1)
+@logKreaction(Ca[OH]+, "(( (1.0 / log(10)) * ((-12.78 * log(10)) - (77207.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, -1.0, H+, 1.0, H2O)
+@species(Ca[SO4], 0)
+@logKreaction(Ca[SO4], "(( (1.0 / log(10)) * ((2.31 * log(10)) - (4292.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
+@mineral(Calcite[s])
+@logKreaction(Calcite[s], "-1 * ((deltaSIcalcite + (1.0 / log(10)) * ((-8.48 * log(10)) - (-8000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Ca+2)
+@entity(Cl, tot, 0)
+@logKreaction(Cl, "-(0)", 1.0, Cl-)
+@mineral(Dolomite[s])
+@logKreaction(Dolomite[s], "-1 * (( (1.0 / log(10)) * ((-17.09 * log(10)) - (-39480.224 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, CO3-2, 1.0, Ca+2, 1.0, Mg+2)
+@entity(Fe[+2], tot, 0)
+@logKreaction(Fe[+2], "-(0)", 1.0, Fe+2)
+@entity(Fe, tot, 0)
+@logKreaction(Fe, "-(0)", 1.0, Fe[+2])
+@species(FeCO3, 0)
+@logKreaction(FeCO3, "(( (1.0 / log(10)) * ((5.27 * log(10)) - (-3367.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Fe+2)
+@species(FeCl+, 1)
+@logKreaction(FeCl+, "(( (1.0 / log(10)) * ((1.0 * log(10)) - (21551.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Cl-, 1.0, Fe+2)
+@species(FeCl2, 0)
+@logKreaction(FeCl2, "((-0.52))", 2.0, Cl-, 1.0, Fe+2)
+@species(FeCl3-, -1)
+@logKreaction(FeCl3-, "((1.02))", 3.0, Cl-, 1.0, Fe+2)
+@species(HS-, -1)
+@logKreaction(HS-, "-((( (1.0 / log(10)) * ((-17.1 * log(10)) - (73278.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))", 1.0, H+, 1.0, S-2)
+@mineral(FeS[ppt][s])
+@logKreaction(FeS[ppt][s], "-1 * (-3.915)", 1.0, Fe+2, -1.0, H+, 1.0, HS-)
+@species(Fe[CO3]2-2, -2)
+@logKreaction(Fe[CO3]2-2, "(( (1.0 / log(10)) * ((7.04 * log(10)) - (58257.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, CO3-2, 1.0, Fe+2)
+@species(Fe[H2PO4]+, 1)
+@logKreaction(Fe[H2PO4]+, "((2.7))", 1.0, Fe+2, 1.0, H2[PO4]-)
+@species(Fe[HPO4], 0)
+@logKreaction(Fe[HPO4], "((-3.61))", 1.0, Fe+2, -1.0, H+, 1.0, H2[PO4]-)
+@species(Fe[HS]+, 1)
+@logKreaction(Fe[HS]+, "((4.34))", 1.0, Fe+2, 1.0, HS-)
+@species(Fe[HS]2, 0)
+@logKreaction(Fe[HS]2, "((6.45))", 1.0, Fe+2, 2.0, HS-)
+@species(NH3, 0)
+@logKreaction(NH3, "-((( (1.0 / log(10)) * ((9.24 * log(10)) - (-52090.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) )))", -1.0, H+, 1.0, NH4+)
+@species(Fe[NH3]+2, 2)
+@logKreaction(Fe[NH3]+2, "((1.3))", 1.0, Fe+2, 1.0, NH3)
+@species(Fe[NH3]2+2, 2)
+@logKreaction(Fe[NH3]2+2, "((2.1))", 1.0, Fe+2, 2.0, NH3)
+@species(Fe[NH3]4+2, 2)
+@logKreaction(Fe[NH3]4+2, "((3.6))", 1.0, Fe+2, 4.0, NH3)
+@species(Fe[OH]+, 1)
+@logKreaction(Fe[OH]+, "(( (1.0 / log(10)) * ((-9.25 * log(10)) - (40921.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Fe+2, -1.0, H+, 1.0, H2O)
+@species(Fe[OH]2, 0)
+@logKreaction(Fe[OH]2, "(( (1.0 / log(10)) * ((-20.84 * log(10)) - (114131.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Fe+2, -2.0, H+, 2.0, H2O)
+@species(Fe[OH]3-, -1)
+@logKreaction(Fe[OH]3-, "(( (1.0 / log(10)) * ((-33.84 * log(10)) - (162231.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Fe+2, -3.0, H+, 3.0, H2O)
+@species(Fe[OH]4-2, -2)
+@logKreaction(Fe[OH]4-2, "(( (1.0 / log(10)) * ((-46.32 * log(10)) - (160750.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Fe+2, -4.0, H+, 4.0, H2O)
+@species(Fe[SO4], 0)
+@logKreaction(Fe[SO4], "(( (1.0 / log(10)) * ((2.44 * log(10)) - (8400.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Fe+2, 1.0, SO4-2)
+@species(H2CO3, 0, 0, 0)
+@logKreaction(H2CO3, "(( (1.0 / log(10)) * ((16.681 * log(10)) - (-23760.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 2.0, H+)
+@gas(H2O[g])
+@logKreaction(H2O[g], "-1 * (( (1.0 / log(10)) * ((1.506 * log(10)) - (-44004.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H2O)
+@species(H2S, 0)
+@logKreaction(H2S, "(( (1.0 / log(10)) * ((6.99 * log(10)) - (-22300.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H+, 1.0, HS-)
+@species(H4[SiO4], 0)
+@logKreaction(H4[SiO4], 0, 1.0, Si)
+@species(H2[SiO4]-2, -2)
+@logKreaction(H2[SiO4]-2, "(( (1.0 / log(10)) * ((-23.14 * log(10)) - (75000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -2.0, H+, 1.0, H4[SiO4])
+@species(H3[PO4], 0)
+@logKreaction(H3[PO4], "(( (1.0 / log(10)) * ((2.14 * log(10)) - (8480.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H+, 1.0, H2[PO4]-)
+@species(H3[SiO4]-, -1)
+@logKreaction(H3[SiO4]-, "(( (1.0 / log(10)) * ((-9.84 * log(10)) - (29363.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H4[SiO4])
+@species(HPO4-2, -2)
+@logKreaction(HPO4-2, "(( (1.0 / log(10)) * ((-7.21 * log(10)) - (3600.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2[PO4]-)
+@species(HSO4-, -1, 4.5, 0)
+@logKreaction(HSO4-, "(( (1.0 / log(10)) * ((1.99 * log(10)) - (22000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H+, 1.0, SO4-2)
+@entity(H[+1], tot, 0)
+@logKreaction(H[+1], 0.0, 1.0, H)
+@mineral(Hydroxyapatite[s])
+@logKreaction(Hydroxyapatite[s], "-1 * (( (1.0 / log(10)) * ((-3.421 * log(10)) - (-151272.52000000002 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 5.0, Ca+2, -4.0, H+, 1.0, H2O, 3.0, HPO4-2)
+@entity(K, tot, 0)
+@logKreaction(K, "-(0)", 1.0, K+)
+@species(KPO4-2, -2)
+@logKreaction(KPO4-2, "((-18.26))", -2.0, H+, 1.0, H2[PO4]-, 1.0, K+)
+@species(KSO4-, -1, 5.4, 0)
+@logKreaction(KSO4-, "(( (1.0 / log(10)) * ((0.85 * log(10)) - (4100.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, K+, 1.0, SO4-2)
+@species(K[HPO4]-, -1)
+@logKreaction(K[HPO4]-, "(( (1.0 / log(10)) * ((-6.4 * log(10)) - (31589.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2[PO4]-, 1.0, K+)
+@entity(Mg, tot, 0)
+@logKreaction(Mg, "-(0)", 1.0, Mg+2)
+@species(MgCO3, 0, 0, 0)
+@logKreaction(MgCO3, "(( (1.0 / log(10)) * ((2.92 * log(10)) - (12000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Mg+2)
+@species(MgHCO3+, 1, 4, 0)
+@logKreaction(MgHCO3+, "(( (1.0 / log(10)) * ((11.339 * log(10)) - (-10600.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, H+, 1.0, Mg+2)
+@species(MgOH+, 1, 6.5, 0)
+@logKreaction(MgOH+, "(( (1.0 / log(10)) * ((-11.397 * log(10)) - (67810.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2O, 1.0, Mg+2)
+@species(MgSO4, 0, 0, 0)
+@logKreaction(MgSO4, "(( (1.0 / log(10)) * ((2.26 * log(10)) - (5800.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Mg+2, 1.0, SO4-2)
+@species(Mg[H2PO4]+, 1)
+@logKreaction(Mg[H2PO4]+, "(( (1.0 / log(10)) * ((1.17 * log(10)) - (13514.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H2[PO4]-, 1.0, Mg+2)
+@species(Mg[H3SiO4]+, 1)
+@logKreaction(Mg[H3SiO4]+, "(( (1.0 / log(10)) * ((-8.58 * log(10)) - (27114.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H4[SiO4], 1.0, Mg+2)
+@species(Mg[HPO4], 0)
+@logKreaction(Mg[HPO4], "(( (1.0 / log(10)) * ((-4.3 * log(10)) - (16152.000000000002 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2[PO4]-, 1.0, Mg+2)
+@species(Mg[NH3]+2, 2)
+@logKreaction(Mg[NH3]+2, "(( (1.0 / log(10)) * ((0.1 * log(10)) - (22.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Mg+2, 1.0, NH3)
+@species(Mg[NH3]2+2, 2)
+@logKreaction(Mg[NH3]2+2, "(( (1.0 / log(10)) * ((0.0 * log(10)) - (44.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Mg+2, 2.0, NH3)
+@species(Mg[NH3]3+2, 2)
+@logKreaction(Mg[NH3]3+2, "(( (1.0 / log(10)) * ((-0.3 * log(10)) - (66.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Mg+2, 3.0, NH3)
+@species(Mg[NH3]4+2, 2)
+@logKreaction(Mg[NH3]4+2, "(( (1.0 / log(10)) * ((-1.0 * log(10)) - (88.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Mg+2, 4.0, NH3)
+@species(Mg[PO4]-, -1)
+@logKreaction(Mg[PO4]-, "(( (1.0 / log(10)) * ((-14.71 * log(10)) - (31170.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -2.0, H+, 1.0, H2[PO4]-, 1.0, Mg+2)
+@entity(Mn, tot, 0)
+@logKreaction(Mn, "-(0)", 1.0, Mn+2)
+@species(Mn2[OH]+3, 3)
+@logKreaction(Mn2[OH]+3, "((-10.1))", -1.0, H+, 1.0, H2O, 2.0, Mn+2)
+@species(Mn2[OH]3+, 1)
+@logKreaction(Mn2[OH]3+, "((-24.9))", -3.0, H+, 3.0, H2O, 2.0, Mn+2)
+@species(MnCl+, 1)
+@logKreaction(MnCl+, "(( (1.0 / log(10)) * ((0.27 * log(10)) - (18516.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Cl-, 1.0, Mn+2)
+@species(MnCl2, 0)
+@logKreaction(MnCl2, "((0.25))", 2.0, Cl-, 1.0, Mn+2)
+@species(MnCl3-, -1)
+@logKreaction(MnCl3-, "((-0.31))", 3.0, Cl-, 1.0, Mn+2)
+@species(Mn[CO3], 0)
+@logKreaction(Mn[CO3], "((6.5))", 1.0, CO3-2, 1.0, Mn+2)
+@species(Mn[HCO3]+, 1)
+@logKreaction(Mn[HCO3]+, "((11.61))", 1.0, CO3-2, 1.0, H+, 1.0, Mn+2)
+@species(Mn[HPO4], 0)
+@logKreaction(Mn[HPO4], "((-3.26))", -1.0, H+, 1.0, H2[PO4]-, 1.0, Mn+2)
+@species(Mn[HPO4]2-2, -2)
+@logKreaction(Mn[HPO4]2-2, "((-9.12))", -2.0, H+, 2.0, H2[PO4]-, 1.0, Mn+2)
+@species(Mn[NH3]+2, 2)
+@logKreaction(Mn[NH3]+2, "((0.7))", 1.0, Mn+2, 1.0, NH3)
+@species(Mn[NH3]2+2, 2)
+@logKreaction(Mn[NH3]2+2, "((1.2))", 1.0, Mn+2, 2.0, NH3)
+@species(Mn[OH]+, 1)
+@logKreaction(Mn[OH]+, "((-10.59))", -1.0, H+, 1.0, H2O, 1.0, Mn+2)
+@species(Mn[OH]2, 0)
+@logKreaction(Mn[OH]2, "((-22.2))", -2.0, H+, 2.0, H2O, 1.0, Mn+2)
+@species(Mn[OH]3-, -1)
+@logKreaction(Mn[OH]3-, "((-34.8))", -3.0, H+, 3.0, H2O, 1.0, Mn+2)
+@species(Mn[OH]4-2, -2)
+@logKreaction(Mn[OH]4-2, "((-48.3))", -4.0, H+, 4.0, H2O, 1.0, Mn+2)
+@species(Mn[SO4], 0)
+@logKreaction(Mn[SO4], "(( (1.0 / log(10)) * ((2.25 * log(10)) - (14100.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Mn+2, 1.0, SO4-2)
+@entity(Na, tot, 0)
+@logKreaction(Na, "-(0)", 1.0, Na+)
+@species(NaCO3-, -1, 5.4, 0)
+@logKreaction(NaCO3-, "(( (1.0 / log(10)) * ((1.27 * log(10)) - (-20350.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Na+)
+@species(NaH2PO4, 0)
+@logKreaction(NaH2PO4, "((0.41))", 1.0, H2[PO4]-, 1.0, Na+)
+@species(NaHCO3, 0, 0, 0)
+@logKreaction(NaHCO3, "(( (1.0 / log(10)) * ((10.079 * log(10)) - (-28330.100000000002 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, H+, 1.0, Na+)
+@species(NaPO4-2, -2)
+@logKreaction(NaPO4-2, "((-18.07))", -2.0, H+, 1.0, H2[PO4]-, 1.0, Na+)
+@species(NaSO4-, -1, 5.4, 0)
+@logKreaction(NaSO4-, "(( (1.0 / log(10)) * ((0.73 * log(10)) - (1000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Na+, 1.0, SO4-2)
+@species(Na[HPO4]-, -1)
+@logKreaction(Na[HPO4]-, "(( (1.0 / log(10)) * ((-6.34 * log(10)) - (34936.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2[PO4]-, 1.0, Na+)
+@entity(O, tot, 0)
+@logKreaction(O, -0.0, 1.0, H2O)
+@species(OH-, -1, 3.5, 0)
+@logKreaction(OH-, -14.096381591995634, -1.0, H, 1.0, H2O)
+@entity(O[-2], tot, 0)
+@logKreaction(O[-2], -0.0, 1.0, H2O)
+@entity(S[+6], tot, 0)
+@logKreaction(S[+6], "-(0)", 1.0, SO4-2)
+@entity(S, tot, 0)
+@logKreaction(S, "-(0)", 1.0, S[+6])
+@species(Si2O2[OH]5-, -1)
+@logKreaction(Si2O2[OH]5-, "((-8.5))", -1.0, H+, -1.0, H2O, 2.0, H4[SiO4])
+@species(Si2O3[OH]4-2, -2)
+@logKreaction(Si2O3[OH]4-2, "((-19.4))", -2.0, H+, -1.0, H2O, 2.0, H4[SiO4])
+@species(Si3O5[OH]5-3, -3)
+@logKreaction(Si3O5[OH]5-3, "((-29.4))", -3.0, H+, -2.0, H2O, 3.0, H4[SiO4])
+@species(Si3O6[OH]3-3, -3)
+@logKreaction(Si3O6[OH]3-3, "((-29.3))", -3.0, H+, -3.0, H2O, 3.0, H4[SiO4])
+@species(Si4O6[OH]6-2, -2)
+@logKreaction(Si4O6[OH]6-2, "((-15.6))", -2.0, H+, -4.0, H2O, 4.0, H4[SiO4])
+@species(Si4O7[OH]6-4, -4)
+@logKreaction(Si4O7[OH]6-4, "((-39.1))", -4.0, H+, -3.0, H2O, 4.0, H4[SiO4])
+@species(Si4O8[OH]4-4, -4)
+@logKreaction(Si4O8[OH]4-4, "((-39.2))", -4.0, H+, -4.0, H2O, 4.0, H4[SiO4])
+@species(Si6O15-6, -6)
+@logKreaction(Si6O15-6, "((-61.8))", -6.0, H+, -9.0, H2O, 6.0, H4[SiO4])
+@mineral(Siderite[s])
+@logKreaction(Siderite[s], "-1 * (( (1.0 / log(10)) * ((-10.68 * log(10)) - (-12916.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Fe+2)
+@mineral(Talc[s])
+@logKreaction(Talc[s], "-1 * (( (1.0 / log(10)) * ((24.92 * log(10)) - (-210356.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -6.0, H+, -4.0, H2O, 4.0, H4[SiO4], 3.0, Mg+2)
+@mineral(Vivianite[s])
+@logKreaction(Vivianite[s], "-1 * ((3.12))", 3.0, Fe+2, -4.0, H+, 8.0, H2O, 2.0, H2[PO4]-)
+//********* Extra text 3 **************
+@class: extra_text_3(){
+ // Here you can put some arbitrary extra code.   
+}
+@extra_text_3()
+//********* End of extra text 3 *******
+
+//********* Extra text 4 **************
+@class: extra_text_4(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_4()
+//********* End of extra text 4 *******
+
+//********* End of Adsorption Models *******
+//********* Extra text 5 **************
+@class: extra_text_5(){
+ // Here you can write ORCHESTRA code that will be used in the calculations, but will not be interpreted by the GUI.  
+}
+@extra_text_5()
+//********* End of extra text 5 *******
+
+//********* Write SI_minerals ************************* 
+@Write_SI_minerals:
+@SI_mineral(Anhydrite[s])
+@logKreaction(Anhydrite[s], "-1 * (( (1.0 / log(10)) * ((-4.36 * log(10)) - (-7200.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 1.0, SO4-2)
+@SI_mineral(Gypsum[s])
+@logKreaction(Gypsum[s], "-1 * (( (1.0 / log(10)) * ((-4.61 * log(10)) - (1000.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ca+2, 2.0, H2O, 1.0, SO4-2)
+@SI_mineral(Halite[s])
+@logKreaction(Halite[s], "-1 * (( (1.0 / log(10)) * ((1.6025 * log(10)) - (3700.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Cl-, 1.0, Na+)
+@SI_mineral(Mackinawite[s])
+@logKreaction(Mackinawite[s], "-1 * ((-3.19))", 1.0, Fe+2, -1.0, H+, 1.0, HS-)
+@SI_mineral(Melanterite[s])
+@logKreaction(Melanterite[s], "-1 * (( (1.0 / log(10)) * ((-2.28 * log(10)) - (12067.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Fe+2, 7.0, H2O, 1.0, SO4-2)
+@SI_mineral(Pyrochroite[s])
+@logKreaction(Pyrochroite[s], "-1 * (15.2)", -2.0, H+, 2.0, H2O, 1.0, Mn+2)
+@SI_mineral(Rhodochrosite[s])
+@logKreaction(Rhodochrosite[s], "-1 * (( (1.0 / log(10)) * ((-11.13 * log(10)) - (-5899.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Mn+2)
+@SI_mineral(Sylvite[s])
+@logKreaction(Sylvite[s], "-1 * (( (1.0 / log(10)) * ((0.87 * log(10)) - (17460.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Cl-, 1.0, K+)
+//*************************************************** 
+//@PHREEQC_Output:

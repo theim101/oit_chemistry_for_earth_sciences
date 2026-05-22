@@ -120,6 +120,10 @@ project:
           - title: Week 4.4
             children:
               - file: content/week 4.4/Week 4_4 Geomicrobiology.md
+          - title: Week 4.6 & 4.7 Project Landfill Leachate
+            children:
+              - file: content/project_THe/Orchestra_Project/Plan_Group_ Projects_Landfill_Leachate.md
+              - file: content/project_THe/Orchestra_Project/Project_Assignment_PP11N_example_Day_1.ipynb
 
 theme:
   name: "book-theme"

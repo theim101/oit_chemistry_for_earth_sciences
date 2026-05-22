@@ -1,0 +1,23 @@
+// Composer settings. 
+Font:  13
+HSize: 2570
+VSize: 1547
+HPos:  -5
+VPos:  30
+Intropage:  none
+Concertfile: concert.xml
+
+// The Composer will allow to edit the files listed here.
+// Changes in this file are effective after refreshing or restarting the composer.
+//    <Title>     <Tab>       <Filename>
+
+File: Documentation 	null 	documentation.txt
+CHEMFile: Chemistry_leachate_no_precip 	null 	chemistry_leachate_no_precip.inp
+CHEMFile: Chemistry_leachate_precip 	null 	chemistry_leachate_precip.inp
+File: Input_precip 	null 	input_precip.dat
+File: Input_no_precip 	null 	input_no_precip.dat
+File: Output_precip 	null 	output_precip.dat
+File: Output_no_precip 	null 	output_no_precip.dat
+File: MyDatabase 	null 	mydatabase.txt
+File: Objects2025_THe 	null 	objects2025_THe.txt
+File: Concert 	null 	concert.xml
