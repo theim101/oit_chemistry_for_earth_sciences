@@ -31,7 +31,7 @@ weather_station = '249'  # Berkhout
 pklfile = './DataFiles/meteo_WM.gz'
 
 meteo_data_stat = dbl.download_meteoKNMI(t_range, weather_station, pklfile)
-#meteo_data = meteo_data_stat.rename(columns={'rain': 'rain_station'})
+meteo_data = meteo_data_stat.rename(columns={'rain': 'rain_station'})
 
 # meteo_data is top boundary condition. We run the model from 2003 onward
 meteo_data = meteo_data[slice(t_range[0], t_range[1])]
@@ -56,7 +56,7 @@ pklfiles = {'cumflow': './DataFiles/cumflow_data_WM.gz',
             }
 
 
-ccumflow_data, level_data = \
+cumflow_data, level_data = \
     dbl.download_sens_data_WM (pklfiles)
 # %%
 # correct errors in flow data
@@ -99,5 +99,5 @@ totF_meas = pd.DataFrame(data=totF_val, index=tmeas)
 totF_meas = totF_meas-totF_meas.iloc[0]
 totF_meas = totF_meas.rename(columns={0: 'cum_Leachate'})
 
-totF_meas.to_excel('df_cumLeachate_BB12.xlsx')
+totF_meas.to_excel('df_cumLeachate_WM.xlsx')
 # %%
