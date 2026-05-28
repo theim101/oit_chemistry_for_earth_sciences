@@ -32,13 +32,9 @@
 @Var: E.logact 1 // 
 @Var: FA_kgkg 0 // 
 @Var: Goethite_kgkg 0.0 // 
-@Var: H+.logact 1.0 // 
-@Var: H.logact 1 // 
-@GlobalVar: H2O.logact 0.0 // 
 @Var: HA_kgkg 1.0E-4 // 
 @Var: HFO_kgkg 1e-3 // 
 @GlobalVar: I .1 // 
-@Var: O.logact 1 // 
 @Var: R 0.082057366080960 // gas constant L atm / (mol K)
 @Var: SL 1.0 // 
 @Var: T 298.15 // Temperature in degrees Kelvin
@@ -48,12 +44,9 @@
 @Var: e-.logact 1.0 // 
 @Var: fixed_logact_CO2 -3.35 // 
 @Var: gasvolume 1 // 
-@Var: gasvolume_fixed 1 // 
 @Var: pH 7 // 
 @Var: pe 3.0 // 
 @Var: porosity .7 // 
-@Var: pressure 1 // 
-@Var: pressure_fixed 1 // 
 @Var: saturation .711 // 
 @Var: totvolume 2 // 
 @Var: watervolume 1 // 
@@ -258,10 +251,12 @@
 @logKreaction(NaCO3-, "(( (1.0 / log(10)) * ((1.27 * log(10)) - (37279.44 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, CO3-2, 1.0, Na+)
 @species(NaHCO3, 0)
 @logKreaction(NaHCO3, "(( (1.0 / log(10)) * ((-0.25 * log(10)) - (-4184.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, HCO3-, 1.0, Na+)
-@entity(O, tot, 0)
-@logKreaction(O, -0.0, 1.0, H2O)
 @species(OH-, -1, 3.5, 0)
 @logKreaction(OH-, -14.096381591995634, -1.0, H, 1.0, H2O)
+@species(NaOH, 0)
+@logKreaction(NaOH, "(-10)", 1.0, Na+, 1.0, OH-)
+@entity(O, tot, 0)
+@logKreaction(O, -0.0, 1.0, H2O)
 @entity(O[-2], tot, 0)
 @logKreaction(O[-2], -0.0, 1.0, H2O)
 @species([CO2]2, 0)

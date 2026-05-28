@@ -18,7 +18,7 @@
 
 @class: extra_text_0(){
   // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI.
-  @scan: objects2025_THe.txt
+  @scan: objects2025.txt
   @stop:
 }
 @extra_text_0()
