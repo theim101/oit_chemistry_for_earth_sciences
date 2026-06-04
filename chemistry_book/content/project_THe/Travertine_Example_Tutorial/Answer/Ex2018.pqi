@@ -1,0 +1,18 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.6.2-15100\database\phreeqc.dat
+
+SOLUTION 1
+    temp      25
+    pH        7
+    pe        4
+    redox     pe
+    units     mmol/kgw
+    density   1
+    -water    0.75 # kg
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1.5
+    -volume 0.5
+    -temperature 25
+    CO2(g)    1.5
+SAVE SOLUTION 1
+END
