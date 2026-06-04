@@ -1,0 +1,18 @@
+// Here we can give any variable of the chemical system a value
+// In this case we want to vary the pH, so we define the pH as a variable with a default value of 7
+
+Var:	T		H.tot	HCO3-.tot	Ca+2.tot	Mg+2.tot	Na+.tot		K+.tot		F-.tot		Cl-.tot		SO4-2.tot
+Default	297.45		4.79e-8	5.05E-03	2.70E-03	4.16E-04	8.36E-05	2.33E-04	1.64E-05	5.41E-05	4.64E-03
+Data:	297.45		4.79e-8	5.05E-03	2.70E-03	4.16E-04	8.36E-05	2.33E-04	1.64E-05	5.41E-05	4.64E-03
+
+
+
+// Now we can define a "sweep", which is a kind of loop.
+// we want to vary the pH from 2 to 12 in 21 steps
+// click run and then look in output.dat for the results
+
+//Sweep: 21
+	Swept: CO2[g].tot 1e-20 1 lin
+}
+
+
