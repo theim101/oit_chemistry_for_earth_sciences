@@ -1,0 +1,12 @@
+// Primary entities added from ThermoddemV1.10
+@entity(Ar_, tot, 0)
+@species(Ar,0)
+@logKreaction(Ar, 0, 1, Ar_)
+
+@gas(Ar[g])
+@logKreaction(Ar[g], "-1 * (( (1.0 / log(10)) * ((-2.853 * log(10)) - (-12011.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, Ar)
+
+
+// Approach to allow forcing a fixed CO2[g] pressure in a system with CO2[g].tot defined...
+@mineral(CO2g[s])
+@logKreaction(CO2g[s], "-1 * (fixed_logact_CO2)", 1.0, CO2[g])
