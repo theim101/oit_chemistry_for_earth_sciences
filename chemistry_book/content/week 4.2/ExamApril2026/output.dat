@@ -1,0 +1,13 @@
+@class: format(){
+    //Output_at: (time, from:, 0, to:, 10, steps:, 100 )
+  // @PHREEQCOutput: chemistry1.inp
+}
+
+@format()
+
+// The column headers in this file can be edited and determine the output for the next run.
+Var: 	pH                       	T                        	Ca+2.tot                 	Mn+2.tot                 	CO3-2.tot        SO4-2.tot F-.tot         	Ca+2.con                 	Mn+2.con                 	CO3-2.con                	
+Data:	 6.00208658              	 3.23150000e2            	 1.00000000e-2           	 1.00000000e-2           	 4.54696011e-2           	 5.51664586e-3           	 7.46873660e-5           	 1.42726223e-6           	
+Data:	 5.45893074              	 3.23150000e2            	 1.00000000e-2           	 1.00000000e-2           	 1.20812771e-1           	 7.53090398e-3           	 2.02414434e-4           	 6.23554974e-7           	
+Data:	 5.15807542              	 3.23150000e2            	 1.00000000e-2           	 1.00000000e-2           	 2.15405593e-1           	 7.50105770e-3           	 3.98471837e-4           	 3.20338844e-7           	
+Data:	 8.21017853              	 2.83150000e2            	 1.00000000e-2           	 1.00000000e-2           	 2.07018162e-2           	 6.66464949e-4           	 1.37411957e-5           	 8.72736825e-6           	

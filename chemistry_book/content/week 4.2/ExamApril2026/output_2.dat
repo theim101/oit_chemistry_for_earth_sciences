@@ -1,0 +1,12 @@
+@class: format(){
+    //Output_at: (time, from:, 0, to:, 10, steps:, 100 )
+  // @PHREEQCOutput: chemistry1.inp
+
+}
+
+@format()
+
+// The column headers in this file can be edited and determine the output for the next run.
+Var: 	pH                       	pressure                 	gasvolume                	totvolume                	T                        	chargebalance            	CO2[g].con               	Ar[g].con                	Calcite[s].tot           	Fluorite[s].tot          	Gypsum[s].tot            	Rhodochrosite[s].tot     	CO2[g].logact            	
+Data:	 5.56137146              	 7.69630456              	 1.00000000e-15          	 1.00000000              	 3.48150000e2            	 0.0                     	 7.69630456              	 1.00000000e-15          	 7.53426301              	 2.49956089              	 4.95283028              	 4.99964694              	 8.86282246e-1           	
+Data:	 5.70032098              	 8.54474946              	 2.50000000e-2           	 1.02500000              	 2.83150000e2            	 0.0                     	 7.54474946              	 1.00000000              	 1.12171994e-2           	 2.27392244e-4           	 0.0                     	 2.72650540e-4           	 8.77644823e-1           	

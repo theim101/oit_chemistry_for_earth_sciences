@@ -1,9 +1,9 @@
 // Composer settings. 
 Font:  13
-HSize: 1920
-VSize: 1080
-HPos:  0
-VPos:  0
+HSize: 1739
+VSize: 942
+HPos:  693
+VPos:  236
 Intropage:  none
 Concertfile: concert.xml
 
@@ -12,8 +12,9 @@ Concertfile: concert.xml
 //    <Title>     <Tab>       <Filename>
 
 File: Documentation 	null 	documentation.txt
-CHEMFile: Chemistry1 	null 	chemistry1.inp
+CHEMFile: Chemistry 	null 	chemistry1.inp
 File: Input 	null 	input.dat
-File: Output 	null 	output.dat
-File: Output2 	null 	output2.dat
+File: Output_1 	null 	output_1.dat
+File: Output_2 	null 	output_2.dat
+File: Output_3 	null 	output_3.dat
 File: Concert 	null 	concert.xml

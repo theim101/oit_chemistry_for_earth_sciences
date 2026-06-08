@@ -1,0 +1,13 @@
+// The values given here overwrite the default values defined within the chemistry file
+Var:      Ca+2.tot	Mn+2.tot	F-.tot		SO4-2.tot	CO3-2.tot 	Na+.tot 	Ar[g].logact 	T   	pressure_fixed	gasvolume_fixed	watervolume 	gas_type
+Default: 15		5		5		5		15		0.1       	-15		348.15  5		1e-15		1		0
+Data:  	 15		5		5		5		12.65		0.1       	-15		348.15  5		1e-15		1		0
+Data:  	 2.92382205e-2  3.70566816e-4	6.27149592e-4 	1.71042797e-2	5.14421457e-1 	0.1       	0		283.15  5		25e-3		1		0
+
+// or use a loop to vary input 
+// The variables used here should be defined above
+// A Sweep results in a given number of data points with the listed variables varied from start to end value in lin or log steps 
+// Sweep{ 21
+//     Swept: pH 1 13 lin
+}
+

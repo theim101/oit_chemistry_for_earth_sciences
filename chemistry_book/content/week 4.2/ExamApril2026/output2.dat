@@ -1,0 +1,14 @@
+@class: format(){
+    //Output_at: (time, from:, 0, to:, 10, steps:, 100 )
+  // @PHREEQCOutput: chemistry1.inp
+
+}
+
+@format()
+
+// The column headers in this file can be edited and determine the output for the next run.
+Var: 	pH                       	T                        	Calcite[s].si            	Siderite[s].si           	Calcite[s].tot           	Siderite[s].tot          	CO2[g].con               	
+Data:	 6.00208658              	 3.23150000e2            	 8.88178420e-16          	 8.88178420e-16          	 3.10115470e-3           	 9.91456281e-3           	 1.00000000              	
+Data:	 5.45893074              	 3.23150000e2            	-2.97822329e-1           	 4.44089210e-16          	 0.0                     	 9.75964669e-3           	 4.89778819              	
+Data:	 5.15807542              	 3.23150000e2            	-5.93703088e-1           	 0.0                     	 0.0                     	 9.52566974e-3           	 10.0000000              	
+Data:	 8.21017853              	 2.83150000e2            	-1.77635684e-15          	-1.77635684e-15          	 9.32011818e-3           	 9.98588415e-3           	 4.16869383e-4           	
