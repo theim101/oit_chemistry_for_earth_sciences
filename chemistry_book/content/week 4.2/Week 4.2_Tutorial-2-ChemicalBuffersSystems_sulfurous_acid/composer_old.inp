@@ -13,7 +13,7 @@ Concertfile: concert.xml
 
 File: Documentation 	null 	documentation.txt
 File: Input 	null 	input.dat
-CHEMFile: chemistry_carbonate_buffer 	null 	chemistry_carbonate_buffer.inp
+CHEMFile: chemistry_sulfurous_acid_buffer 	null 	chemistry_carbonate_buffer.inp
 File: output 	null 	output.dat
 File: mydatabase 	null 	mydatabase.txt
 File: Concert 	null 	concert.xml

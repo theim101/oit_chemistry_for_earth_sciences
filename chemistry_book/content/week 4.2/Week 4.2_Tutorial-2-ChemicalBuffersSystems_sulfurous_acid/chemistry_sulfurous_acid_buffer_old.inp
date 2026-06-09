@@ -9,6 +9,7 @@
 // Syntax for local files:                   @database: minteq.txt
 // Syntax for files on the internet:         @database: www.meeussen.nl/orchestra/minteqv4.txt
 
+@database: kinetics_db.txt
 @database: mydatabase.txt
 @database: thermochimie11a.dat
 //********* End of the database file(s) *******
@@ -17,9 +18,10 @@
 //********* Extra text 0 *******
 
 @class: extra_text_0(){
-  // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI.
-  @scan: objects2026_THe.txt
-  @stop:
+ // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
+// @scan: objects2022.txt
+// @scan: kinetics_db.txt
+@stop:
 }
 @extra_text_0()
 //********* End of extra text 0 *******
@@ -38,29 +40,53 @@
 @Var: HA_kgkg 1.0E-4 // 
 @Var: HFO_kgkg 1e-3 // 
 @GlobalVar: I .1 // 
-@Var: O.logact 1 // 
 @Var: R 0.082057366080960 // gas constant L atm / (mol K)
 @Var: SL 1.0 // 
 @Var: T 298.15 // Temperature in degrees Kelvin
-@Var: Waste_kgkg .04 // 
-@Var: deltaSIcalcite 0 // Approach to shift SI value for equilibrium to allow equilibration to a non-equilibrium condition
-@Var: density 1.5 // 
+@Var: density 1.0 // 
 @Var: e-.logact 1.0 // 
-@Var: fixed_logact_CO2 -3.38 // Allows model to simulate with a fixed logactivity (-3.38 corresponds with log10(420ppm))
-@Var: gasvolume 0 // 
+@Var: gas_type 0 // default value for gastype problem: 0: fixed gas volume, 1: fixed gas pressure
+@Var: gasvolume 1 // 
+@Var: gasvolume_fixed 1 // default value for fixed gasvolume problem
 @Var: pH 7 // 
 @Var: pe 3.0 // 
-@Var: porosity .7 // 
-@Var: pressure 1 // 
-@Var: saturation .711 // 
-@Var: totvolume 0 // 
+@Var: pressure 1 // gas pressure used in idea gas law
+@Var: pressure_fixed 1 // default value for fixed gas pressure problem
+@Var: totvolume 1 // 
 @Var: watervolume 1 // 
 //********* End of the variables *******
 
 
 //********* Extra text 1 *******
 @class: extra_text_1(){
-  
+  // Here you can write ORCHESTRA extra expressions new style.
+  @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
+
+  // We want to be able to work with either a fixed_volume or a fixed_pressure
+  // @Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
+
+  // We introduce two variables:
+
+  @Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+  @Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
+
+  // We introduce extra expressions in three steps:
+
+  // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
+  // This calculation is defined during stage 1, so before all other calculations and we can thus use
+  // the gasvolume as input in the rest of the chemistry
+  // @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
+  // @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
+
+  // In the second step we define the the equation(s) that should go to zero.
+  // It is defined during stage 5, so after all other chemical calculations are ready.
+  // Effectively:
+  // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
+  // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
+  // @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
+
+  // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
+  // @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
 }
 @extra_text_1()
 //********* End of extra text 1 *******
@@ -108,79 +134,17 @@
 @link_phase(FA_part, DFA_part, "DFA_kgl")
 @link_phase(FA_part, SFA_part_l, "FA_kgkg*SL")
 @phase(gas_l)
-@link_phase(gas_l, liter, "1/watervolume")
+@link_phase(gas_l, liter, "1")
 @phase(gas)
-@link_phase(gas, tot, "gasvolume/molargasvolume")
-@link_phase(gas, gas_l, "gasvolume")
+@link_phase(gas, gas_l, "gasvolume*pressure/")
+@phase(wastephase)
 @end_of_gui_phases:
 //********* End of the phases *******
 
 //********* Extra text 2 *******
 @class: extra_text_2(){
-   //******************************************************************************************************  
-   //* ORCHESTRA code to work with variable/given gas volume and variable/given gas pressure.
-   //* This code needs to be included in the chemistry file after the standard objects file, as it redefines the gas entity.
-   //* After testing we will move this code to the standard objects file
-   //* This code calculates a PT dependend molar gasvolume, that can (should) be used in linking the gas phase to the 
-   //* total phase:
-   //*    @link_phase(gas, tot, "gasvolume/molargasvolume")
-   //* This link converts the fractions (partial pressures) in the gas phase to moles in the total phase.
-   //****************************************************************************************************** 
-
-   //* To automate the summation of individual gas partial pressures in the gas phase to a total pressure, 
-   //* we define "gas" also as an ORCHESTRA "entity" in the gas phase (which is already defined in standard systems)
-   //* This means that "gas" can be used in reactions, and that we get a cumulative mass balance of total "gas" present in al entities
-   //* in which it is used as reactant. The standard concentration unit of the gases in the gas phase (<name>.con) is partial pressure.
-   //* So the sum of all gas partial pressures will be available in the variable: gas.gas
-   //* (The 0 indicates that the gas entity itself has no mass, and does not count in the cumulative sum)
-   @entity(gas, gas, 0)
-
-   //* To automatically link each selecte gas to the gas entity, we redefine the standard gas class to include a link to 
-   //* the gas entity with a stoichiometry of 1
-   @def: gas(name){
-     @entity(<name>, gas, 1)
-     @Var: <name>.logk_unit 0
-     @Calc:(1, "<name>.logk_unit = 0")
-     @link(<name>, gas, 1)
-   }
-
-   //* We want to be able to work with either a fixed_volume or a fixed_pressure 
-   @Var: gas_type         0  // fixed volume == 0 or fixed pressure == 1
-   @Var: gasvolume_fixed .1  // this volume is used when gas_type == 0  (liter) 
-   @Var: pressure_fixed  .1  // this pressure is used when gas_type == 1 (atmosphere) 
-   @Var: pressure        .1  // The actual pressure in the calculations(atmosphere) 
-
-   //* To solve the required extra equation we introduce two variables:
-   @globalVar: gas_val_u  .1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
-   @globalVar: gas_res     0  // the "equation" or residual that is calculated from the chemical equilibrium condition, and should go to zero.
-
-   //* Now we define that the unknown/equation has to be solved as part of the iteration procedure.
-   //* The unknown value can become negative, so the type needs to be lin(ear) 
-   @solve: unknown:(name:, gas_val_u, delta:, 1e-3, type:, lin, step:, 100) equation:(name:, gas_res)
-
-   //* Now we calculate the gasvolume from the unknown (0 if unknown is negative) or the given volume 
-   //*  The calculations happen during stage 1, so before after all other calculations
-   @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0))")
-   @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
-
-   //* and we calculate the actual pressure from the unknown or the given pressure
-   @Calc: (1, "pressure  = if(gas_type==0, gas_val_u, pressure_fixed)")
-
-   //* and from the pressure we calculate the molar gasvolume for this PT, so we can use it to link the gas phase to total phase
-   // @link_phase(gas, tot, "gasvolume/molargasvolume")
-   @Var: molargasvolume 1
-   @Calc: (1,"molargasvolume = (8.3143 * 0.01 * T)/pressure")  // RT/p
-
-
-   //* After all calculations are done (stage 5) we calculate the residual (which needs to go to zero during iteration) 
-   //* Generally this is the difference between calculated pressure and given pressure
-   //* However, in case of a fixed pressure (gas_type == 1) the calculated pressure can be less than the given pressure.
-   //* In that case the gasvolume is 0,
-   //* and the (negative) value of the unknown represents the difference between calculated and given pressure.
-   @Calc: (5, "gas_res = if(gas_type==0,  pressure - gas.gas, if(gas_val_u > 0, (pressure - gas.gas), (gas_val_u + pressure - gas.gas) ) )") 
-   //******************************************************************************************************  
-
-   }
+   @include: objects2025.txt
+}
 @extra_text_2()
 //********* End of extra text 2 *******
 
@@ -191,23 +155,29 @@
 @gas(Ar[g])
 @primary_entity(Ar[g], 0.0)
 @species(Cl-, -1)
-@primary_entity(Cl-, -3.0, tot, 1.0E-9)
+@primary_entity(Cl-, -9.0, tot, 1.0E-20)
 @Global: pH
-@Calc:(1, "H.logact = -pH")
-@entity(H, tot, 0)
-@primary_entity(H, pH, 7.0)
+@Calc:(1, "H+.logact = -pH")
+@species(H+, 1)
+@primary_entity(H+, pH, 7.0)
 @entity(H2O, liter, 55.6)
 @primary_entity(H2O, -0.0)
 @species(Na+, 1)
-@primary_entity(Na+, -9.0, tot, 1.0E-9)
+@primary_entity(Na+, -9.0, tot, 0.3)
 @species(SO3-2, -2)
-@primary_entity(SO3-2, -9.0, tot, 0.01)
+@primary_entity(SO3-2, -9.0, tot, 0.1)
 //****************************************
 //******************************
 
 //********* Extra text 2a **************
 @class: extra_text_2a(){
-
+//@composition(calcite_cris, 1.0, CO3-2, 1.0, Ca+2)
+//@composition(acetate, 2, CO3-2, 3, H, -4, O)
+//@composition(Acetogens, 1, CO3-2, 0.6, H, -2.6, O, 0.2, NH4+)
+//@composition(Methanogens, 1, CO3-2, 0.6, H, -2.6, O, 0.2, NH4+)
+//@composition(Glucose, 6, CO3-2, 12, H+, -12, O)
+//@composition(SOM-HD, 1, CO3-2, 1.56, H, -2.37, O, 0.06, NH4+)
+//@composition(SOM, 1, CO3-2, 1.56, H, -2.37, O, 0.06, NH4+)
  // Here is some space for extra code that will be used in the calculations but will not be changed by the GUI. 
 }
 @extra_text_2a()
@@ -219,30 +189,26 @@
 @logKreaction(Ar, -20.0, 1.0, Ar[g])
 @entity(Cl, tot, 0)
 @logKreaction(Cl, "-(0)", 1.0, Cl-)
-@species(H+, 1)
-@logKreaction(H+, 0.0, 1.0, H)
-@gas(H2O[g])
-@logKreaction(H2O[g], "-1 * (( (1.0 / log(10)) * ((1.506 * log(10)) - (-44004.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H2O)
+@entity(H, tot, 0)
+@logKreaction(H, "-(0.0+(0.0))", 1.0, H+)
 @species(H2[SO3], 0)
 @logKreaction(H2[SO3], "(( (1.0 / log(10)) * ((9.03 * log(10)) - (21453.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, H+, 1.0, SO3-2)
 @entity(H[+1], tot, 0)
-@logKreaction(H[+1], 0.0, 1.0, H)
+@logKreaction(H[+1], "-(0)", 1.0, H+)
 @species(H[SO3]-, -1)
 @logKreaction(H[SO3]-, "(( (1.0 / log(10)) * ((7.17 * log(10)) - (3668.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 1.0, H+, 1.0, SO3-2)
 @entity(Na, tot, 0)
 @logKreaction(Na, "-(0)", 1.0, Na+)
 @entity(O, tot, 0)
-@logKreaction(O, -0.0, 1.0, H2O)
+@logKreaction(O, "-0.0+(-0.0)", 1.0, H2O)
 @species(OH-, -1, 3.5, 0)
-@logKreaction(OH-, -14.096381591995634, -1.0, H, 1.0, H2O)
+@logKreaction(OH-, "(( (1.0 / log(10)) * ((-13.997 * log(10)) - (55810.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", -1.0, H+, 1.0, H2O)
 @entity(O[-2], tot, 0)
 @logKreaction(O[-2], -0.0, 1.0, H2O)
 @species(S2O5-2, -2)
 @logKreaction(S2O5-2, "(( (1.0 / log(10)) * ((12.85 * log(10)) - (2606.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, H+, -1.0, H2O, 2.0, SO3-2)
 @species(SO2, 0)
 @logKreaction(SO2, "(( (1.0 / log(10)) * ((9.03 * log(10)) - (21450.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, H+, -1.0, H2O, 1.0, SO3-2)
-@gas(SO2[g])
-@logKreaction(SO2[g], "-1 * (( (1.0 / log(10)) * ((-8.94 * log(10)) - (-48420.0 / 8.3144598) * ((1 / @T()) - (1 / 298.15))) ))", 2.0, H+, -1.0, H2O, 1.0, SO3-2)
 @entity(S[+4], tot, 0)
 @logKreaction(S[+4], "-(0)", 1.0, SO3-2)
 //********* Extra text 3 **************

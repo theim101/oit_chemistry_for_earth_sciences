@@ -1,11 +1,9 @@
 // Composer settings. 
 Font:  13
-HSize: 2437
-VSize: 1080
-HPos:  0
-VPos:  0
-ProxyHost: name
-ProxyPort: port
+HSize: 1615
+VSize: 890
+HPos:  305
+VPos:  223
 Intropage:  none
 Concertfile: concert.xml
 
@@ -15,6 +13,7 @@ Concertfile: concert.xml
 
 File: Documentation 	null 	documentation.txt
 File: Input 	null 	input.dat
-CHEMFile: Chemistry 	null 	chemistry_sulfurous_acid_buffer.inp
-File: Output 	null 	output.dat
+CHEMFile: chemistry_sulfurous_acid_buffer 	null 	chemistry_sulfurous_acid_buffer.inp
+File: output 	null 	output.dat
+File: mydatabase 	null 	mydatabase.txt
 File: Concert 	null 	concert.xml

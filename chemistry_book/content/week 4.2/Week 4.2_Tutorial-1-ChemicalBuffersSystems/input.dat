@@ -5,8 +5,8 @@
 Var:	      CO3-2.tot	Na+.tot	gasvolume	watervolume 	gas_type	Cl-.tot 
 Default:      0.1       0.2	0		1   		0		1e-20
 Data: 	      0.1       0.2	0   		1		0		1e-20
-Data: 	      0.1       0.15	0   		1		0		1e-20
-Data: 	      0.1       0.05	0   		1		0		1e-20
+Data: 	      0.1       0.15	1   		1		0		1e-20
+Data: 	      0.1       0.05	1   		1		0		1e-20
 
 
 // Now we can define a "sweep", which is a kind of loop.
