@@ -1,0 +1,26 @@
+// Composer settings. 
+Font:  13
+HSize: 2570
+VSize: 1450
+HPos:  1915
+VPos:  -5
+Intropage:  none
+Concertfile: concert.xml
+
+// The Composer will allow to edit the files listed here.
+// Changes in this file are effective after refreshing or restarting the composer.
+//    <Title>     <Tab>       <Filename>
+
+File: Documentation 	null 	documentation.txt
+File: Input 	null 	input.dat
+CHEMFile: chemistry_Travertine 	null 	chemistry_Travertine.inp
+CHEMFile: chemistry_Travertine_fixed_CO2_logact 	null 	chemistry_Travertine_fixed_CO2_logact.inp
+CHEMFile: chemistry_Travertine_UG 	null 	chemistry_Travertine_UG.inp
+File: output1_1 	null 	output1_1.dat
+File: output1_2 	null 	output1_2.dat
+File: output2_1 	null 	output2_1.dat
+File: output2_2 	null 	output2_2.dat
+File: output3_1 	null 	output3_1.dat
+File: output3_2 	null 	output3_2.dat
+File: mydatabase 	null 	mydatabase.txt
+File: Concert 	null 	concert.xml

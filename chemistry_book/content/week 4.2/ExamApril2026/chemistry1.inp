@@ -17,7 +17,7 @@
 //********* Extra text 0 *******
 
 @class: extra_text_0(){
-@scan: objects2025.txt
+  @scan: objects2026_THe.txt
 }
 @extra_text_0()
 //********* End of extra text 0 *******
@@ -58,43 +58,8 @@
 
 //********* Extra text 1 *******
 @class: extra_text_1(){//********* Extra text 1 *******
-@class: extra_text_1(){
-  
-  // We want to be able to work with either a fixed_volume or a fixed_pressure
-  @Var: gas_type 0 // gastype: fixed_volume = 0 or fixed_pressure = 1
-  @Var: gasvolume_fixed 1e-10 // Constant for fixed gasvolume
-  @Var: pressure_fixed 1 // Constant for fixed pressure
-  @Var: pressure 1 // initial value for pressure
-
-  // Here you can write ORCHESTRA extra expressions new style.
-  @Calc: (5, "totvolume = watervolume + gasvolume")     // is total volume per cell
-  
-  // We introduce two variables:
-
-  @Var: gas_val_u  0.1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
-  @Var: gas_res 0  // the "equation" that is calculated from the chemical equilibrium condition, and should go to zero.
-
-  // We introduce extra expressions in three steps:
-
-  // In the first step we calculate the gasvolume from the unknown (0 if unknown is negative)
-  // This calculation is defined during stage 1, so before all other calculations and we can thus use
-  // the gasvolume as input in the rest of the chemistry
-  @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0)^2)")
-  @Calc: (1, "pressure = if(gas_type==0, gas_val_u, pressure_fixed)"
-
-  // In the second step we define the the equation(s) that should go to zero.
-  // It is defined during stage 5, so after all other chemical calculations are ready.
-  // Effectively:
-  // the sum of partial pressures will equal the total pressure when the unknown/gasvolume is greater than zero,
-  // the sum of partial pressures will be less than the total pressure, when the unknown is less than zero.
-  @Calc: (5, "gas_res = pressure - (10^{CO2[g].logact} + 10^{Ar[g].logact}))"
-
-  // Now we just have to define that the unknown/equation has to be solved as part of the iteration procedure.
-  @solve: unknown:(name:, gas_val_u, delta:, 1e-6, type:, lin, step:, 0.1) equation:(name:, gas_res)
 
 }
-@extra_text_1()
-//********* End of extra text 1 *******}
 @extra_text_1()
 //********* End of extra text 1 *******
 
@@ -145,15 +110,78 @@
 @phase(exchange)
 @link_phase(exchange, ads, "1")
 @phase(gas_l)
-@link_phase(gas_l, liter, "1")
+@link_phase(gas_l, liter, "1/watervolume")
 @phase(gas)
-@link_phase(gas, gas_l, "gasvolume/22.4")
+@link_phase(gas, tot, "gasvolume/molargasvolume")
+@link_phase(gas, gas_l, "gasvolume")
 @end_of_gui_phases:
 //********* End of the phases *******
 
 //********* Extra text 2 *******
 @class: extra_text_2(){
-  
+   //******************************************************************************************************
+   //* ORCHESTRA code to work with variable/given gas volume and variable/given gas pressure.
+   //* This code needs to be included in the chemistry file after the standard objects file, as it redefines the gas entity.
+   //* After testing we will move this code to the standard objects file
+   //* This code calculates a PT dependend molar gasvolume, that can (should) be used in linking the gas phase to the
+   //* total phase:
+   //*    @link_phase(gas, tot, "gasvolume/molargasvolume")
+   //* This link converts the fractions (partial pressures) in the gas phase to moles in the total phase.
+   //******************************************************************************************************
+
+   //* To automate the summation of individual gas partial pressures in the gas phase to a total pressure,
+   //* we define "gas" also as an ORCHESTRA "entity" in the gas phase (which is already defined in standard systems)
+   //* This means that "gas" can be used in reactions, and that we get a cumulative mass balance of total "gas" present in al entities
+   //* in which it is used as reactant. The standard concentration unit of the gases in the gas phase (<name>.con) is partial pressure.
+   //* So the sum of all gas partial pressures will be available in the variable: gas.gas
+   //* (The 0 indicates that the gas entity itself has no mass, and does not count in the cumulative sum)
+   @entity(gas, gas, 0)
+
+   //* To automatically link each selecte gas to the gas entity, we redefine the standard gas class to include a link to
+   //* the gas entity with a stoichiometry of 1
+   @def: gas(name){
+     @entity(<name>, gas, 1)
+     @Var: <name>.logk_unit 0
+     @Calc:(1, "<name>.logk_unit = 0")
+     @link(<name>, gas, 1)
+   }
+
+   //* We want to be able to work with either a fixed_volume or a fixed_pressure
+   @Var: gas_type         0  // fixed volume == 0 or fixed pressure == 1
+   @Var: gasvolume_fixed .1  // this volume is used when gas_type == 0  (liter)
+   @Var: pressure_fixed  .1  // this pressure is used when gas_type == 1 (atmosphere)
+   @Var: pressure        .1  // The actual pressure in the calculations(atmosphere)
+
+   //* To solve the required extra equation we introduce two variables:
+   @globalVar: gas_val_u  .1  // the "unknown" that is directly estimated by the solver and can be used as input for all other calculations
+   @globalVar: gas_res     0  // the "equation" or residual that is calculated from the chemical equilibrium condition, and should go to zero.
+
+   //* Now we define that the unknown/equation has to be solved as part of the iteration procedure.
+   //* The unknown value can become negative, so the type needs to be lin(ear)
+   @solve: unknown:(name:, gas_val_u, delta:, 1e-3, type:, lin, step:, 100) equation:(name:, gas_res)
+
+   //* Now we calculate the gasvolume from the unknown (0 if unknown is negative) or the given volume
+   //*  The calculations happen during stage 1, so before after all other calculations
+   @Calc: (1, "gasvolume = if(gas_type==0, gasvolume_fixed, if(gas_val_u>0, gas_val_u, 0))")
+   @Calc: (1, "totvolume = watervolume + gasvolume")     // is total volume per cell
+
+   //* and we calculate the actual pressure from the unknown or the given pressure
+   @Calc: (1, "pressure  = if(gas_type==0, gas_val_u, pressure_fixed)")
+
+   //* and from the pressure we calculate the molar gasvolume for this PT, so we can use it to link the gas phase to total phase
+   // @link_phase(gas, tot, "gasvolume/molargasvolume")
+   @Var: molargasvolume 1
+   @Calc: (1,"molargasvolume = (8.3143 * 0.01 * T)/pressure")  // RT/p
+
+
+   //* After all calculations are done (stage 5) we calculate the residual (which needs to go to zero during iteration)
+   //* Generally this is the difference between calculated pressure and given pressure
+   //* However, in case of a fixed pressure (gas_type == 1) the calculated pressure can be less than the given pressure.
+   //* In that case the gasvolume is 0,
+   //* and the (negative) value of the unknown represents the difference between calculated and given pressure.
+   @Calc: (5, "gas_res = if(gas_type==0,  pressure - gas.gas, if(gas_val_u > 0, (pressure - gas.gas), (gas_val_u + pressure - gas.gas) ) )")
+   //******************************************************************************************************
+
 }
 @extra_text_2()
 //********* End of extra text 2 *******
