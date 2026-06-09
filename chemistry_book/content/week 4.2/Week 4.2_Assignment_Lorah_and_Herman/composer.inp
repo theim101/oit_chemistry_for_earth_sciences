@@ -2,8 +2,8 @@
 Font:  13
 HSize: 1615
 VSize: 890
-HPos:  2068
-VPos:  139
+HPos:  305
+VPos:  266
 Intropage:  none
 Concertfile: concert.xml
 
@@ -19,4 +19,5 @@ File: output1_1 	null 	output1_1.dat
 File: output1_2 	null 	output1_2.dat
 File: output2_1 	null 	output2_1.dat
 File: output2_2 	null 	output2_2.dat
+File: mydatabse 	null 	mydatabase.txt
 File: Concert 	null 	concert.xml
